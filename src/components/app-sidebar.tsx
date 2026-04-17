@@ -13,6 +13,8 @@ import {
   LogOut,
   Building2,
   Users,
+  Settings,
+  Phone,
 } from "lucide-react"
 import {
   Sidebar,
@@ -33,12 +35,13 @@ const managerNav = [
   { title: "Finansije", href: "/dashboard/finansije", icon: ArrowLeftRight },
   { title: "PP Inspekcije", href: "/dashboard/inspekcije", icon: ShieldCheck },
   { title: "Investicije", href: "/dashboard/investicije", icon: HardHat },
+  { title: "Stanari", href: "/dashboard/stanari", icon: Users },
 ]
 
 const communityNav = [
   { title: "Obavestenja", href: "/dashboard/obavestenja", icon: Megaphone },
   { title: "Glasanje", href: "/dashboard/glasanje", icon: Vote },
-  { title: "Stanari", href: "/dashboard/stanari", icon: Users },
+  { title: "Kontakti", href: "/dashboard/kontakti", icon: Phone },
 ]
 
 interface AppSidebarProps {
@@ -113,8 +116,19 @@ export function AppSidebar({ userName, userRole }: AppSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t p-3">
-        <div className="flex items-center gap-3">
+      <SidebarFooter className="border-t">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              isActive={pathname === "/dashboard/podesavanja"}
+              render={<Link href="/dashboard/podesavanja" />}
+            >
+              <Settings className="w-4 h-4" />
+              <span>Podesavanja</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+        <div className="flex items-center gap-3 px-3 py-2">
           <Avatar className="w-8 h-8">
             <AvatarFallback className="text-xs bg-slate-100">{initials}</AvatarFallback>
           </Avatar>

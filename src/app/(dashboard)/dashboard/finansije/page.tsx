@@ -6,16 +6,49 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowDownCircle, ArrowUpCircle, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { TransactionFilters } from "./transaction-filters"
+import { Prisma } from "@/generated/prisma/client"
 
-export default async function FinansijePage() {
+export default async function FinansijePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ mesec?: string; tip?: string; kategorija?: string }>
+}) {
   const session = await auth()
   if (session?.user.role !== "MANAGER") redirect("/dashboard")
 
-  const transactions = await db.transaction.findMany({
-    orderBy: { date: "desc" },
-    include: { category: true },
-    take: 50,
-  })
+  const { mesec, tip, kategorija } = await searchParams
+
+  const where: Prisma.TransactionWhereInput = {}
+
+  if (tip === "INCOME" || tip === "EXPENSE") {
+    where.type = tip
+  }
+
+  if (kategorija) {
+    where.categoryId = kategorija
+  }
+
+  if (mesec) {
+    const [year, month] = mesec.split("-").map(Number)
+    if (year && month) {
+      const start = new Date(year, month - 1, 1)
+      const end = new Date(year, month, 1)
+      where.date = { gte: start, lt: end }
+    }
+  }
+
+  const [transactions, categories] = await Promise.all([
+    db.transaction.findMany({
+      where,
+      orderBy: { date: "desc" },
+      include: { category: true },
+      take: 100,
+    }),
+    db.transactionCategory.findMany({
+      orderBy: { name: "asc" },
+    }),
+  ])
 
   const totalIncome = transactions
     .filter((t) => t.type === "INCOME")
@@ -40,7 +73,8 @@ export default async function FinansijePage() {
         </Button>
       </div>
 
-      {/* Sumarni kartici */}
+      <TransactionFilters categories={categories} />
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
@@ -64,7 +98,7 @@ export default async function FinansijePage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Stanje racuna</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Stanje</CardTitle>
           </CardHeader>
           <CardContent>
             <p className={`text-2xl font-bold ${balance >= 0 ? "text-green-600" : "text-red-600"}`}>
@@ -74,22 +108,17 @@ export default async function FinansijePage() {
         </Card>
       </div>
 
-      {/* Lista transakcija */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Sve transakcije</CardTitle>
+          <CardTitle className="text-base">
+            Transakcije{" "}
+            <span className="text-muted-foreground font-normal">({transactions.length})</span>
+          </CardTitle>
         </CardHeader>
         <CardContent>
           {transactions.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">Nema evidentiranih transakcija</p>
-              <Button
-                className="mt-4"
-                variant="outline"
-                render={<Link href="/dashboard/finansije/nova" />}
-              >
-                Dodaj prvu stavku
-              </Button>
+              <p className="text-muted-foreground">Nema transakcija za izabrane filtere</p>
             </div>
           ) : (
             <div className="space-y-1">

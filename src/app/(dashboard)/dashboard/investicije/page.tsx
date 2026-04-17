@@ -89,7 +89,7 @@ export default async function InvesticijePage() {
         <div className="space-y-3">
           {investments.map((inv) => {
             const config = statusConfig[inv.status]
-            const progress = inv.budget > 0 ? (Number(inv.spent) / Number(inv.budget)) * 100 : 0
+            const progress = Number(inv.budget) > 0 ? (Number(inv.spent) / Number(inv.budget)) * 100 : 0
             return (
               <Link key={inv.id} href={`/dashboard/investicije/${inv.id}`}>
                 <Card className="hover:shadow-md transition-shadow cursor-pointer">

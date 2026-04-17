@@ -9,6 +9,9 @@ import {
   Vote,
   TrendingDown,
   TrendingUp,
+  Pin,
+  AlertTriangle,
+  Clock,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -29,6 +32,8 @@ export default async function DashboardPage() {
     upcomingInspections,
     activeInvestments,
     recentTransactions,
+    recentAnnouncements,
+    activePollsList,
   ] = await Promise.all([
     db.transaction.aggregate({ where: { type: "INCOME" }, _sum: { amount: true } }),
     db.transaction.aggregate({ where: { type: "EXPENSE" }, _sum: { amount: true } }),
@@ -42,6 +47,18 @@ export default async function DashboardPage() {
       take: 5,
       orderBy: { date: "desc" },
       include: { category: true },
+    }),
+    db.announcement.findMany({
+      where: { publishedAt: { lte: now }, OR: [{ expiresAt: null }, { expiresAt: { gt: now } }] },
+      orderBy: [{ isPinned: "desc" }, { publishedAt: "desc" }],
+      take: 3,
+      include: { author: { select: { name: true } } },
+    }),
+    db.poll.findMany({
+      where: { status: "ACTIVE" },
+      orderBy: { createdAt: "desc" },
+      take: 3,
+      include: { _count: { select: { votes: true } } },
     }),
   ])
 
@@ -167,52 +184,85 @@ export default async function DashboardPage() {
         </>
       )}
 
-      {/* Zajednicke kartice (za sve) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Link href="/dashboard/obavestenja">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Megaphone className="w-4 h-4" /> Obavestenja
-                </CardTitle>
-                {activeAnnouncements > 0 && (
-                  <Badge variant="secondary">{activeAnnouncements}</Badge>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                {activeAnnouncements > 0
-                  ? `${activeAnnouncements} aktivnih obavestenja`
-                  : "Nema novih obavestenja"}
-              </p>
-            </CardContent>
-          </Card>
-        </Link>
+      {/* Obavestenja */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            <Megaphone className="w-4 h-4" /> Obavestenja
+          </CardTitle>
+          <Link href="/dashboard/obavestenja" className="text-sm text-muted-foreground hover:text-foreground">
+            Sva →
+          </Link>
+        </CardHeader>
+        <CardContent>
+          {recentAnnouncements.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-4">Nema obavestenja</p>
+          ) : (
+            <div className="space-y-3">
+              {recentAnnouncements.map((a) => (
+                <div
+                  key={a.id}
+                  className={`p-3 rounded-lg border ${
+                    a.priority === "URGENT" ? "border-red-200 bg-red-50/50" : ""
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    {a.isPinned && <Pin className="w-3.5 h-3.5 text-slate-500" />}
+                    {a.priority === "URGENT" && <AlertTriangle className="w-3.5 h-3.5 text-red-500" />}
+                    <span className="text-sm font-medium">{a.title}</span>
+                    {a.priority === "URGENT" && (
+                      <Badge variant="destructive" className="text-xs">Hitno</Badge>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2">{a.body}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {a.author.name} · {new Date(a.publishedAt).toLocaleDateString("sr-RS")}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-        <Link href="/dashboard/glasanje">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Vote className="w-4 h-4" /> Glasanje
-                </CardTitle>
-                {activePolls > 0 && (
-                  <Badge variant="destructive">{activePolls}</Badge>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                {activePolls > 0
-                  ? `${activePolls} aktivnih glasanja`
-                  : "Nema aktivnih glasanja"}
-              </p>
-            </CardContent>
-          </Card>
-        </Link>
-      </div>
+      {/* Aktivna glasanja */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            <Vote className="w-4 h-4" /> Glasanje
+            {activePolls > 0 && <Badge variant="destructive" className="text-xs">{activePolls}</Badge>}
+          </CardTitle>
+          <Link href="/dashboard/glasanje" className="text-sm text-muted-foreground hover:text-foreground">
+            Sva →
+          </Link>
+        </CardHeader>
+        <CardContent>
+          {activePollsList.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-4">Nema aktivnih glasanja</p>
+          ) : (
+            <div className="space-y-3">
+              {activePollsList.map((p) => (
+                <Link
+                  key={p.id}
+                  href={`/dashboard/glasanje/${p.id}`}
+                  className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+                >
+                  <span className="text-sm font-medium">{p.title}</span>
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
+                    <span>{p._count.votes} glasova</span>
+                    {p.endsAt && (
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        Istice: {new Date(p.endsAt).toLocaleDateString("sr-RS")}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

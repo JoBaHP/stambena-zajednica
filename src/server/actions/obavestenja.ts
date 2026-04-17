@@ -37,6 +37,34 @@ export async function createAnnouncement(formData: FormData) {
   redirect("/dashboard/obavestenja")
 }
 
+export async function updateAnnouncement(id: string, formData: FormData) {
+  const session = await auth()
+  if (!session || session.user.role !== "MANAGER") {
+    throw new Error("Nemate dozvolu")
+  }
+
+  const title = formData.get("title") as string
+  const body = formData.get("body") as string
+  const priority = formData.get("priority") as string
+  const isPinned = formData.get("isPinned") === "on"
+  const expiresAt = formData.get("expiresAt") as string
+
+  await db.announcement.update({
+    where: { id },
+    data: {
+      title,
+      body,
+      priority: priority as "NORMAL" | "URGENT",
+      isPinned,
+      expiresAt: expiresAt ? new Date(expiresAt) : null,
+    },
+  })
+
+  revalidatePath("/dashboard")
+  revalidatePath("/dashboard/obavestenja")
+  redirect("/dashboard/obavestenja")
+}
+
 export async function deleteAnnouncement(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {

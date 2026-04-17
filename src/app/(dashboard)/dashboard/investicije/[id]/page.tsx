@@ -6,8 +6,9 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Trash2, Calendar } from "lucide-react"
+import { Pencil, Calendar } from "lucide-react"
 import { deleteInvestment, updateInvestmentSpent } from "@/server/actions/investicije"
+import { ConfirmDelete } from "@/components/confirm-delete"
 import Link from "next/link"
 
 const statusConfig = {
@@ -174,12 +175,11 @@ export default async function InvesticijaDetaljPage({
         <Button variant="outline" className="flex-1" render={<Link href="/dashboard/investicije" />}>
           Nazad
         </Button>
-        <form action={deleteWithId}>
-          <Button variant="destructive" type="submit">
-            <Trash2 className="w-4 h-4 mr-2" />
-            Obrisi
-          </Button>
-        </form>
+        <Button className="flex-1" render={<Link href={`/dashboard/investicije/${investment.id}/uredi`} />}>
+          <Pencil className="w-4 h-4 mr-2" />
+          Izmeni
+        </Button>
+        <ConfirmDelete action={deleteWithId} />
       </div>
     </div>
   )

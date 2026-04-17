@@ -38,6 +38,38 @@ export async function createInvestment(formData: FormData) {
   redirect("/dashboard/investicije")
 }
 
+export async function updateInvestment(id: string, formData: FormData) {
+  const session = await auth()
+  if (!session || session.user.role !== "MANAGER") {
+    throw new Error("Nemate dozvolu")
+  }
+
+  const title = formData.get("title") as string
+  const description = formData.get("description") as string
+  const budget = parseFloat(formData.get("budget") as string)
+  const spent = parseFloat(formData.get("spent") as string)
+  const status = formData.get("status") as string
+  const startDate = formData.get("startDate") as string
+  const endDate = formData.get("endDate") as string
+
+  await db.investment.update({
+    where: { id },
+    data: {
+      title,
+      description: description || null,
+      budget,
+      spent: spent || 0,
+      status: status as "PLANNED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED",
+      startDate: startDate ? new Date(startDate) : null,
+      endDate: endDate ? new Date(endDate) : null,
+    },
+  })
+
+  revalidatePath("/dashboard")
+  revalidatePath("/dashboard/investicije")
+  redirect("/dashboard/investicije")
+}
+
 export async function updateInvestmentSpent(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {

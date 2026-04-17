@@ -4,8 +4,9 @@ import { db } from "@/lib/db"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowDownCircle, ArrowUpCircle, Trash2, Pencil } from "lucide-react"
+import { ArrowDownCircle, ArrowUpCircle, Pencil } from "lucide-react"
 import { deleteTransaction } from "@/server/actions/finansije"
+import { ConfirmDelete } from "@/components/confirm-delete"
 import Link from "next/link"
 
 export default async function TransakcijaDetaljPage({
@@ -95,12 +96,11 @@ export default async function TransakcijaDetaljPage({
         <Button variant="outline" className="flex-1" render={<Link href="/dashboard/finansije" />}>
           Nazad
         </Button>
-        <form action={deleteWithId}>
-          <Button variant="destructive" type="submit">
-            <Trash2 className="w-4 h-4 mr-2" />
-            Obrisi
-          </Button>
-        </form>
+        <Button className="flex-1" render={<Link href={`/dashboard/finansije/${transaction.id}/uredi`} />}>
+          <Pencil className="w-4 h-4 mr-2" />
+          Izmeni
+        </Button>
+        <ConfirmDelete action={deleteWithId} />
       </div>
     </div>
   )

@@ -38,6 +38,36 @@ export async function createInspection(formData: FormData) {
   redirect("/dashboard/inspekcije")
 }
 
+export async function updateInspection(id: string, formData: FormData) {
+  const session = await auth()
+  if (!session || session.user.role !== "MANAGER") {
+    throw new Error("Nemate dozvolu")
+  }
+
+  const title = formData.get("title") as string
+  const inspectionDate = formData.get("inspectionDate") as string
+  const nextDueDate = formData.get("nextDueDate") as string
+  const result = formData.get("result") as string
+  const inspector = formData.get("inspector") as string
+  const notes = formData.get("notes") as string
+
+  await db.pPInspection.update({
+    where: { id },
+    data: {
+      title,
+      inspectionDate: new Date(inspectionDate),
+      nextDueDate: nextDueDate ? new Date(nextDueDate) : null,
+      result: result as "PASSED" | "FAILED" | "CONDITIONAL",
+      inspector: inspector || null,
+      notes: notes || null,
+    },
+  })
+
+  revalidatePath("/dashboard")
+  revalidatePath("/dashboard/inspekcije")
+  redirect("/dashboard/inspekcije")
+}
+
 export async function deleteInspection(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {

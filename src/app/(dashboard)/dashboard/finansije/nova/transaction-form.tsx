@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { createTransaction } from "@/server/actions/finansije"
+import { createTransaction, updateTransaction } from "@/server/actions/finansije"
 import Link from "next/link"
 
 interface Category {
@@ -30,6 +30,10 @@ interface TransactionFormProps {
 }
 
 export function TransactionForm({ categories, defaultValues }: TransactionFormProps) {
+  const isEdit = !!defaultValues?.id
+  const action = isEdit
+    ? updateTransaction.bind(null, defaultValues!.id!)
+    : createTransaction
   const [type, setType] = useState<"INCOME" | "EXPENSE">(
     (defaultValues?.type as "INCOME" | "EXPENSE") ?? "EXPENSE"
   )
@@ -41,7 +45,7 @@ export function TransactionForm({ categories, defaultValues }: TransactionFormPr
   return (
     <Card>
       <CardContent className="pt-6">
-        <form action={createTransaction} className="space-y-5">
+        <form action={action} className="space-y-5">
           {/* Tip: prihod ili rashod */}
           <div className="space-y-2">
             <Label>Tip</Label>
@@ -155,7 +159,7 @@ export function TransactionForm({ categories, defaultValues }: TransactionFormPr
           {/* Dugmad */}
           <div className="flex gap-3 pt-2">
             <Button type="submit" className="flex-1">
-              Sacuvaj
+              {isEdit ? "Sacuvaj izmene" : "Sacuvaj"}
             </Button>
             <Button type="button" variant="outline" render={<Link href="/dashboard/finansije" />}>
               Otkazi
