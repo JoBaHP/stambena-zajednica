@@ -15,6 +15,9 @@ import {
   Users,
   Settings,
   Phone,
+  Wrench,
+  CalendarClock,
+  FolderArchive,
 } from "lucide-react"
 import {
   Sidebar,
@@ -36,11 +39,14 @@ const managerNav = [
   { title: "PP Inspekcije", href: "/dashboard/inspekcije", icon: ShieldCheck },
   { title: "Investicije", href: "/dashboard/investicije", icon: HardHat },
   { title: "Stanari", href: "/dashboard/stanari", icon: Users },
+  { title: "Kalendar", href: "/dashboard/kalendar", icon: CalendarClock },
 ]
 
 const communityNav = [
   { title: "Obavestenja", href: "/dashboard/obavestenja", icon: Megaphone },
   { title: "Glasanje", href: "/dashboard/glasanje", icon: Vote },
+  { title: "Zahtevi", href: "/dashboard/zahtevi", icon: Wrench },
+  { title: "Arhiva", href: "/dashboard/arhiva", icon: FolderArchive },
   { title: "Kontakti", href: "/dashboard/kontakti", icon: Phone },
 ]
 

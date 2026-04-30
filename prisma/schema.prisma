@@ -17,15 +17,21 @@ model User {
   role      Role     @default(RESIDENT)
   phone     String?
   unit      String?  // broj stana npr. "12", "PP1"
+  notifyEmail Boolean @default(true)
+  notifySms   Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  accounts      Account[]
-  sessions      Session[]
-  announcements Announcement[]
-  polls         Poll[]
-  votes         Vote[]
-  transactions  Transaction[]
+  accounts            Account[]
+  sessions            Session[]
+  announcements       Announcement[]
+  polls               Poll[]
+  votes               Vote[]
+  transactions        Transaction[]
+  maintenanceRequests MaintenanceRequest[]
+  requestComments     RequestComment[]
+  tasks               Task[]
+  archiveDocuments    ArchiveDocument[]
 }
 
 enum Role {
@@ -168,6 +174,127 @@ model Document {
   announcementId String?
   announcement   Announcement? @relation(fields: [announcementId], references: [id], onDelete: Cascade)
   createdAt      DateTime      @default(now())
+}
+
+// ─── ZAHTEVI ZA INTERVENCIJE ────────────────────────────────────────────────
+
+model MaintenanceRequest {
+  id          String           @id @default(cuid())
+  title       String
+  description String
+  category    RequestCategory
+  status      RequestStatus    @default(SUBMITTED)
+  priority    RequestPriority  @default(NORMAL)
+  location    String?
+  resolution  String?
+  resolvedAt  DateTime?
+  reporterId  String
+  reporter    User             @relation(fields: [reporterId], references: [id])
+  comments    RequestComment[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+enum RequestCategory {
+  PLUMBING
+  ELECTRICAL
+  ELEVATOR
+  HEATING
+  CLEANING
+  STRUCTURAL
+  OTHER
+}
+
+enum RequestStatus {
+  SUBMITTED
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
+}
+
+enum RequestPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+model RequestComment {
+  id        String             @id @default(cuid())
+  requestId String
+  request   MaintenanceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User               @relation(fields: [authorId], references: [id])
+  body      String
+  createdAt DateTime           @default(now())
+}
+
+// ─── DIGITALNA ARHIVA ──────────────────────────────────────────────────────
+
+model ArchiveDocument {
+  id           String          @id @default(cuid())
+  title        String
+  description  String?
+  category     ArchiveCategory
+  fileName     String
+  fileUrl      String
+  fileSize     Int
+  mimeType     String
+  uploadedById String
+  uploadedBy   User            @relation(fields: [uploadedById], references: [id])
+  createdAt    DateTime        @default(now())
+
+  @@index([category])
+  @@index([createdAt])
+}
+
+enum ArchiveCategory {
+  MINUTES
+  CONTRACT
+  INVOICE
+  REPORT
+  REGULATION
+  OTHER
+}
+
+// ─── KALENDAR OBAVEZA ──────────────────────────────────────────────────────
+
+model Task {
+  id          String         @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime       @db.Date
+  category    TaskCategory   @default(OTHER)
+  status      TaskStatus     @default(PENDING)
+  recurrence  TaskRecurrence @default(NONE)
+  completedAt DateTime?
+  createdById String
+  createdBy   User           @relation(fields: [createdById], references: [id])
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([dueDate])
+}
+
+enum TaskCategory {
+  INSPECTION
+  MAINTENANCE
+  PAYMENT
+  MEETING
+  CONTRACT
+  OTHER
+}
+
+enum TaskStatus {
+  PENDING
+  COMPLETED
+}
+
+enum TaskRecurrence {
+  NONE
+  MONTHLY
+  QUARTERLY
+  YEARLY
 }
 
 // ─── KONTAKTI ───────────────────────────────────────────────────────────────

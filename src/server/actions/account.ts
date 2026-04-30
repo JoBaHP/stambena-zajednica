@@ -42,3 +42,24 @@ export async function changePassword(formData: FormData) {
   revalidatePath("/dashboard/podesavanja")
   return { success: true }
 }
+
+export async function updateNotificationPreferences(formData: FormData) {
+  const session = await auth()
+  if (!session) return { error: "Niste prijavljeni" }
+
+  const notifyEmail = formData.get("notifyEmail") === "on"
+  const notifySms = formData.get("notifySms") === "on"
+  const phone = (formData.get("phone") as string)?.trim() || null
+
+  if (notifySms && !phone) {
+    return { error: "Unesite broj telefona da biste primali SMS" }
+  }
+
+  await db.user.update({
+    where: { id: session.user.id },
+    data: { notifyEmail, notifySms, phone },
+  })
+
+  revalidatePath("/dashboard/podesavanja")
+  return { success: true }
+}

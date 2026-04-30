@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { notifyAllResidents } from "@/lib/notifications"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -31,6 +32,14 @@ export async function createAnnouncement(formData: FormData) {
       authorId: session.user.id,
     },
   })
+
+  if (priority === "URGENT") {
+    await notifyAllResidents({
+      subject: `[Pasterova 16] HITNO: ${title}`,
+      body: `${title}\n\n${body}\n\nVidi: ${process.env.APP_URL ?? ""}/dashboard/obavestenja`,
+      smsBody: `Pasterova 16 HITNO: ${title}. Vidi obavestenja u aplikaciji.`,
+    })
+  }
 
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/obavestenja")
