@@ -36,6 +36,12 @@ const categoryOrder: Array<keyof typeof categoryConfig> = [
   "OTHER",
 ]
 
+const RESIDENT_VISIBLE: Array<keyof typeof categoryConfig> = [
+  "MINUTES",
+  "REGULATION",
+  "OTHER",
+]
+
 function formatSize(bytes: number) {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`
@@ -52,10 +58,16 @@ export default async function ArhivaPage({
   const isManager = session.user.role === "MANAGER"
   const { kategorija } = await searchParams
 
+  const visibleCategories = isManager ? categoryOrder : RESIDENT_VISIBLE
+  const requestedCategory =
+    kategorija && (visibleCategories as string[]).includes(kategorija)
+      ? (kategorija as keyof typeof categoryConfig)
+      : undefined
+
   const documents = await db.archiveDocument.findMany({
-    where: kategorija
-      ? { category: kategorija as keyof typeof categoryConfig }
-      : undefined,
+    where: requestedCategory
+      ? { category: requestedCategory }
+      : { category: { in: visibleCategories } },
     orderBy: { createdAt: "desc" },
     include: { uploadedBy: { select: { name: true } } },
   })
@@ -88,7 +100,7 @@ export default async function ArhivaPage({
         >
           Sve
         </Link>
-        {categoryOrder.map((cat) => {
+        {visibleCategories.map((cat) => {
           const cfg = categoryConfig[cat]
           const active = kategorija === cat
           return (
@@ -156,7 +168,7 @@ export default async function ArhivaPage({
                         </p>
                       )}
                       <p className="text-xs text-muted-foreground mt-1">
-                        {doc.fileName} · {formatSize(doc.fileSize)} ·{" "}
+                        {doc.fileName} · {formatSize(doc.fileSize)} · {doc.year} ·{" "}
                         {doc.uploadedBy.name} ·{" "}
                         {new Date(doc.createdAt).toLocaleDateString("sr-RS")}
                       </p>
@@ -167,9 +179,7 @@ export default async function ArhivaPage({
                         size="sm"
                         render={
                           <a
-                            href={doc.fileUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href={`/api/arhiva/${doc.id}/download`}
                             download={doc.fileName}
                           />
                         }

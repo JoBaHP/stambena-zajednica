@@ -236,8 +236,9 @@ model ArchiveDocument {
   title        String
   description  String?
   category     ArchiveCategory
+  year         Int
   fileName     String
-  fileUrl      String
+  fileId       String
   fileSize     Int
   mimeType     String
   uploadedById String

@@ -12,6 +12,8 @@ export default async function NoviDokumentPage() {
   const session = await auth()
   if (session?.user.role !== "MANAGER") redirect("/dashboard/arhiva")
 
+  const currentYear = new Date().getFullYear()
+
   return (
     <div className="max-w-2xl space-y-6">
       <div>
@@ -23,11 +25,7 @@ export default async function NoviDokumentPage() {
 
       <Card>
         <CardContent className="pt-6">
-          <form
-            action={uploadDocument}
-            encType="multipart/form-data"
-            className="space-y-5"
-          >
+          <form action={uploadDocument} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="title">Naziv</Label>
               <Input
@@ -48,21 +46,36 @@ export default async function NoviDokumentPage() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="category">Kategorija</Label>
-              <select
-                id="category"
-                name="category"
-                required
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-              >
-                <option value="MINUTES">Zapisnik</option>
-                <option value="CONTRACT">Ugovor</option>
-                <option value="INVOICE">Racun</option>
-                <option value="REPORT">Izvestaj</option>
-                <option value="REGULATION">Pravilnik</option>
-                <option value="OTHER">Ostalo</option>
-              </select>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="category">Kategorija</Label>
+                <select
+                  id="category"
+                  name="category"
+                  required
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                >
+                  <option value="MINUTES">Zapisnik</option>
+                  <option value="CONTRACT">Ugovor</option>
+                  <option value="INVOICE">Racun</option>
+                  <option value="REPORT">Izvestaj</option>
+                  <option value="REGULATION">Pravilnik</option>
+                  <option value="OTHER">Ostalo</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="year">Godina</Label>
+                <Input
+                  id="year"
+                  name="year"
+                  type="number"
+                  min={2000}
+                  max={2100}
+                  defaultValue={currentYear}
+                  required
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -76,6 +89,9 @@ export default async function NoviDokumentPage() {
               />
               <p className="text-xs text-muted-foreground">
                 Podrzano: PDF, slike (JPG/PNG/WebP), Word, Excel · max 20MB
+              </p>
+              <p className="text-xs text-muted-foreground">
+                <strong>Za racune:</strong> imenuj fajl sa prefiksom meseca (JAN, FEB, MAR, APR, MAJ, JUN, JUL, AVG, SEP, OKT, NOV, DEC) — npr. <code>MAR_2_Izrada Kljuceva.pdf</code>. Fajl ce biti smesten u folder za odabranu godinu i mesec.
               </p>
             </div>
 

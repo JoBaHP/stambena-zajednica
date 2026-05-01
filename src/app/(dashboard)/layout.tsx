@@ -2,6 +2,7 @@ import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
+import { AnnouncementWatcher } from "@/components/announcement-watcher"
 
 export default async function DashboardLayout({
   children,
@@ -20,6 +21,7 @@ export default async function DashboardLayout({
         </header>
         <div className="flex-1 p-6">{children}</div>
       </main>
+      <AnnouncementWatcher />
     </SidebarProvider>
   )
 }

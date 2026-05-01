@@ -2,7 +2,11 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
-import { put, del } from "@vercel/blob"
+import {
+  uploadFile,
+  deleteFile,
+  resolveTargetFolder,
+} from "@/lib/drive"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -35,10 +39,16 @@ export async function uploadDocument(formData: FormData) {
   const title = formData.get("title") as string
   const description = formData.get("description") as string
   const category = formData.get("category") as string
+  const yearRaw = formData.get("year") as string
   const file = formData.get("file") as File | null
 
   if (!title || !category || !file || file.size === 0) {
     throw new Error("Popunite obavezna polja i izaberite fajl")
+  }
+
+  const year = Number.parseInt(yearRaw, 10)
+  if (!Number.isInteger(year) || year < 2000 || year > 2100) {
+    throw new Error("Unesite validnu godinu")
   }
 
   if (file.size > MAX_FILE_SIZE) {
@@ -49,12 +59,19 @@ export async function uploadDocument(formData: FormData) {
     throw new Error("Tip fajla nije podrzan")
   }
 
-  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_")
-  const blobPath = `arhiva/${Date.now()}_${safeName}`
+  const buffer = Buffer.from(await file.arrayBuffer())
 
-  const blob = await put(blobPath, file, {
-    access: "public",
-    contentType: file.type,
+  const { folderId } = await resolveTargetFolder({
+    category,
+    year,
+    fileName: file.name,
+  })
+
+  const { fileId } = await uploadFile({
+    parentFolderId: folderId,
+    fileName: file.name,
+    mimeType: file.type,
+    buffer,
   })
 
   await db.archiveDocument.create({
@@ -62,8 +79,9 @@ export async function uploadDocument(formData: FormData) {
       title,
       description: description || null,
       category: category as ArchiveCategory,
+      year,
       fileName: file.name,
-      fileUrl: blob.url,
+      fileId,
       fileSize: file.size,
       mimeType: file.type,
       uploadedById: session.user.id,
@@ -84,9 +102,9 @@ export async function deleteDocument(id: string) {
   if (!doc) throw new Error("Dokument ne postoji")
 
   try {
-    await del(doc.fileUrl)
+    await deleteFile(doc.fileId)
   } catch {
-    // ignore — blob may already be missing
+    // ignore — file may already be missing on Drive
   }
 
   await db.archiveDocument.delete({ where: { id } })
