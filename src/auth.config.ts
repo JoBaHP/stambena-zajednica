@@ -5,6 +5,7 @@ export const authConfig = {
   debug: process.env.NODE_ENV === "production",
   pages: {
     signIn: "/login",
+    error: "/login",
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {

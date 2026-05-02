@@ -18,6 +18,7 @@ import {
   Wrench,
   CalendarClock,
   FolderArchive,
+  UserPlus,
 } from "lucide-react"
 import {
   Sidebar,
@@ -39,6 +40,11 @@ const managerNav = [
   { title: "PP Inspekcije", href: "/dashboard/inspekcije", icon: ShieldCheck },
   { title: "Investicije", href: "/dashboard/investicije", icon: HardHat },
   { title: "Stanari", href: "/dashboard/stanari", icon: Users },
+  {
+    title: "Zahtevi za pristup",
+    href: "/dashboard/zahtevi-za-pristup",
+    icon: UserPlus,
+  },
   { title: "Kalendar", href: "/dashboard/kalendar", icon: CalendarClock },
 ]
 
@@ -53,9 +59,14 @@ const communityNav = [
 interface AppSidebarProps {
   userName: string
   userRole: string
+  pendingAccessRequests?: number
 }
 
-export function AppSidebar({ userName, userRole }: AppSidebarProps) {
+export function AppSidebar({
+  userName,
+  userRole,
+  pendingAccessRequests = 0,
+}: AppSidebarProps) {
   const pathname = usePathname()
   const isManager = userRole === "MANAGER"
 
@@ -70,7 +81,7 @@ export function AppSidebar({ userName, userRole }: AppSidebarProps) {
     <Sidebar>
       <SidebarHeader className="border-b px-4 py-3">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900">
+          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-linear-to-br from-primary to-indigo-700 shadow-sm">
             <Building2 className="w-4 h-4 text-white" />
           </div>
           <div className="flex flex-col">
@@ -86,17 +97,27 @@ export function AppSidebar({ userName, userRole }: AppSidebarProps) {
             <SidebarGroupLabel>Upravljanje</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {managerNav.map((item) => (
-                  <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton
-                      isActive={pathname === item.href}
-                      render={<Link href={item.href} />}
-                    >
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {managerNav.map((item) => {
+                  const showBadge =
+                    item.href === "/dashboard/zahtevi-za-pristup" &&
+                    pendingAccessRequests > 0
+                  return (
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton
+                        isActive={pathname === item.href}
+                        render={<Link href={item.href} />}
+                      >
+                        <item.icon className="w-4 h-4" />
+                        <span className="flex-1">{item.title}</span>
+                        {showBadge && (
+                          <span className="ml-auto inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full text-[10px] font-semibold bg-amber-500 text-white">
+                            {pendingAccessRequests}
+                          </span>
+                        )}
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>

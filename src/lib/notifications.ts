@@ -13,6 +13,10 @@ const resend = process.env.RESEND_API_KEY
 
 const fromEmail = process.env.NOTIFY_FROM_EMAIL ?? "Pasterova 16 <noreply@pasterova16.rs>"
 
+export async function sendDirectEmail(to: string, subject: string, body: string) {
+  return sendEmail(to, subject, body)
+}
+
 async function sendEmail(to: string, subject: string, body: string) {
   if (!resend) {
     console.log(`[email skipped — no RESEND_API_KEY] to=${to} subject="${subject}"`)

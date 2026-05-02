@@ -19,6 +19,7 @@ model User {
   unit      String?  // broj stana npr. "12", "PP1"
   notifyEmail Boolean @default(true)
   notifySms   Boolean @default(false)
+  active      Boolean @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -37,6 +38,30 @@ model User {
 enum Role {
   MANAGER
   RESIDENT
+}
+
+model AccessRequest {
+  id           String              @id @default(cuid())
+  email        String
+  name         String
+  phone        String?
+  unit         String?
+  message      String?
+  status       AccessRequestStatus @default(PENDING)
+  reviewNote   String?
+  reviewedById String?
+  reviewedAt   DateTime?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum AccessRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Account {
