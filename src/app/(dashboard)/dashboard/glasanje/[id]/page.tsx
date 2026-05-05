@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { castVote, closePoll, activatePoll } from "@/server/actions/glasanje"
 import Link from "next/link"
+import { ExportPollResultsButton } from "./export-button"
 
 export default async function GlasanjeDetaljPage({
   params,
@@ -124,6 +125,9 @@ export default async function GlasanjeDetaljPage({
           <form action={closePoll.bind(null, poll.id)}>
             <Button type="submit" variant="destructive">Zatvori glasanje</Button>
           </form>
+        )}
+        {isManager && poll.status !== "DRAFT" && (
+          <ExportPollResultsButton pollId={poll.id} />
         )}
       </div>
     </div>

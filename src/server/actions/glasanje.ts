@@ -4,6 +4,7 @@ import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { findOrCreateFolder, uploadFile } from "@/lib/drive"
 
 export async function createPoll(formData: FormData) {
   const session = await auth()
@@ -100,4 +101,114 @@ export async function activatePoll(id: string) {
 
   revalidatePath("/dashboard/glasanje")
   revalidatePath(`/dashboard/glasanje/${id}`)
+}
+
+function csvEscape(value: string): string {
+  if (value.includes(",") || value.includes('"') || value.includes("\n")) {
+    return `"${value.replace(/"/g, '""')}"`
+  }
+  return value
+}
+
+function sanitizeFileName(name: string): string {
+  return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-zA-Z0-9 _-]/g, "")
+    .trim()
+    .replace(/\s+/g, "_")
+    .slice(0, 80) || "glasanje"
+}
+
+export async function exportPollResults(pollId: string) {
+  const session = await auth()
+  if (!session || session.user.role !== "MANAGER") {
+    throw new Error("Nemate dozvolu")
+  }
+
+  const archiveRoot = process.env.GDRIVE_ARCHIVE_FOLDER_ID
+  if (!archiveRoot) {
+    throw new Error("GDRIVE_ARCHIVE_FOLDER_ID nije postavljen")
+  }
+
+  const poll = await db.poll.findUnique({
+    where: { id: pollId },
+    include: {
+      options: {
+        include: { _count: { select: { votes: true } } },
+      },
+    },
+  })
+  if (!poll) throw new Error("Glasanje ne postoji")
+
+  const votes = await db.vote.findMany({
+    where: { pollId },
+    orderBy: { votedAt: "asc" },
+    include: {
+      voter: { select: { name: true, email: true, unit: true } },
+      option: { select: { text: true } },
+    },
+  })
+
+  const totalVotes = votes.length
+  const exportedAt = new Date()
+  const summaryRows = poll.options
+    .map((o) => {
+      const count = o._count.votes
+      const pct = totalVotes > 0 ? ((count / totalVotes) * 100).toFixed(1) : "0.0"
+      return [o.text, String(count), `${pct}%`]
+    })
+    .map((cols) => cols.map(csvEscape).join(","))
+
+  const detailRows = votes.map((v) =>
+    [
+      v.voter.name,
+      v.voter.unit ?? "",
+      v.voter.email,
+      v.option.text,
+      v.votedAt.toISOString(),
+    ]
+      .map(csvEscape)
+      .join(","),
+  )
+
+  const lines = [
+    "# Pasterova 16 — Rezultati glasanja",
+    `# Naslov: ${poll.title}`,
+    `# Status: ${poll.status}`,
+    `# Pokrenuto: ${poll.startsAt ? poll.startsAt.toISOString() : ""}`,
+    `# Istice: ${poll.endsAt ? poll.endsAt.toISOString() : ""}`,
+    `# Eksportovano: ${exportedAt.toISOString()}`,
+    `# Ukupno glasova: ${totalVotes}`,
+    "",
+    "Sumarno",
+    "Opcija,Glasovi,Procenat",
+    ...summaryRows,
+    "",
+    "Detaljno",
+    "Stanar,Stan,Email,Opcija,Vreme glasanja",
+    ...detailRows,
+  ]
+
+  const csv = "﻿" + lines.join("\n")
+  const buffer = Buffer.from(csv, "utf8")
+
+  const year = exportedAt.getFullYear()
+  const glasanjaFolderId = await findOrCreateFolder("Glasanja", archiveRoot)
+  const yearFolderId = await findOrCreateFolder(String(year), glasanjaFolderId)
+
+  const stamp = exportedAt
+    .toISOString()
+    .replace(/[:T]/g, "-")
+    .replace(/\..+$/, "")
+  const fileName = `${sanitizeFileName(poll.title)}_${stamp}.csv`
+
+  const { fileId } = await uploadFile({
+    parentFolderId: yearFolderId,
+    fileName,
+    mimeType: "text/csv",
+    buffer,
+  })
+
+  return { fileId, fileName }
 }
