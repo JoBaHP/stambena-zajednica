@@ -19,6 +19,7 @@ import {
   CalendarClock,
   FolderArchive,
   UserPlus,
+  X,
 } from "lucide-react"
 import {
   Sidebar,
@@ -31,6 +32,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
@@ -68,6 +70,7 @@ export function AppSidebar({
   pendingAccessRequests = 0,
 }: AppSidebarProps) {
   const pathname = usePathname()
+  const { isMobile, setOpenMobile } = useSidebar()
   const isManager = userRole === "MANAGER"
 
   const initials = userName
@@ -84,10 +87,19 @@ export function AppSidebar({
           <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-linear-to-br from-primary to-indigo-700 shadow-sm">
             <Building2 className="w-4 h-4 text-white" />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col flex-1 min-w-0">
             <span className="font-semibold text-sm leading-tight">Pasterova 16</span>
             <span className="text-xs text-muted-foreground">Stambena Zajednica</span>
           </div>
+          {isMobile && (
+            <button
+              onClick={() => setOpenMobile(false)}
+              aria-label="Zatvori meni"
+              className="h-9 w-9 inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
       </SidebarHeader>
 
