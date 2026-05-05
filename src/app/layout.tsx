@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Geist } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "@/components/ui/sonner"
@@ -30,6 +30,26 @@ export const metadata: Metadata = {
     siteName: "Pasterova 16",
   },
   robots: { index: false, follow: false },
+  appleWebApp: {
+    capable: true,
+    title: "Pasterova 16",
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: true,
+    address: false,
+    email: true,
+  },
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#1e3a8a" },
+    { media: "(prefers-color-scheme: dark)", color: "#1e1b4b" },
+  ],
 }
 
 export default function RootLayout({

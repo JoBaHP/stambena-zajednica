@@ -30,7 +30,7 @@ export default async function TransakcijaDetaljPage({
 
   return (
     <div className="max-w-2xl space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           {transaction.type === "INCOME" ? (
             <ArrowUpCircle className="w-8 h-8 text-green-500" />

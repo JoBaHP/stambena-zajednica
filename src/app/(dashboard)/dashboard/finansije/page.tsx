@@ -62,7 +62,7 @@ export default async function FinansijePage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Finansije</h1>
           <p className="text-sm text-muted-foreground mt-1">Evidencija prihoda i rashoda zajednickog racuna</p>
