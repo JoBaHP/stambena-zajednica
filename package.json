@@ -2,6 +2,18 @@
   "name": "pasterova-16",
   "version": "0.1.0",
   "private": true,
+  "description": "Aplikacija za upravljanje stambenom zajednicom Pasterova 16",
+  "author": {
+    "name": "Jovan Raosavljevic",
+    "email": "raosavljevicjovan.jr@gmail.com",
+    "url": "https://github.com/JoBaHP"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JoBaHP/stambena-zajednica.git"
+  },
+  "homepage": "https://stambena-zajednica-ns.vercel.app",
   "scripts": {
     "dev": "next dev",
     "postinstall": "prisma generate",

@@ -110,7 +110,7 @@ export function AppSidebar({
                         <item.icon className="w-4 h-4" />
                         <span className="flex-1">{item.title}</span>
                         {showBadge && (
-                          <span className="ml-auto inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full text-[10px] font-semibold bg-amber-500 text-white">
+                          <span className="ml-auto inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full text-[10px] font-semibold bg-amber-500 text-white">
                             {pendingAccessRequests}
                           </span>
                         )}
@@ -173,6 +173,17 @@ export function AppSidebar({
             <LogOut className="w-4 h-4" />
           </button>
         </div>
+        <p className="px-3 pb-3 text-[10px] text-muted-foreground">
+          ©{" "}
+          <a
+            href="https://github.com/JoBaHP"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            Jovan Raosavljevic
+          </a>
+        </p>
       </SidebarFooter>
     </Sidebar>
   )

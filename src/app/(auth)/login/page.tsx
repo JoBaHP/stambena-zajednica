@@ -165,6 +165,18 @@ export default function LoginPage() {
             Zatrazi pristup
           </Link>
         </p>
+
+        <p className="text-center text-xs text-muted-foreground mt-8">
+          ©{" "}
+          <a
+            href="https://github.com/JoBaHP"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            Jovan Raosavljevic
+          </a>
+        </p>
       </div>
     </div>
   )

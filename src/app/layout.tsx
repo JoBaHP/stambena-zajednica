@@ -9,8 +9,27 @@ const geist = Geist({
 })
 
 export const metadata: Metadata = {
-  title: "Pasterova 16 - Stambena Zajednica",
-  description: "Upravljanje stambenom zajednicom Pasterova 16",
+  title: {
+    default: "Pasterova 16 — Stambena Zajednica",
+    template: "%s · Pasterova 16",
+  },
+  description:
+    "Portal stambene zajednice Pasterova 16: finansije, obavestenja, glasanja, zahtevi za odrzavanje, kalendar i digitalna arhiva.",
+  applicationName: "Pasterova 16",
+  authors: [
+    { name: "Jovan Raosavljevic", url: "https://github.com/JoBaHP" },
+  ],
+  creator: "Jovan Raosavljevic",
+  publisher: "Jovan Raosavljevic",
+  openGraph: {
+    title: "Pasterova 16 — Stambena Zajednica",
+    description:
+      "Portal stambene zajednice Pasterova 16: finansije, obavestenja, glasanja i digitalna arhiva.",
+    type: "website",
+    locale: "sr_RS",
+    siteName: "Pasterova 16",
+  },
+  robots: { index: false, follow: false },
 }
 
 export default function RootLayout({
