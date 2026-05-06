@@ -13,7 +13,7 @@
     "type": "git",
     "url": "https://github.com/JoBaHP/stambena-zajednica.git"
   },
-  "homepage": "https://stambena-zajednica-ns.vercel.app",
+  "homepage": "https://sz-pasterova16.vercel.app",
   "scripts": {
     "dev": "next dev",
     "postinstall": "prisma generate",
