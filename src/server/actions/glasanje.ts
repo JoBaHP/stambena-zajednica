@@ -121,6 +121,19 @@ function sanitizeFileName(name: string): string {
 }
 
 export async function exportPollResults(pollId: string) {
+  try {
+    return await exportPollResultsImpl(pollId)
+  } catch (err) {
+    console.error("[exportPollResults] failed", {
+      pollId,
+      message: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack : undefined,
+    })
+    throw err
+  }
+}
+
+async function exportPollResultsImpl(pollId: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
     throw new Error("Nemate dozvolu")
