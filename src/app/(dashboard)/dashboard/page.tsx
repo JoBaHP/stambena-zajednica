@@ -72,7 +72,23 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold">
-          Dobro jutro{session?.user.name ? `, ${session.user.name.split(" ")[0]}` : ""}
+          {(() => {
+            const hour = Number(
+              new Date().toLocaleString("en-GB", {
+                hour: "2-digit",
+                hour12: false,
+                timeZone: "Europe/Belgrade",
+              }),
+            )
+            const greeting =
+              hour >= 5 && hour < 11
+                ? "Dobro jutro"
+                : hour >= 11 && hour < 18
+                  ? "Dobar dan"
+                  : "Dobro vece"
+            const firstName = session?.user.name?.split(" ")[0]
+            return firstName ? `${greeting}, ${firstName}` : greeting
+          })()}
         </h1>
         <p className="text-muted-foreground text-sm mt-1">Pregled stambene zajednice Pasterova 16</p>
       </div>
