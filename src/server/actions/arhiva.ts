@@ -31,6 +31,18 @@ const ALLOWED_MIME_TYPES = [
 ]
 
 export async function uploadDocument(formData: FormData) {
+  try {
+    return await uploadDocumentImpl(formData)
+  } catch (err) {
+    console.error("[uploadDocument] failed", {
+      message: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack : undefined,
+    })
+    throw err
+  }
+}
+
+async function uploadDocumentImpl(formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
     throw new Error("Nemate dozvolu")

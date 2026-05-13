@@ -4,6 +4,11 @@ const nextConfig: NextConfig = {
   env: {
     AUTH_SECRET: process.env.AUTH_SECRET,
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "21mb",
+    },
+  },
 };
 
 export default nextConfig;
