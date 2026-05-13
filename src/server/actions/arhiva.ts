@@ -94,8 +94,11 @@ export async function uploadDocument(
       },
     })
   } catch (err) {
+    const gErr = err as { code?: number; errors?: unknown[] }
     console.error("[uploadDocument] failed", {
       message: err instanceof Error ? err.message : String(err),
+      code: gErr?.code,
+      errors: gErr?.errors,
       stack: err instanceof Error ? err.stack : undefined,
     })
     return { error: "Otpremanje nije uspelo. Pokusajte ponovo." }

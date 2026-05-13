@@ -124,9 +124,12 @@ export async function exportPollResults(pollId: string) {
   try {
     return await exportPollResultsImpl(pollId)
   } catch (err) {
+    const gErr = err as { code?: number; errors?: unknown[] }
     console.error("[exportPollResults] failed", {
       pollId,
       message: err instanceof Error ? err.message : String(err),
+      code: gErr?.code,
+      errors: gErr?.errors,
       stack: err instanceof Error ? err.stack : undefined,
     })
     throw err
