@@ -30,22 +30,15 @@ const ALLOWED_MIME_TYPES = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 ]
 
-export async function uploadDocument(formData: FormData) {
-  try {
-    return await uploadDocumentImpl(formData)
-  } catch (err) {
-    console.error("[uploadDocument] failed", {
-      message: err instanceof Error ? err.message : String(err),
-      stack: err instanceof Error ? err.stack : undefined,
-    })
-    throw err
-  }
-}
+export type UploadDocumentState = { error: string } | null
 
-async function uploadDocumentImpl(formData: FormData) {
+export async function uploadDocument(
+  _prev: UploadDocumentState,
+  formData: FormData,
+): Promise<UploadDocumentState> {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    return { error: "Nemate dozvolu" }
   }
 
   const title = formData.get("title") as string
@@ -55,50 +48,58 @@ async function uploadDocumentImpl(formData: FormData) {
   const file = formData.get("file") as File | null
 
   if (!title || !category || !file || file.size === 0) {
-    throw new Error("Popunite obavezna polja i izaberite fajl")
+    return { error: "Popunite obavezna polja i izaberite fajl" }
   }
 
   const year = Number.parseInt(yearRaw, 10)
   if (!Number.isInteger(year) || year < 2000 || year > 2100) {
-    throw new Error("Unesite validnu godinu")
+    return { error: "Unesite validnu godinu" }
   }
 
   if (file.size > MAX_FILE_SIZE) {
-    throw new Error("Fajl je veci od 20MB")
+    return { error: "Fajl je veci od 20MB" }
   }
 
   if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-    throw new Error("Tip fajla nije podrzan")
+    return { error: "Tip fajla nije podrzan" }
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer())
+  try {
+    const buffer = Buffer.from(await file.arrayBuffer())
 
-  const { folderId } = await resolveTargetFolder({
-    category,
-    year,
-    fileName: file.name,
-  })
-
-  const { fileId } = await uploadFile({
-    parentFolderId: folderId,
-    fileName: file.name,
-    mimeType: file.type,
-    buffer,
-  })
-
-  await db.archiveDocument.create({
-    data: {
-      title,
-      description: description || null,
-      category: category as ArchiveCategory,
+    const { folderId } = await resolveTargetFolder({
+      category,
       year,
       fileName: file.name,
-      fileId,
-      fileSize: file.size,
+    })
+
+    const { fileId } = await uploadFile({
+      parentFolderId: folderId,
+      fileName: file.name,
       mimeType: file.type,
-      uploadedById: session.user.id,
-    },
-  })
+      buffer,
+    })
+
+    await db.archiveDocument.create({
+      data: {
+        title,
+        description: description || null,
+        category: category as ArchiveCategory,
+        year,
+        fileName: file.name,
+        fileId,
+        fileSize: file.size,
+        mimeType: file.type,
+        uploadedById: session.user.id,
+      },
+    })
+  } catch (err) {
+    console.error("[uploadDocument] failed", {
+      message: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack : undefined,
+    })
+    return { error: "Otpremanje nije uspelo. Pokusajte ponovo." }
+  }
 
   revalidatePath("/dashboard/arhiva")
   redirect("/dashboard/arhiva")

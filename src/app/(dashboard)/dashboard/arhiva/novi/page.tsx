@@ -1,16 +1,23 @@
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
+"use client"
+
+import { useActionState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { uploadDocument } from "@/server/actions/arhiva"
+import { toast } from "sonner"
 import Link from "next/link"
 
-export default async function NoviDokumentPage() {
-  const session = await auth()
-  if (session?.user.role !== "MANAGER") redirect("/dashboard/arhiva")
+export default function NoviDokumentPage() {
+  const [state, action, pending] = useActionState(uploadDocument, null)
+
+  useEffect(() => {
+    if (state?.error) {
+      toast.error(state.error)
+    }
+  }, [state])
 
   const currentYear = new Date().getFullYear()
 
@@ -25,7 +32,7 @@ export default async function NoviDokumentPage() {
 
       <Card>
         <CardContent className="pt-6">
-          <form action={uploadDocument} className="space-y-5">
+          <form action={action} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="title">Naziv</Label>
               <Input
@@ -96,8 +103,8 @@ export default async function NoviDokumentPage() {
             </div>
 
             <div className="flex gap-3 pt-2">
-              <Button type="submit" className="flex-1">
-                Otpremi
+              <Button type="submit" className="flex-1" disabled={pending}>
+                {pending ? "Otpremanje..." : "Otpremi"}
               </Button>
               <Button
                 type="button"
