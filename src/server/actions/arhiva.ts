@@ -30,16 +30,13 @@ const ALLOWED_MIME_TYPES = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 ]
 
-export type UploadDocumentState = { error: string } | null
+function fail(msg: string): never {
+  redirect(`/dashboard/arhiva/novi?error=${encodeURIComponent(msg)}`)
+}
 
-export async function uploadDocument(
-  _prev: UploadDocumentState,
-  formData: FormData,
-): Promise<UploadDocumentState> {
+export async function uploadDocument(formData: FormData) {
   const session = await auth()
-  if (!session || session.user.role !== "MANAGER") {
-    return { error: "Nemate dozvolu" }
-  }
+  if (!session || session.user.role !== "MANAGER") fail("Nemate dozvolu")
 
   const title = formData.get("title") as string
   const description = formData.get("description") as string
@@ -47,22 +44,17 @@ export async function uploadDocument(
   const yearRaw = formData.get("year") as string
   const file = formData.get("file") as File | null
 
-  if (!title || !category || !file || file.size === 0) {
-    return { error: "Popunite obavezna polja i izaberite fajl" }
-  }
+  if (!title || !category || !file || file.size === 0)
+    fail("Popunite obavezna polja i izaberite fajl")
 
   const year = Number.parseInt(yearRaw, 10)
-  if (!Number.isInteger(year) || year < 2000 || year > 2100) {
-    return { error: "Unesite validnu godinu" }
-  }
+  if (!Number.isInteger(year) || year < 2000 || year > 2100)
+    fail("Unesite validnu godinu")
 
-  if (file.size > MAX_FILE_SIZE) {
-    return { error: "Fajl je veci od 20MB" }
-  }
+  if (file.size > MAX_FILE_SIZE) fail("Fajl je veci od 20MB")
 
-  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-    return { error: "Tip fajla nije podrzan" }
-  }
+  if (!ALLOWED_MIME_TYPES.includes(file.type))
+    fail(`Tip fajla nije podrzan (${file.type})`)
 
   try {
     const buffer = Buffer.from(await file.arrayBuffer())
@@ -101,7 +93,7 @@ export async function uploadDocument(
       errors: gErr?.errors,
       stack: err instanceof Error ? err.stack : undefined,
     })
-    return { error: "Otpremanje nije uspelo. Pokusajte ponovo." }
+    fail("Otpremanje nije uspelo. Pokusajte ponovo.")
   }
 
   revalidatePath("/dashboard/arhiva")
