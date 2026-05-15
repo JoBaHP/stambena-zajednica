@@ -128,6 +128,7 @@ export async function approveAccessRequest(id: string, formData: FormData) {
 
   revalidatePath("/dashboard/zahtevi-za-pristup")
   revalidatePath("/dashboard/stanari")
+  return { name: req.name, email: req.email, password }
 }
 
 export async function rejectAccessRequest(id: string, formData: FormData) {
