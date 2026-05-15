@@ -99,7 +99,17 @@ export default async function NoviDokumentPage({
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Podrzano: PDF, slike (JPG/PNG/WebP), Word, Excel · max 4MB
+                Podrzano: PDF, slike (JPG/PNG/WebP), Word, Excel · max 4MB.{" "}
+                Ako je fajl veci, kompresuj ga na{" "}
+                <a
+                  href="https://www.ilovepdf.com/compress_pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-foreground"
+                >
+                  ilovepdf.com
+                </a>{" "}
+                pre uploada.
               </p>
               <p className="text-xs text-muted-foreground">
                 <strong>Za racune:</strong> imenuj fajl sa prefiksom meseca (JAN, FEB, MAR, APR, MAJ, JUN, JUL, AVG, SEP, OKT, NOV, DEC) — npr. <code>MAR_2_Izrada Kljuceva.pdf</code>.
