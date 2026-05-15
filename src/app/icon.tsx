@@ -13,15 +13,21 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: "white",
-          fontSize: 18,
-          fontWeight: 700,
-          letterSpacing: -1,
-          background: "linear-gradient(135deg, #1e3a8a 0%, #1e1b4b 100%)",
-          borderRadius: 6,
+          background: "linear-gradient(135deg, #1e3a8a 0%, #312e81 100%)",
+          borderRadius: 4,
         }}
       >
-        P16
+        <span
+          style={{
+            color: "white",
+            fontSize: 14,
+            fontWeight: 800,
+            letterSpacing: -0.5,
+            lineHeight: 1,
+          }}
+        >
+          P16
+        </span>
       </div>
     ),
     { ...size },
