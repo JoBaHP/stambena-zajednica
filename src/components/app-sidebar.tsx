@@ -120,12 +120,14 @@ export function AppSidebar({
                         render={<Link href={item.href} />}
                       >
                         <item.icon className="w-4 h-4" />
-                        <span className="flex-1">{item.title}</span>
-                        {showBadge && (
-                          <span className="ml-auto inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full text-[10px] font-semibold bg-amber-500 text-white">
-                            {pendingAccessRequests}
-                          </span>
-                        )}
+                        <span className="flex-1 flex items-center justify-between gap-2 min-w-0">
+                          <span className="truncate">{item.title}</span>
+                          {showBadge && (
+                            <span className="shrink-0 inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full text-[10px] font-semibold bg-amber-500 text-white">
+                              {pendingAccessRequests}
+                            </span>
+                          )}
+                        </span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   )
