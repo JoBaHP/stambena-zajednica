@@ -84,7 +84,7 @@ export function AppSidebar({
     <Sidebar>
       <SidebarHeader className="border-b px-4 py-3">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-linear-to-br from-primary to-indigo-700 shadow-sm">
+          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-linear-to-br from-indigo-400 to-indigo-600 shadow-sm">
             <Building2 className="w-4 h-4 text-white" />
           </div>
           <div className="flex flex-col flex-1 min-w-0">
