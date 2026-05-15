@@ -1,4 +1,4 @@
-import { Resend } from "resend"
+import nodemailer from "nodemailer"
 import { db } from "@/lib/db"
 
 type NotifyOptions = {
@@ -7,29 +7,30 @@ type NotifyOptions = {
   smsBody?: string
 }
 
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null
-
-const fromEmail = process.env.NOTIFY_FROM_EMAIL ?? "Pasterova 16 <noreply@pasterova16.rs>"
+function getTransporter() {
+  const user = process.env.GMAIL_USER
+  const pass = process.env.GMAIL_APP_PASSWORD
+  if (!user || !pass) return null
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: { user, pass },
+  })
+}
 
 export async function sendDirectEmail(to: string, subject: string, body: string) {
   return sendEmail(to, subject, body)
 }
 
 async function sendEmail(to: string, subject: string, body: string) {
-  if (!resend) {
-    console.log(`[email skipped — no RESEND_API_KEY] to=${to} subject="${subject}"`)
+  const transporter = getTransporter()
+  if (!transporter) {
+    console.log(`[email skipped — GMAIL_USER/GMAIL_APP_PASSWORD nisu postavljeni] to=${to} subject="${subject}"`)
     return
   }
 
+  const from = `Pasterova 16 <${process.env.GMAIL_USER}>`
   try {
-    await resend.emails.send({
-      from: fromEmail,
-      to,
-      subject,
-      text: body,
-    })
+    await transporter.sendMail({ from, to, subject, text: body })
   } catch (err) {
     console.error(`[email failed] to=${to}`, err)
   }
