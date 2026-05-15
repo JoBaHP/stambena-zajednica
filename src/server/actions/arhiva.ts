@@ -18,7 +18,7 @@ type ArchiveCategory =
   | "REGULATION"
   | "OTHER"
 
-const MAX_FILE_SIZE = 20 * 1024 * 1024
+const MAX_FILE_SIZE = 4 * 1024 * 1024
 const ALLOWED_MIME_TYPES = [
   "application/pdf",
   "image/jpeg",
@@ -51,7 +51,7 @@ export async function uploadDocument(formData: FormData) {
   if (!Number.isInteger(year) || year < 2000 || year > 2100)
     fail("Unesite validnu godinu")
 
-  if (file.size > MAX_FILE_SIZE) fail("Fajl je veci od 20MB")
+  if (file.size > MAX_FILE_SIZE) fail("Fajl je veci od 4MB")
 
   if (!ALLOWED_MIME_TYPES.includes(file.type))
     fail(`Tip fajla nije podrzan (${file.type})`)

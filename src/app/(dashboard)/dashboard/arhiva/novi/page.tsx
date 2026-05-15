@@ -24,7 +24,7 @@ export default async function NoviDokumentPage({
       <div>
         <h1 className="text-2xl font-semibold">Novi dokument</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Otpremi PDF, sliku ili Word/Excel dokument (max 20MB)
+          Otpremi PDF, sliku ili Word/Excel dokument (max 4MB)
         </p>
       </div>
 
@@ -99,7 +99,7 @@ export default async function NoviDokumentPage({
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Podrzano: PDF, slike (JPG/PNG/WebP), Word, Excel · max 20MB
+                Podrzano: PDF, slike (JPG/PNG/WebP), Word, Excel · max 4MB
               </p>
               <p className="text-xs text-muted-foreground">
                 <strong>Za racune:</strong> imenuj fajl sa prefiksom meseca (JAN, FEB, MAR, APR, MAJ, JUN, JUL, AVG, SEP, OKT, NOV, DEC) — npr. <code>MAR_2_Izrada Kljuceva.pdf</code>.
