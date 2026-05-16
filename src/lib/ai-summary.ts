@@ -34,12 +34,8 @@ export async function summarizeOffer(opts: {
 
 async function extractText(mimeType: string, buffer: Buffer): Promise<string> {
   if (mimeType === "application/pdf") {
-    // Import lib directly to bypass index.js test-file loading
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mod = await import("pdf-parse/lib/pdf-parse.js" as any)
-    const parse: (buf: Buffer) => Promise<{ text: string }> =
-      mod.default ?? mod
-    const data = await parse(buffer)
+    const pdfParse = (await import("pdf-parse")).default
+    const data = await pdfParse(buffer)
     return data.text
   }
 
