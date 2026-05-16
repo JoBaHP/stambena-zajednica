@@ -33,13 +33,12 @@ export async function createAnnouncement(formData: FormData) {
     },
   })
 
-  if (priority === "URGENT") {
-    await notifyAllResidents({
-      subject: `[Pasterova 16] HITNO: ${title}`,
-      body: `${title}\n\n${body}\n\nVidi: ${process.env.APP_URL ?? ""}/dashboard/obavestenja`,
-      smsBody: `Pasterova 16 HITNO: ${title}. Vidi obavestenja u aplikaciji.`,
-    })
-  }
+  const subjectPrefix = priority === "URGENT" ? "HITNO: " : ""
+  await notifyAllResidents({
+    subject: `[Pasterova 16] ${subjectPrefix}${title}`,
+    body: `${title}\n\n${body}\n\nVidi: ${process.env.NEXTAUTH_URL ?? ""}/dashboard/obavestenja`,
+    smsBody: `Pasterova 16${priority === "URGENT" ? " HITNO" : ""}: ${title}. Vidi obavestenja u aplikaciji.`,
+  })
 
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/obavestenja")
