@@ -1,17 +1,20 @@
 "use client"
 
 import { useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { Sparkles } from "lucide-react"
 import { toast } from "sonner"
 import { regenerateSummary } from "@/server/actions/tenderi"
 
 export function RegenerateButton({ offerId }: { offerId: string }) {
   const [pending, startTransition] = useTransition()
+  const router = useRouter()
 
   function handleClick() {
     startTransition(async () => {
       try {
         await regenerateSummary(offerId)
+        router.refresh()
         toast.success("Sažetak generisan")
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "Greška pri generisanju sažetka")
