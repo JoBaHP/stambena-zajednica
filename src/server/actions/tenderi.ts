@@ -193,12 +193,18 @@ export async function regenerateSummary(offerId: string) {
   const session = await auth()
   requireManager(session)
 
+  if (!process.env.GROQ_API_KEY) {
+    throw new Error("GROQ_API_KEY nije postavljen u Vercel env vars")
+  }
+
   const offer = await db.tenderOffer.findUnique({ where: { id: offerId } })
   if (!offer?.fileId || !offer.mimeType) throw new Error("Ponuda nema fajl")
 
   const { downloadFile } = await import("@/lib/drive")
   const { buffer } = await downloadFile(offer.fileId)
   const aiSummary = await summarizeOffer({ mimeType: offer.mimeType, buffer })
+
+  if (!aiSummary) throw new Error("AI nije uspeo da generiše sažetak. Proverite format fajla.")
 
   await db.tenderOffer.update({ where: { id: offerId }, data: { aiSummary } })
   revalidatePath(`/dashboard/tenderi/${offer.tenderId}`)
