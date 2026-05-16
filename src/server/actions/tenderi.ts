@@ -189,6 +189,21 @@ export async function closeTender(tenderId: string, winnerId: string) {
   redirect(`/dashboard/tenderi/${tenderId}`)
 }
 
+export async function regenerateSummary(offerId: string) {
+  const session = await auth()
+  requireManager(session)
+
+  const offer = await db.tenderOffer.findUnique({ where: { id: offerId } })
+  if (!offer?.fileId || !offer.mimeType) throw new Error("Ponuda nema fajl")
+
+  const { downloadFile } = await import("@/lib/drive")
+  const { buffer } = await downloadFile(offer.fileId)
+  const aiSummary = await summarizeOffer({ mimeType: offer.mimeType, buffer })
+
+  await db.tenderOffer.update({ where: { id: offerId }, data: { aiSummary } })
+  revalidatePath(`/dashboard/tenderi/${offer.tenderId}`)
+}
+
 export async function reopenTender(tenderId: string) {
   const session = await auth()
   requireManager(session)
