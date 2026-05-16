@@ -12,16 +12,15 @@ import {
   Trophy,
   Plus,
   RotateCcw,
-  Sparkles,
 } from "lucide-react"
 import Link from "next/link"
 import { VoteButton } from "./vote-button"
+import { RegenerateButton } from "./regenerate-button"
 import { ConfirmDelete } from "@/components/confirm-delete"
 import {
   closeTender,
   reopenTender,
   deleteTenderOffer,
-  regenerateSummary,
 } from "@/server/actions/tenderi"
 
 export default async function TenderDetaljPage({
@@ -186,15 +185,7 @@ export default async function TenderDetaljPage({
                   </div>
                 ) : (
                   isManager && offer.fileId && (
-                    <form action={regenerateSummary.bind(null, offer.id)}>
-                      <button
-                        type="submit"
-                        className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-indigo-600 transition-colors"
-                      >
-                        <Sparkles className="w-3.5 h-3.5" />
-                        Generiši AI sažetak
-                      </button>
-                    </form>
+                    <RegenerateButton offerId={offer.id} />
                   )
                 )}
 
