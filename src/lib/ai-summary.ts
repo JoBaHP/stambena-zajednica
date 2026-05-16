@@ -1,45 +1,31 @@
-import Anthropic from "@anthropic-ai/sdk"
+import Groq from "groq-sdk"
+
+const MODEL = "llama-3.3-70b-versatile"
+
+const PROMPT =
+  "Napravi sažetak ove ponude na srpskom jeziku. Izvuci ključne informacije: predmet ponude, cenu, uslove, rokove isporuke, garancije. Budi koncizan, maksimalno 150 reči."
 
 export async function summarizeOffer(opts: {
   mimeType: string
   buffer: Buffer
 }): Promise<string | null> {
-  const apiKey = process.env.ANTHROPIC_API_KEY
+  const apiKey = process.env.GROQ_API_KEY
   if (!apiKey) return null
 
-  const client = new Anthropic({ apiKey })
-  const prompt =
-    "Napravi sažetak ove ponude na srpskom jeziku. Izvuci ključne informacije: predmet ponude, cenu, uslove, rokove isporuke, garancije. Budi koncizan, maksimalno 150 reči."
-
   try {
-    let content: Anthropic.MessageParam["content"]
+    const text = await extractText(opts.mimeType, opts.buffer)
+    if (!text || text.trim().length < 30) return null
 
-    if (opts.mimeType === "application/pdf") {
-      content = [
-        {
-          type: "document",
-          source: {
-            type: "base64",
-            media_type: "application/pdf",
-            data: opts.buffer.toString("base64"),
-          },
-        } as Anthropic.DocumentBlockParam,
-        { type: "text", text: prompt },
-      ]
-    } else {
-      const text = await extractText(opts.mimeType, opts.buffer)
-      if (!text || text.trim().length < 30) return null
-      content = `${prompt}\n\n${text.slice(0, 12000)}`
-    }
-
-    const response = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
+    const client = new Groq({ apiKey })
+    const response = await client.chat.completions.create({
+      model: MODEL,
       max_tokens: 400,
-      messages: [{ role: "user", content }],
+      messages: [
+        { role: "user", content: `${PROMPT}\n\n${text.slice(0, 12000)}` },
+      ],
     })
 
-    const block = response.content.find((b) => b.type === "text")
-    return block?.type === "text" ? block.text : null
+    return response.choices[0]?.message?.content ?? null
   } catch (err) {
     console.error("[ai-summary] greška:", err)
     return null
@@ -47,17 +33,28 @@ export async function summarizeOffer(opts: {
 }
 
 async function extractText(mimeType: string, buffer: Buffer): Promise<string> {
-  const DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  const DOC = "application/msword"
-  const XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  const XLS = "application/vnd.ms-excel"
+  if (mimeType === "application/pdf") {
+    // Import lib directly to bypass index.js test-file loading
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mod = await import("pdf-parse/lib/pdf-parse.js" as any)
+    const parse: (buf: Buffer) => Promise<{ text: string }> =
+      mod.default ?? mod
+    const data = await parse(buffer)
+    return data.text
+  }
 
+  const DOCX =
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  const DOC = "application/msword"
   if (mimeType === DOCX || mimeType === DOC) {
     const mammoth = await import("mammoth")
     const result = await mammoth.extractRawText({ buffer })
     return result.value
   }
 
+  const XLSX =
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  const XLS = "application/vnd.ms-excel"
   if (mimeType === XLSX || mimeType === XLS) {
     const xlsxLib = await import("xlsx")
     const wb = xlsxLib.read(buffer, { type: "buffer" })
