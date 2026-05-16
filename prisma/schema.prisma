@@ -33,6 +33,7 @@ model User {
   requestComments     RequestComment[]
   tasks               Task[]
   archiveDocuments    ArchiveDocument[]
+  tenderVotes         TenderVote[]
 }
 
 enum Role {
@@ -171,6 +172,7 @@ model Investment {
   startDate   DateTime?        @db.Date
   endDate     DateTime?        @db.Date
   documents   Document[]
+  tender      Tender?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 }
@@ -406,4 +408,56 @@ model Vote {
   votedAt  DateTime   @default(now())
 
   @@unique([pollId, voterId])
+}
+
+// ─── TENDERI ─────────────────────────────────────────────────────────────────
+
+model Tender {
+  id           String        @id @default(cuid())
+  investmentId String        @unique
+  title        String
+  description  String?
+  status       TenderStatus  @default(OPEN)
+  selectedId   String?
+  closedAt     DateTime?
+  createdAt    DateTime      @default(now())
+
+  investment   Investment    @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  offers       TenderOffer[]
+  votes        TenderVote[]
+}
+
+enum TenderStatus {
+  OPEN
+  CLOSED
+}
+
+model TenderOffer {
+  id          String       @id @default(cuid())
+  tenderId    String
+  company     String
+  description String?
+  price       Decimal?     @db.Decimal(10, 2)
+  fileName    String?
+  fileId      String?
+  mimeType    String?
+  aiSummary   String?
+  createdAt   DateTime     @default(now())
+
+  tender      Tender       @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  votes       TenderVote[]
+}
+
+model TenderVote {
+  id        String      @id @default(cuid())
+  tenderId  String
+  offerId   String
+  userId    String
+  createdAt DateTime    @default(now())
+
+  tender    Tender      @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+  offer     TenderOffer @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tenderId, userId])
 }

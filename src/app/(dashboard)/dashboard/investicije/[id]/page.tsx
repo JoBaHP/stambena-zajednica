@@ -6,8 +6,10 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Pencil, Calendar } from "lucide-react"
+import { Textarea } from "@/components/ui/textarea"
+import { Pencil, Calendar, Gavel, ChevronRight, FileText, Users } from "lucide-react"
 import { deleteInvestment, updateInvestmentSpent } from "@/server/actions/investicije"
+import { createTender } from "@/server/actions/tenderi"
 import { ConfirmDelete } from "@/components/confirm-delete"
 import Link from "next/link"
 
@@ -30,7 +32,12 @@ export default async function InvesticijaDetaljPage({
 
   const investment = await db.investment.findUnique({
     where: { id },
-    include: { documents: true },
+    include: {
+      documents: true,
+      tender: {
+        include: { _count: { select: { offers: true, votes: true } } },
+      },
+    },
   })
 
   if (!investment) notFound()
@@ -42,6 +49,7 @@ export default async function InvesticijaDetaljPage({
 
   const deleteWithId = deleteInvestment.bind(null, investment.id)
   const updateWithId = updateInvestmentSpent.bind(null, investment.id)
+  const createTenderForInvestment = createTender.bind(null, investment.id)
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -170,6 +178,76 @@ export default async function InvesticijaDetaljPage({
           </CardContent>
         </Card>
       )}
+
+      {/* Tender sekcija */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <Gavel className="w-4 h-4" />
+            Tender — ponude kompanija
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {investment.tender ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-sm">{investment.tender.title}</p>
+                  <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <FileText className="w-3 h-3" />
+                      {investment.tender._count.offers} ponuda
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Users className="w-3 h-3" />
+                      {investment.tender._count.votes} glasova
+                    </span>
+                  </div>
+                </div>
+                <Badge variant={investment.tender.status === "OPEN" ? "default" : "secondary"}>
+                  {investment.tender.status === "OPEN" ? "Aktivno" : "Zatvoreno"}
+                </Badge>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                render={<Link href={`/dashboard/tenderi/${investment.tender.id}`} />}
+              >
+                Upravljaj tenderom
+                <ChevronRight className="w-3.5 h-3.5 ml-1.5" />
+              </Button>
+            </div>
+          ) : (
+            <form action={createTenderForInvestment} className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                Kreirajte tender da biste dodali ponude kompanija i omogućili glasanje stanarima.
+              </p>
+              <div className="space-y-1.5">
+                <Label htmlFor="tender-title">Naziv tendera</Label>
+                <Input
+                  id="tender-title"
+                  name="title"
+                  required
+                  placeholder={`npr. ${investment.title} — prikupljanje ponuda`}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="tender-desc">Opis (opciono)</Label>
+                <Textarea
+                  id="tender-desc"
+                  name="description"
+                  rows={2}
+                  placeholder="Šta se traži, kriterijumi izbora..."
+                />
+              </div>
+              <Button type="submit" size="sm">
+                <Gavel className="w-3.5 h-3.5 mr-1.5" />
+                Kreiraj tender
+              </Button>
+            </form>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="flex gap-3">
         <Button variant="outline" className="flex-1" render={<Link href="/dashboard/investicije" />}>

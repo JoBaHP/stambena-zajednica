@@ -20,6 +20,7 @@ import {
   FolderArchive,
   UserPlus,
   X,
+  Gavel,
 } from "lucide-react"
 import {
   Sidebar,
@@ -53,6 +54,7 @@ const managerNav = [
 const communityNav = [
   { title: "Obavestenja", href: "/dashboard/obavestenja", icon: Megaphone },
   { title: "Glasanje", href: "/dashboard/glasanje", icon: Vote },
+  { title: "Tenderi", href: "/dashboard/tenderi", icon: Gavel },
   { title: "Zahtevi", href: "/dashboard/zahtevi", icon: Wrench },
   { title: "Arhiva", href: "/dashboard/arhiva", icon: FolderArchive },
   { title: "Kontakti", href: "/dashboard/kontakti", icon: Phone },
