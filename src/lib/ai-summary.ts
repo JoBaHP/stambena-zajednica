@@ -34,9 +34,10 @@ export async function summarizeOffer(opts: {
 
 async function extractText(mimeType: string, buffer: Buffer): Promise<string> {
   if (mimeType === "application/pdf") {
-    const pdfParse = (await import("pdf-parse")).default
-    const data = await pdfParse(buffer)
-    return data.text
+    const { getDocumentProxy, extractText } = await import("unpdf")
+    const pdf = await getDocumentProxy(new Uint8Array(buffer))
+    const { text } = await extractText(pdf, { mergePages: true })
+    return text
   }
 
   const DOCX =
