@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { changePassword } from "@/server/actions/account"
@@ -39,29 +39,26 @@ export function PasswordForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="currentPassword">Trenutna lozinka</Label>
-            <Input
+            <PasswordInput
               id="currentPassword"
               name="currentPassword"
-              type="password"
               required
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="newPassword">Nova lozinka</Label>
-            <Input
+            <PasswordInput
               id="newPassword"
               name="newPassword"
-              type="password"
               required
               minLength={6}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Potvrdite novu lozinku</Label>
-            <Input
+            <PasswordInput
               id="confirmPassword"
               name="confirmPassword"
-              type="password"
               required
               minLength={6}
             />
