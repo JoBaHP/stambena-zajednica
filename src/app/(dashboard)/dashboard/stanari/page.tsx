@@ -16,7 +16,7 @@ export default async function StanariPage() {
   })
 
   const managers = users.filter((u) => u.role === "MANAGER")
-  const stanari = users.filter((u) => u.role === "RESIDENT")
+  const stanari = users.filter((u) => u.role === "RESIDENT" || (u.role === "MANAGER" && u.unit))
 
   const renderRow = (u: (typeof users)[number]) => (
     <Link

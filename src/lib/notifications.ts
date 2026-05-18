@@ -101,7 +101,7 @@ export async function notifyUsers(userIds: string[], opts: NotifyOptions) {
 
 export async function notifyAllResidents(opts: NotifyOptions) {
   const residents = await db.user.findMany({
-    where: { role: "RESIDENT" },
+    where: { OR: [{ role: "RESIDENT" }, { role: "MANAGER", unit: { not: null } }] },
     select: { id: true },
   })
   await notifyUsers(
