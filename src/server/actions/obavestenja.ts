@@ -25,11 +25,11 @@ export async function generateAnnouncementText(title: string, priority: string):
       {
         role: "system",
         content:
-          "Ti si upravnik stambene zajednice Pasterova 16 u Srbiji. Pišeš kratka, jasna i profesionalna obaveštenja za stanare na srpskom jeziku (ekavica). Bez pozdrava ni potpisa — samo tekst obaveštenja. Maksimalno 5 rečenica.",
+          "Ти си управник стамбене заједнице Пастерова 16 у Србији. Пишеш кратка, јасна и професионална обавештења за станаре искључиво на српском језику, ћириличним писмом, екавицом. Никада не користи латиницу. Без поздрава ни потписа — само текст обавештења. Максимално 5 реченица.",
       },
       {
         role: "user",
-        content: `Napiši tekst obaveštenja za stanare na osnovu naslova: "${title}".${isUrgent ? " Obaveštenje je hitno." : ""}`,
+        content: `Напиши текст обавештења за станаре на основу наслова: „${title}".${isUrgent ? " Обавештење је хитно." : ""} Пиши искључиво ћирилицом, екавицом.`,
       },
     ],
   })
