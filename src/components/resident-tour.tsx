@@ -19,8 +19,8 @@ import {
 const SLIDES = [
   {
     icon: <div className="text-4xl">👋</div>,
-    title: "Добродошли на портал!",
-    desc: "Ово је ваш портал стамбене заједнице Пастерова 16. Овде можете пратити све вести, гласати, подносити захтеве и много тога. Прегледајте кратки водич кроз функције.",
+    title: "Поштоване комшије, добродошли!",
+    desc: "Добродошли на свој портал стамбене заједнице Пастерова 16. Овде можете пратити вести, гласати, подносити захтеве и бити у току са свим дешавањима у згради. Прегледајте кратки водич кроз функције.",
   },
   {
     icon: <Megaphone className="w-10 h-10 text-indigo-500" />,
@@ -118,7 +118,7 @@ export function ResidentTour({ userId }: { userId: string }) {
             </div>
 
             {/* Content */}
-            <div className="flex flex-col items-center text-center px-8 py-6 gap-4 min-h-[220px] justify-center">
+            <div className="flex flex-col items-center text-center px-8 py-6 gap-4 min-h-55 justify-center">
               {slide.icon}
               <h2 className="text-xl font-semibold">{slide.title}</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">{slide.desc}</p>
