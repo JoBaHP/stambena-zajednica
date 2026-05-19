@@ -3,7 +3,7 @@ import Groq from "groq-sdk"
 const MODEL = "llama-3.3-70b-versatile"
 
 const PROMPT =
-  "Napravi sažetak ove ponude na srpskom jeziku. Izvuci ključne informacije: predmet ponude, cenu, uslove, rokove isporuke, garancije. Budi koncizan, maksimalno 150 reči."
+  "Направи сажетак ове понуде на српском језику, ћириличним писмом, екавицом. Извуци кључне информације: предмет понуде, цену, услове, рокове испоруке, гаранције. Буди концизан, максимално 150 речи."
 
 export async function summarizeOffer(opts: {
   mimeType: string

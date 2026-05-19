@@ -4,6 +4,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import { AnnouncementWatcher } from "@/components/announcement-watcher"
 import { MobileMenuTrigger } from "@/components/mobile-menu-trigger"
+import { ResidentTour } from "@/components/resident-tour"
 import { db } from "@/lib/db"
 
 export default async function DashboardLayout({
@@ -27,8 +28,11 @@ export default async function DashboardLayout({
         pendingAccessRequests={pendingAccessRequests}
       />
       <main className="flex-1 flex flex-col min-w-0">
-        <header className="flex items-center h-14 px-3 sm:px-4 border-b bg-background sticky top-0 z-10">
+        <header className="flex items-center justify-between h-14 px-3 sm:px-4 border-b bg-background sticky top-0 z-10">
           <MobileMenuTrigger />
+          {session.user.role === "RESIDENT" && (
+            <ResidentTour userId={session.user.id} />
+          )}
         </header>
         <div className="flex-1 p-4 sm:p-6">{children}</div>
       </main>
