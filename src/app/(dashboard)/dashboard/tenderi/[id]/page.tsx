@@ -5,19 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
-  Gavel,
   Building2,
-  FileText,
-  Download,
   Trophy,
   Plus,
   RotateCcw,
+  Sparkles,
 } from "lucide-react"
 import Link from "next/link"
-import { VoteButton } from "./vote-button"
-import { RegenerateButton } from "./regenerate-button"
+import { OfferCard } from "./offer-card"
 import { CompareButton } from "./compare-button"
-import { ConfirmDelete } from "@/components/confirm-delete"
 import {
   closeTender,
   reopenTender,
@@ -57,7 +53,7 @@ export default async function TenderDetaljPage({
   )
 
   return (
-    <div className="max-w-2xl space-y-6">
+    <div className="max-w-5xl space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
@@ -109,134 +105,13 @@ export default async function TenderDetaljPage({
         </Card>
       )}
 
-      {tender.status === "OPEN" && !isManager && (
-        <p className="text-sm text-muted-foreground">
-          {myVote
-            ? `Glasali ste za: ${tender.offers.find((o) => o.id === myVote.offerId)?.company}. Kliknite na drugu ponudu da promenite glas.`
-            : "Pregledajte ponude i glasajte za najpovoljniju."}
-        </p>
-      )}
-
-      <div className="space-y-4">
-        {sortedOffers.map((offer, idx) => {
-          const isWinner = tender.selectedId === offer.id
-          const isMyVoteOffer = myVote?.offerId === offer.id
-          const voteCount = offer._count.votes
-          const pct = totalVotes > 0 ? Math.round((voteCount / totalVotes) * 100) : 0
-
-          return (
-            <Card
-              key={offer.id}
-              className={
-                isWinner
-                  ? "border-amber-300 bg-amber-50/50"
-                  : isMyVoteOffer
-                    ? "border-primary/40"
-                    : ""
-              }
-            >
-              <CardHeader className="pb-2">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    {isWinner && <Trophy className="w-4 h-4 text-amber-500 shrink-0" />}
-                    <CardTitle className="text-base">
-                      {tender.status === "CLOSED" ? `${idx + 1}. ` : ""}
-                      {offer.company}
-                    </CardTitle>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <VoteButton
-                      tenderId={tender.id}
-                      offerId={offer.id}
-                      isMyVote={isMyVoteOffer}
-                      disabled={tender.status !== "OPEN"}
-                    />
-                    {isManager && (
-                      <ConfirmDelete
-                        action={deleteTenderOffer.bind(null, offer.id)}
-                      />
-                    )}
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {offer.price !== null && (
-                  <p className="text-sm font-semibold text-indigo-700">
-                    {Number(offer.price).toLocaleString("sr-RS", {
-                      minimumFractionDigits: 2,
-                    })}{" "}
-                    RSD
-                  </p>
-                )}
-
-                {offer.description && (
-                  <p className="text-sm text-muted-foreground">
-                    {offer.description}
-                  </p>
-                )}
-
-                {offer.aiSummary ? (
-                  <div className="rounded-md bg-indigo-50 border border-indigo-100 px-3 py-2">
-                    <p className="text-[11px] font-medium text-indigo-700 mb-1">
-                      AI sažetak
-                    </p>
-                    <p className="text-xs text-indigo-900 leading-relaxed">
-                      {offer.aiSummary}
-                    </p>
-                  </div>
-                ) : (
-                  isManager && offer.fileId && (
-                    <RegenerateButton offerId={offer.id} />
-                  )
-                )}
-
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex-1 space-y-1">
-                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-indigo-500 rounded-full transition-all"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {voteCount}{" "}
-                      {voteCount === 1 ? "glas" : "glasova"} ({pct}%)
-                    </p>
-                  </div>
-
-                  {offer.fileId && (
-                    <a
-                      href={`/api/tenderi/${offer.id}/download`}
-                      className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <FileText className="w-3.5 h-3.5" />
-                      {offer.fileName ?? "Preuzmi"}
-                      <Download className="w-3 h-3" />
-                    </a>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          )
-        })}
-      </div>
-
-      {tender.offers.length === 0 && (
-        <Card>
-          <CardContent className="py-10 text-center text-muted-foreground">
-            <Building2 className="w-8 h-8 mx-auto mb-2 opacity-30" />
-            <p className="text-sm">Nema ponuda. Dodajte prvu ponudu.</p>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* AI поређење понуда */}
+      {/* AI поређење понуда — на врху */}
       {(tender.aiComparison || (isManager && tender.offers.length >= 2)) && (
         <Card className="border-indigo-200">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <CardTitle className="text-base flex items-center gap-2">
-                <span className="text-indigo-600">✦</span>
+                <Sparkles className="w-4 h-4 text-indigo-600" />
                 AI поређење понуда
               </CardTitle>
               {isManager && (
@@ -267,6 +142,49 @@ export default async function TenderDetaljPage({
             )}
           </CardContent>
         </Card>
+      )}
+
+      {tender.status === "OPEN" && !isManager && (
+        <p className="text-sm text-muted-foreground">
+          {myVote
+            ? `Glasali ste za: ${tender.offers.find((o) => o.id === myVote.offerId)?.company}. Kliknite na drugu ponudu da promenite glas.`
+            : "Pregledajte ponude i glasajte za najpovoljniju."}
+        </p>
+      )}
+
+      {tender.offers.length === 0 ? (
+        <Card>
+          <CardContent className="py-10 text-center text-muted-foreground">
+            <Building2 className="w-8 h-8 mx-auto mb-2 opacity-30" />
+            <p className="text-sm">Nema ponuda. Dodajte prvu ponudu.</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {sortedOffers.map((offer, idx) => (
+            <OfferCard
+              key={offer.id}
+              offer={{
+                id: offer.id,
+                company: offer.company,
+                price: offer.price !== null ? Number(offer.price) : null,
+                description: offer.description,
+                aiSummary: offer.aiSummary,
+                fileId: offer.fileId,
+                fileName: offer.fileName,
+                _count: offer._count,
+              }}
+              tenderId={tender.id}
+              tenderStatus={tender.status}
+              isWinner={tender.selectedId === offer.id}
+              isMyVoteOffer={myVote?.offerId === offer.id}
+              isManager={isManager}
+              totalVotes={totalVotes}
+              rank={idx + 1}
+              deleteAction={deleteTenderOffer.bind(null, offer.id)}
+            />
+          ))}
+        </div>
       )}
 
       {isManager && (
