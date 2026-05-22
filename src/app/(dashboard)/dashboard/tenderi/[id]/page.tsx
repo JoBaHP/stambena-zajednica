@@ -16,6 +16,7 @@ import {
 import Link from "next/link"
 import { VoteButton } from "./vote-button"
 import { RegenerateButton } from "./regenerate-button"
+import { CompareButton } from "./compare-button"
 import { ConfirmDelete } from "@/components/confirm-delete"
 import {
   closeTender,
@@ -225,6 +226,45 @@ export default async function TenderDetaljPage({
           <CardContent className="py-10 text-center text-muted-foreground">
             <Building2 className="w-8 h-8 mx-auto mb-2 opacity-30" />
             <p className="text-sm">Nema ponuda. Dodajte prvu ponudu.</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* AI поређење понуда */}
+      {(tender.aiComparison || (isManager && tender.offers.length >= 2)) && (
+        <Card className="border-indigo-200">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <CardTitle className="text-base flex items-center gap-2">
+                <span className="text-indigo-600">✦</span>
+                AI поређење понуда
+              </CardTitle>
+              {isManager && (
+                <CompareButton
+                  tenderId={tender.id}
+                  hasComparison={!!tender.aiComparison}
+                />
+              )}
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {tender.aiComparison ? (
+              <>
+                <div className="text-sm leading-relaxed whitespace-pre-line text-foreground">
+                  {tender.aiComparison}
+                </div>
+                <div className="rounded-md bg-amber-50 border border-amber-200 px-3 py-2 flex gap-2">
+                  <span className="text-amber-600 shrink-0 mt-0.5">⚠</span>
+                  <p className="text-xs text-amber-800 leading-relaxed">
+                    Препорука је генерисана на основу доступних информација у систему и не значи да AI располаже свим подацима везаним за понуду. Коначну одлуку доноси управник уз увид у потпуну документацију.
+                  </p>
+                </div>
+              </>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Кликните на „AI поређење понуда" да генеришете анализу свих понуда.
+              </p>
+            )}
           </CardContent>
         </Card>
       )}

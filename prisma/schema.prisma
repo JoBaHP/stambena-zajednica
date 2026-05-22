@@ -419,6 +419,7 @@ model Tender {
   description  String?
   status       TenderStatus  @default(OPEN)
   selectedId   String?
+  aiComparison String?
   closedAt     DateTime?
   createdAt    DateTime      @default(now())
 

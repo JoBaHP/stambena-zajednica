@@ -189,6 +189,54 @@ export async function closeTender(tenderId: string, winnerId: string) {
   redirect(`/dashboard/tenderi/${tenderId}`)
 }
 
+export async function compareOffers(tenderId: string) {
+  const session = await auth()
+  requireManager(session)
+
+  if (!process.env.GROQ_API_KEY) throw new Error("GROQ_API_KEY није постављен")
+
+  const tender = await db.tender.findUnique({
+    where: { id: tenderId },
+    include: { offers: { orderBy: { createdAt: "asc" } } },
+  })
+  if (!tender) throw new Error("Тендер не постоји")
+  if (tender.offers.length < 2) throw new Error("Потребне су најмање две понуде за поређење")
+
+  const offerList = tender.offers
+    .map((o, i) => {
+      const price = o.price ? `${Number(o.price).toLocaleString("sr-RS")} РСД` : "цена није наведена"
+      const summary = o.aiSummary ? `Сажетак: ${o.aiSummary}` : ""
+      const desc = o.description ? `Напомена: ${o.description}` : ""
+      return `${i + 1}. ${o.company} — ${price}\n${desc}\n${summary}`.trim()
+    })
+    .join("\n\n")
+
+  const Groq = (await import("groq-sdk")).default
+  const client = new Groq({ apiKey: process.env.GROQ_API_KEY })
+
+  const response = await client.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    max_tokens: 600,
+    messages: [
+      {
+        role: "system",
+        content:
+          "Ти си непристрасни саветник стамбене заједнице у Србији. Анализираш понуде компанија и рангираш их. Пишеш искључиво ћириличним писмом, екавицом, на српском језику. Буди концизан и јасан.",
+      },
+      {
+        role: "user",
+        content: `Упореди следеће понуде за тендер „${tender.title}" и рангирај их од најбоље до најлошије на основу доступних информација. За сваку понуду укратко образложи оцену. Максимално 400 речи.\n\n${offerList}`,
+      },
+    ],
+  })
+
+  const aiComparison = response.choices[0]?.message?.content?.trim() ?? null
+  if (!aiComparison) throw new Error("АИ није успео да генерише поређење")
+
+  await db.tender.update({ where: { id: tenderId }, data: { aiComparison } })
+  revalidatePath(`/dashboard/tenderi/${tenderId}`)
+}
+
 export async function regenerateSummary(offerId: string) {
   const session = await auth()
   requireManager(session)
