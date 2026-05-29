@@ -14,6 +14,7 @@ import {
 import Link from "next/link"
 import { OfferCard } from "./offer-card"
 import { CompareButton } from "./compare-button"
+import { ComparisonTable } from "./comparison-table"
 import {
   closeTender,
   reopenTender,
@@ -124,17 +125,7 @@ export default async function TenderDetaljPage({
           </CardHeader>
           <CardContent className="space-y-3">
             {tender.aiComparison ? (
-              <>
-                <div className="text-sm leading-relaxed whitespace-pre-line text-foreground">
-                  {tender.aiComparison}
-                </div>
-                <div className="rounded-md bg-amber-50 border border-amber-200 px-3 py-2 flex gap-2">
-                  <span className="text-amber-600 shrink-0 mt-0.5">⚠</span>
-                  <p className="text-xs text-amber-800 leading-relaxed">
-                    Препорука је генерисана на основу доступних информација у систему и не значи да AI располаже свим подацима везаним за понуду. Коначну одлуку доноси управник уз увид у потпуну документацију.
-                  </p>
-                </div>
-              </>
+              <ComparisonTable content={tender.aiComparison} />
             ) : (
               <p className="text-sm text-muted-foreground">
                 Кликните на „AI поређење понуда" да генеришете анализу свих понуда.
