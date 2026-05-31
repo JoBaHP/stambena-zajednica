@@ -57,7 +57,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         user.id = dbUser.id
         user.role = dbUser.role
         user.name = dbUser.name
-        return true
+      }
+      if (user.id) {
+        await db.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date() },
+        })
       }
       return true
     },

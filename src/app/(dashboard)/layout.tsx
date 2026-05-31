@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { AnnouncementWatcher } from "@/components/announcement-watcher"
 import { MobileMenuTrigger } from "@/components/mobile-menu-trigger"
 import { ResidentTour } from "@/components/resident-tour"
+import { ActivityPing } from "@/components/activity-ping"
 import { db } from "@/lib/db"
 
 export default async function DashboardLayout({
@@ -37,6 +38,7 @@ export default async function DashboardLayout({
         <div className="flex-1 p-4 sm:p-6">{children}</div>
       </main>
       <AnnouncementWatcher />
+      <ActivityPing />
     </SidebarProvider>
   )
 }
