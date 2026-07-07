@@ -141,7 +141,7 @@ export function AppSidebar({
           </SidebarGroup>
         )}
 
-        {isManager && process.env.NEXT_PUBLIC_NVR_URL && (
+        {process.env.NEXT_PUBLIC_NVR_URL && (
           <SidebarGroup>
             <SidebarGroupLabel>Nadzor</SidebarGroupLabel>
             <SidebarGroupContent>
