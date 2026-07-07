@@ -21,6 +21,8 @@ import {
   UserPlus,
   X,
   Gavel,
+  Cctv,
+  ExternalLink,
 } from "lucide-react"
 import {
   Sidebar,
@@ -134,6 +136,31 @@ export function AppSidebar({
                     </SidebarMenuItem>
                   )
                 })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {isManager && process.env.NEXT_PUBLIC_NVR_URL && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Nadzor</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    render={
+                      <a
+                        href={process.env.NEXT_PUBLIC_NVR_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      />
+                    }
+                  >
+                    <Cctv className="w-4 h-4" />
+                    <span className="flex-1">Kamere uživo</span>
+                    <ExternalLink className="w-3 h-3 text-muted-foreground" />
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
