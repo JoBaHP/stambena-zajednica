@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { scheduleMirror } from "@/lib/drive-mirror/schedule"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -23,7 +24,7 @@ export async function createTransaction(formData: FormData) {
     throw new Error("Popunite obavezna polja")
   }
 
-  await db.transaction.create({
+  const created = await db.transaction.create({
     data: {
       type: type as "INCOME" | "EXPENSE",
       amount,
@@ -35,6 +36,8 @@ export async function createTransaction(formData: FormData) {
       createdById: session.user.id,
     },
   })
+
+  scheduleMirror("TRANSACTION", created.id)
 
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/finansije")
@@ -68,6 +71,8 @@ export async function updateTransaction(id: string, formData: FormData) {
     },
   })
 
+  scheduleMirror("TRANSACTION", id)
+
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/finansije")
   redirect("/dashboard/finansije")
@@ -80,6 +85,8 @@ export async function deleteTransaction(id: string) {
   }
 
   await db.transaction.delete({ where: { id } })
+
+  scheduleMirror("TRANSACTION", id)
 
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/finansije")

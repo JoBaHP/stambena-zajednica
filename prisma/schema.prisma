@@ -464,3 +464,24 @@ model TenderVote {
 
   @@unique([tenderId, userId])
 }
+
+// ─── OGLEDANJE NA DRIVE ─────────────────────────────────────────────────────
+
+// Veza izmedju zapisa u bazi i njegovog citljivog dokumenta na Google Drive-u.
+// entityId je cuid zapisa, ili "_all" za zbirne registre (kontakti, stanari).
+model DriveMirror {
+  id          String    @id @default(cuid())
+  entity      String
+  entityId    String
+  fileId      String?
+  fileName    String?
+  folderId    String?
+  contentHash String?
+  syncedAt    DateTime?
+  lastError   String?
+  attempts    Int       @default(0)
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([entity, entityId])
+  @@index([entity])
+}

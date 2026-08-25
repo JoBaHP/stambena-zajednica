@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { scheduleMirror } from "@/lib/drive-mirror/schedule"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -22,7 +23,7 @@ export async function createInvestment(formData: FormData) {
     throw new Error("Popunite obavezna polja")
   }
 
-  await db.investment.create({
+  const created = await db.investment.create({
     data: {
       title,
       description: description || null,
@@ -32,6 +33,8 @@ export async function createInvestment(formData: FormData) {
       endDate: endDate ? new Date(endDate) : null,
     },
   })
+
+  scheduleMirror("INVESTMENT", created.id)
 
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/investicije")
@@ -65,6 +68,8 @@ export async function updateInvestment(id: string, formData: FormData) {
     },
   })
 
+  scheduleMirror("INVESTMENT", id)
+
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/investicije")
   redirect("/dashboard/investicije")
@@ -87,6 +92,8 @@ export async function updateInvestmentSpent(id: string, formData: FormData) {
     },
   })
 
+  scheduleMirror("INVESTMENT", id)
+
   revalidatePath("/dashboard/investicije")
   revalidatePath(`/dashboard/investicije/${id}`)
 }
@@ -98,6 +105,8 @@ export async function deleteInvestment(id: string) {
   }
 
   await db.investment.delete({ where: { id } })
+
+  scheduleMirror("INVESTMENT", id)
 
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/investicije")

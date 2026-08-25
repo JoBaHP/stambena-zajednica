@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { scheduleMirror } from "@/lib/drive-mirror/schedule"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -47,7 +48,7 @@ export async function createTask(formData: FormData) {
     throw new Error("Popunite obavezna polja")
   }
 
-  await db.task.create({
+  const created = await db.task.create({
     data: {
       title,
       description: description || null,
@@ -57,6 +58,8 @@ export async function createTask(formData: FormData) {
       createdById: session.user.id,
     },
   })
+
+  scheduleMirror("TASK", created.id)
 
   revalidatePath("/dashboard/kalendar")
   revalidatePath("/dashboard")
@@ -86,6 +89,8 @@ export async function updateTask(id: string, formData: FormData) {
     },
   })
 
+  scheduleMirror("TASK", id)
+
   revalidatePath("/dashboard/kalendar")
   revalidatePath(`/dashboard/kalendar/${id}/uredi`)
   redirect("/dashboard/kalendar")
@@ -108,10 +113,12 @@ export async function completeTask(id: string) {
     },
   })
 
+  scheduleMirror("TASK", id)
+
   if (task.recurrence !== "NONE") {
     const next = nextDueDate(task.dueDate, task.recurrence)
     if (next) {
-      await db.task.create({
+      const repeated = await db.task.create({
         data: {
           title: task.title,
           description: task.description,
@@ -121,6 +128,7 @@ export async function completeTask(id: string) {
           createdById: session.user.id,
         },
       })
+      scheduleMirror("TASK", repeated.id)
     }
   }
 
@@ -142,6 +150,8 @@ export async function reopenTask(id: string) {
     },
   })
 
+  scheduleMirror("TASK", id)
+
   revalidatePath("/dashboard/kalendar")
   revalidatePath("/dashboard")
 }
@@ -153,6 +163,8 @@ export async function deleteTask(id: string) {
   }
 
   await db.task.delete({ where: { id } })
+
+  scheduleMirror("TASK", id)
 
   revalidatePath("/dashboard/kalendar")
   revalidatePath("/dashboard")

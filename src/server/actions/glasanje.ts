@@ -5,6 +5,8 @@ import { db } from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { findOrCreateFolder, uploadFile } from "@/lib/drive"
+import { scheduleMirror } from "@/lib/drive-mirror/schedule"
+import { sanitizeFileName } from "@/lib/drive-mirror/format"
 
 export async function createPoll(formData: FormData) {
   const session = await auth()
@@ -22,7 +24,7 @@ export async function createPoll(formData: FormData) {
     throw new Error("Unesite naslov i bar dve opcije")
   }
 
-  await db.poll.create({
+  const created = await db.poll.create({
     data: {
       title,
       description: description || null,
@@ -35,6 +37,8 @@ export async function createPoll(formData: FormData) {
       },
     },
   })
+
+  scheduleMirror("POLL", created.id)
 
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/glasanje")
@@ -84,6 +88,8 @@ export async function closePoll(id: string) {
     data: { status: "CLOSED" },
   })
 
+  scheduleMirror("POLL", id)
+
   revalidatePath("/dashboard/glasanje")
   revalidatePath(`/dashboard/glasanje/${id}`)
 }
@@ -99,6 +105,8 @@ export async function activatePoll(id: string) {
     data: { status: "ACTIVE", startsAt: new Date() },
   })
 
+  scheduleMirror("POLL", id)
+
   revalidatePath("/dashboard/glasanje")
   revalidatePath(`/dashboard/glasanje/${id}`)
 }
@@ -108,16 +116,6 @@ function csvEscape(value: string): string {
     return `"${value.replace(/"/g, '""')}"`
   }
   return value
-}
-
-function sanitizeFileName(name: string): string {
-  return name
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-zA-Z0-9 _-]/g, "")
-    .trim()
-    .replace(/\s+/g, "_")
-    .slice(0, 80) || "glasanje"
 }
 
 export async function exportPollResults(pollId: string) {
@@ -217,7 +215,7 @@ async function exportPollResultsImpl(pollId: string) {
     .toISOString()
     .replace(/[:T]/g, "-")
     .replace(/\..+$/, "")
-  const fileName = `${sanitizeFileName(poll.title)}_${stamp}.csv`
+  const fileName = `${sanitizeFileName(poll.title, "glasanje")}_${stamp}.csv`
 
   const { fileId } = await uploadFile({
     parentFolderId: yearFolderId,

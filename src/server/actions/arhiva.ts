@@ -7,6 +7,7 @@ import {
   deleteFile,
   resolveTargetFolder,
 } from "@/lib/drive"
+import { scheduleDataMirror } from "@/lib/drive-mirror/schedule"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -96,6 +97,8 @@ export async function uploadDocument(formData: FormData) {
     fail("Otpremanje nije uspelo. Pokusajte ponovo.")
   }
 
+  scheduleDataMirror("ARCHIVE")
+
   revalidatePath("/dashboard/arhiva")
   redirect("/dashboard/arhiva")
 }
@@ -116,6 +119,8 @@ export async function deleteDocument(id: string) {
   }
 
   await db.archiveDocument.delete({ where: { id } })
+
+  scheduleDataMirror("ARCHIVE")
 
   revalidatePath("/dashboard/arhiva")
 }

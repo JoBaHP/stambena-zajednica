@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { scheduleMirror } from "@/lib/drive-mirror/schedule"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import bcrypt from "bcryptjs"
@@ -39,6 +40,8 @@ export async function createResident(formData: FormData) {
       role: "RESIDENT",
     },
   })
+
+  scheduleMirror("RESIDENT")
 
   revalidatePath("/dashboard/stanari")
   redirect("/dashboard/stanari")
@@ -86,6 +89,8 @@ export async function updateUser(id: string, formData: FormData) {
     },
   })
 
+  scheduleMirror("RESIDENT")
+
   revalidatePath("/dashboard/stanari")
   revalidatePath(`/dashboard/stanari/${id}`)
 }
@@ -124,6 +129,8 @@ export async function setUserActive(id: string, active: boolean) {
   if (!target) throw new Error("Korisnik ne postoji")
 
   await db.user.update({ where: { id }, data: { active } })
+
+  scheduleMirror("RESIDENT")
 
   revalidatePath("/dashboard/stanari")
   revalidatePath(`/dashboard/stanari/${id}`)

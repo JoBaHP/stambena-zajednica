@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { scheduleMirror } from "@/lib/drive-mirror/schedule"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -22,7 +23,7 @@ export async function createInspection(formData: FormData) {
     throw new Error("Popunite obavezna polja")
   }
 
-  await db.pPInspection.create({
+  const created = await db.pPInspection.create({
     data: {
       title,
       inspectionDate: new Date(inspectionDate),
@@ -32,6 +33,8 @@ export async function createInspection(formData: FormData) {
       notes: notes || null,
     },
   })
+
+  scheduleMirror("INSPECTION", created.id)
 
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/inspekcije")
@@ -63,6 +66,8 @@ export async function updateInspection(id: string, formData: FormData) {
     },
   })
 
+  scheduleMirror("INSPECTION", id)
+
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/inspekcije")
   redirect("/dashboard/inspekcije")
@@ -75,6 +80,8 @@ export async function deleteInspection(id: string) {
   }
 
   await db.pPInspection.delete({ where: { id } })
+
+  scheduleMirror("INSPECTION", id)
 
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/inspekcije")

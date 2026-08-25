@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { scheduleMirror } from "@/lib/drive-mirror/schedule"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
@@ -29,6 +30,8 @@ export async function createContact(formData: FormData) {
     },
   })
 
+  scheduleMirror("CONTACT")
+
   revalidatePath("/dashboard/kontakti")
   redirect("/dashboard/kontakti")
 }
@@ -54,6 +57,8 @@ export async function updateContact(id: string, formData: FormData) {
     },
   })
 
+  scheduleMirror("CONTACT")
+
   revalidatePath("/dashboard/kontakti")
   redirect("/dashboard/kontakti")
 }
@@ -65,6 +70,8 @@ export async function deleteContact(id: string) {
   }
 
   await db.contact.delete({ where: { id } })
+
+  scheduleMirror("CONTACT")
 
   revalidatePath("/dashboard/kontakti")
   redirect("/dashboard/kontakti")

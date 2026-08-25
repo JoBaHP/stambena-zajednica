@@ -25,10 +25,24 @@ function getDrive(): drive_v3.Drive {
   return cachedDrive
 }
 
+// Memo kes id-eva foldera po kljucu `${parentId}/${name}`. Ogledanje zapisa na
+// Drive radi 2-3 files.list poziva samo da razresi putanju foldera; kes to svodi
+// na jedan po hladnom startu. forgetFolder() se poziva kad Drive vrati 404
+// (folder rucno obrisan), pa se putanja razresava iznova.
+const folderCache = new Map<string, string>()
+
+export function forgetFolder(name: string, parentId: string): void {
+  folderCache.delete(`${parentId}/${name}`)
+}
+
 export async function findOrCreateFolder(
   name: string,
   parentId: string,
 ): Promise<string> {
+  const cacheKey = `${parentId}/${name}`
+  const cached = folderCache.get(cacheKey)
+  if (cached) return cached
+
   const drive = getDrive()
   const safeName = name.replace(/'/g, "\\'")
   const query = [
@@ -47,6 +61,7 @@ export async function findOrCreateFolder(
   })
 
   if (list.data.files && list.data.files.length > 0 && list.data.files[0].id) {
+    folderCache.set(cacheKey, list.data.files[0].id)
     return list.data.files[0].id
   }
 
@@ -63,7 +78,31 @@ export async function findOrCreateFolder(
   if (!created.data.id) {
     throw new Error(`Folder ${name} nije mogao biti kreiran`)
   }
+  folderCache.set(cacheKey, created.data.id)
   return created.data.id
+}
+
+export async function findFileInFolder(
+  name: string,
+  parentId: string,
+): Promise<string | null> {
+  const drive = getDrive()
+  const safeName = name.replace(/'/g, "\\'")
+  const query = [
+    `'${parentId}' in parents`,
+    `name = '${safeName}'`,
+    "trashed = false",
+  ].join(" and ")
+
+  const list = await drive.files.list({
+    q: query,
+    fields: "files(id, name)",
+    supportsAllDrives: true,
+    includeItemsFromAllDrives: true,
+    pageSize: 1,
+  })
+
+  return list.data.files?.[0]?.id ?? null
 }
 
 export async function uploadFile(opts: {
@@ -92,6 +131,26 @@ export async function uploadFile(opts: {
     throw new Error("Upload na Drive nije uspeo")
   }
   return { fileId: res.data.id }
+}
+
+export async function updateFile(opts: {
+  fileId: string
+  fileName?: string
+  mimeType: string
+  buffer: Buffer
+}): Promise<void> {
+  const drive = getDrive()
+
+  await drive.files.update({
+    fileId: opts.fileId,
+    requestBody: opts.fileName ? { name: opts.fileName } : {},
+    media: {
+      mimeType: opts.mimeType,
+      body: Readable.from(opts.buffer),
+    },
+    fields: "id",
+    supportsAllDrives: true,
+  })
 }
 
 export async function downloadFile(

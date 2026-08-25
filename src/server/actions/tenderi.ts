@@ -5,6 +5,7 @@ import { db } from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { uploadFile, findOrCreateFolder } from "@/lib/drive"
+import { scheduleMirror } from "@/lib/drive-mirror/schedule"
 import { summarizeOffer } from "@/lib/ai-summary"
 
 const MAX_FILE_SIZE = 4 * 1024 * 1024
@@ -34,7 +35,12 @@ export async function createTender(investmentId: string, formData: FormData) {
   const description = (formData.get("description") as string)?.trim() || null
   if (!title) throw new Error("Naslov je obavezan")
 
-  await db.tender.create({ data: { investmentId, title, description } })
+  const created = await db.tender.create({
+    data: { investmentId, title, description },
+  })
+
+  scheduleMirror("TENDER", created.id)
+  scheduleMirror("INVESTMENT", investmentId)
 
   revalidatePath(`/dashboard/investicije/${investmentId}`)
   revalidatePath("/dashboard/tenderi")
@@ -105,6 +111,8 @@ export async function createTenderOffer(tenderId: string, formData: FormData) {
     data: { tenderId, company, description, price, fileName, fileId, mimeType, aiSummary },
   })
 
+  scheduleMirror("TENDER", tenderId)
+
   revalidatePath(`/dashboard/tenderi/${tenderId}`)
   redirect(`/dashboard/tenderi/${tenderId}`)
 }
@@ -124,6 +132,8 @@ export async function updateTenderOffer(offerId: string, formData: FormData) {
     where: { id: offerId },
     data: { company, description, price },
   })
+
+  scheduleMirror("TENDER", offer.tenderId)
 
   revalidatePath(`/dashboard/tenderi/${offer.tenderId}`)
   redirect(`/dashboard/tenderi/${offer.tenderId}`)
@@ -146,6 +156,9 @@ export async function deleteTenderOffer(offerId: string) {
   }
 
   await db.tenderOffer.delete({ where: { id: offerId } })
+
+  scheduleMirror("TENDER", offer.tenderId)
+
   revalidatePath(`/dashboard/tenderi/${offer.tenderId}`)
 }
 
@@ -183,6 +196,8 @@ export async function closeTender(tenderId: string, winnerId: string) {
     where: { id: tenderId },
     data: { status: "CLOSED", selectedId: winnerId, closedAt: new Date() },
   })
+
+  scheduleMirror("TENDER", tenderId)
 
   revalidatePath(`/dashboard/tenderi/${tenderId}`)
   revalidatePath("/dashboard/tenderi")
@@ -234,6 +249,9 @@ export async function compareOffers(tenderId: string) {
   if (!aiComparison) throw new Error("АИ није успео да генерише поређење")
 
   await db.tender.update({ where: { id: tenderId }, data: { aiComparison } })
+
+  scheduleMirror("TENDER", tenderId)
+
   revalidatePath(`/dashboard/tenderi/${tenderId}`)
 }
 
@@ -255,6 +273,9 @@ export async function regenerateSummary(offerId: string) {
   if (!aiSummary) throw new Error("AI nije uspeo da generiše sažetak. Proverite format fajla.")
 
   await db.tenderOffer.update({ where: { id: offerId }, data: { aiSummary } })
+
+  scheduleMirror("TENDER", offer.tenderId)
+
   revalidatePath(`/dashboard/tenderi/${offer.tenderId}`)
 }
 
@@ -266,6 +287,8 @@ export async function reopenTender(tenderId: string) {
     where: { id: tenderId },
     data: { status: "OPEN", selectedId: null, closedAt: null },
   })
+
+  scheduleMirror("TENDER", tenderId)
 
   revalidatePath(`/dashboard/tenderi/${tenderId}`)
   revalidatePath("/dashboard/tenderi")

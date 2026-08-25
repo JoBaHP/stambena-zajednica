@@ -1,12 +1,16 @@
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { mirrorStatus } from "@/lib/drive-mirror"
 import { redirect } from "next/navigation"
 import { PasswordForm } from "./password-form"
 import { NotificationsForm } from "./notifications-form"
+import { DriveSyncCard } from "./drive-sync"
 
 export default async function PodesavanjaPage() {
   const session = await auth()
   if (!session) redirect("/login")
+
+  const isManager = session.user.role === "MANAGER"
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },
@@ -14,6 +18,8 @@ export default async function PodesavanjaPage() {
   })
 
   if (!user) redirect("/login")
+
+  const driveStatus = isManager ? await mirrorStatus() : null
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -34,6 +40,15 @@ export default async function PodesavanjaPage() {
       />
 
       <PasswordForm />
+
+      {driveStatus && (
+        <DriveSyncCard
+          status={{
+            ...driveStatus,
+            lastSyncedAt: driveStatus.lastSyncedAt?.toISOString() ?? null,
+          }}
+        />
+      )}
     </div>
   )
 }

@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { scheduleMirror } from "@/lib/drive-mirror/schedule"
 import { notifyManagers, notifyUsers } from "@/lib/notifications"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
@@ -30,6 +31,8 @@ export async function createRequest(formData: FormData) {
       reporterId: session.user.id,
     },
   })
+
+  scheduleMirror("REQUEST", created.id)
 
   const isUrgent = created.priority === "URGENT"
   await notifyManagers({
@@ -60,6 +63,8 @@ export async function updateRequestStatus(id: string, formData: FormData) {
       resolvedAt: status === "RESOLVED" || status === "REJECTED" ? new Date() : null,
     },
   })
+
+  scheduleMirror("REQUEST", id)
 
   const statusLabels: Record<string, string> = {
     SUBMITTED: "Prijavljeno",
@@ -93,6 +98,8 @@ export async function addComment(requestId: string, formData: FormData) {
     },
   })
 
+  scheduleMirror("REQUEST", requestId)
+
   revalidatePath(`/dashboard/zahtevi/${requestId}`)
 }
 
@@ -108,6 +115,8 @@ export async function deleteRequest(id: string) {
   }
 
   await db.maintenanceRequest.delete({ where: { id } })
+
+  scheduleMirror("REQUEST", id)
 
   revalidatePath("/dashboard/zahtevi")
   redirect("/dashboard/zahtevi")

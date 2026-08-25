@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { scheduleMirror } from "@/lib/drive-mirror/schedule"
 import { notifyAllResidents } from "@/lib/notifications"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
@@ -53,7 +54,7 @@ export async function createAnnouncement(formData: FormData) {
     throw new Error("Popunite obavezna polja")
   }
 
-  await db.announcement.create({
+  const created = await db.announcement.create({
     data: {
       title,
       body,
@@ -63,6 +64,8 @@ export async function createAnnouncement(formData: FormData) {
       authorId: session.user.id,
     },
   })
+
+  scheduleMirror("ANNOUNCEMENT", created.id)
 
   const subjectPrefix = priority === "URGENT" ? "HITNO: " : ""
   await notifyAllResidents({
@@ -99,6 +102,8 @@ export async function updateAnnouncement(id: string, formData: FormData) {
     },
   })
 
+  scheduleMirror("ANNOUNCEMENT", id)
+
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/obavestenja")
   redirect("/dashboard/obavestenja")
@@ -111,6 +116,9 @@ export async function deleteAnnouncement(id: string) {
   }
 
   await db.announcement.delete({ where: { id } })
+
+  // Citljiv dokument na Drive-u ostaje; osvezava se samo JSON snimak modula.
+  scheduleMirror("ANNOUNCEMENT", id)
 
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/obavestenja")
