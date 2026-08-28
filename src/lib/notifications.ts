@@ -76,7 +76,10 @@ export async function notifyUsers(userIds: string[], opts: NotifyOptions) {
   if (userIds.length === 0) return
 
   const users = await db.user.findMany({
-    where: { id: { in: userIds } },
+    // active: true — korisniku sa uklonjenim pristupom ne salju se obavestenja.
+    // Filter je ovde jer notifyAllResidents i notifyManagers prolaze kroz ovu
+    // funkciju, pa jedno mesto pokriva sve pozive.
+    where: { id: { in: userIds }, active: true },
     select: {
       id: true,
       email: true,
