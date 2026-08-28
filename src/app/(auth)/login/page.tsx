@@ -31,10 +31,16 @@ export default function LoginPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const error = params.get("error")
-    if (!error) return
+    const odjava = params.get("odjava")
+    if (!error && !odjava) return
 
     const id = setTimeout(() => {
-      if (error === "AccessDenied" || error === "Callback") {
+      if (odjava === "pristup") {
+        toast.error(
+          "Pristup tvom nalogu je uklonjen. Obrati se upravniku.",
+          { duration: 8000 },
+        )
+      } else if (error === "AccessDenied" || error === "Callback") {
         toast.error(
           "Tvoj Google nalog nije registrovan u sistemu. Obrati se upravniku.",
           { duration: 6000 },
@@ -47,6 +53,7 @@ export default function LoginPage() {
     }, 100)
 
     params.delete("error")
+    params.delete("odjava")
     const newQs = params.toString()
     window.history.replaceState(
       {},

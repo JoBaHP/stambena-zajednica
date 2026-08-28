@@ -14,7 +14,9 @@ export default async function DashboardLayout({
   children: React.ReactNode
 }) {
   const session = await auth()
-  if (!session) redirect("/login")
+  // Do ovde se stize samo sa cookie-jem (proxy.ts inace vrati na /login), pa
+  // prazna sesija znaci da nalog vise nema pristup — brisemo cookie i gasimo.
+  if (!session) redirect("/api/odjava")
 
   const pendingAccessRequests =
     session.user.role === "MANAGER"

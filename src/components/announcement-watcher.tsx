@@ -17,7 +17,13 @@ export function AnnouncementWatcher() {
     async function check() {
       try {
         const res = await fetch("/api/notifications/latest", { cache: "no-store" })
-        if (!res.ok || cancelled) return
+        if (cancelled) return
+        if (res.status === 401) {
+          // Pristup je uklonjen dok je tab bio otvoren — odjavi se sam.
+          window.location.href = "/api/odjava"
+          return
+        }
+        if (!res.ok) return
         const data = (await res.json()) as {
           latest: {
             id: string

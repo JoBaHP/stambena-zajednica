@@ -47,6 +47,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     ...authConfig.callbacks,
+    async jwt({ token, user }) {
+      // Pri prijavi je pristup vec proveren u authorize()/signIn().
+      if (user) {
+        token.role = user.role
+        token.id = user.id
+        return token
+      }
+
+      const userId = (token.id ?? token.sub) as string | undefined
+      if (!userId) return null
+
+      // Svaki naredni poziv auth() proverava da nalog i dalje ima pristup.
+      // Vracanje null gasi sesiju: auth() vraca null, pa straza u
+      // (dashboard)/layout.tsx i u server akcijama odbija zahtev.
+      try {
+        const dbUser = await db.user.findUnique({
+          where: { id: userId },
+          select: { active: true, role: true, name: true },
+        })
+
+        if (!dbUser || !dbUser.active) return null
+
+        // Promena role vazi odmah, bez ponovne prijave.
+        token.id = userId
+        token.role = dbUser.role
+        token.name = dbUser.name
+      } catch (err) {
+        // Baza nedostupna — zadrzi sesiju. Odjaviti sve zbog kratkog prekida
+        // baze bilo bi gore od nekoliko sekundi zastarelog pristupa.
+        console.error("[auth] provera pristupa nije uspela", err)
+      }
+
+      return token
+    },
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         if (!user.email) return false
