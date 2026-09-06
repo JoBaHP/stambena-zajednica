@@ -93,6 +93,22 @@ export default function NovoGlasanjePage() {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="requiredShare">Potrebna vecina</Label>
+              <select
+                id="requiredShare"
+                name="requiredShare"
+                defaultValue="50"
+                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              >
+                <option value="50">Obicna vecina — preko 50% udela</option>
+                <option value="66">Dvotrecinska vecina — preko 66% udela</option>
+              </select>
+              <p className="text-xs text-muted-foreground">
+                Racuna se prema kvadraturi stanova, ne prema broju glasova.
+              </p>
+            </div>
+
+            <div className="space-y-2">
               <Label>Objavi odmah?</Label>
               <select
                 name="status"

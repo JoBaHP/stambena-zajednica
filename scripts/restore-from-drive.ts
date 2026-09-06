@@ -134,6 +134,7 @@ async function main() {
             role: r.role,
             phone: r.phone ?? null,
             unit: r.unit ?? null,
+            area: r.area !== null && r.area !== undefined ? String(r.area) : null,
             notifyEmail: Boolean(r.notifyEmail),
             notifySms: Boolean(r.notifySms),
             active: Boolean(r.active),
@@ -251,6 +252,7 @@ async function main() {
           title: String(r.title),
           description: r.description ?? null,
           status: r.status,
+          requiredShare: Number(r.requiredShare ?? 50),
           startsAt: date(r.startsAt),
           endsAt: date(r.endsAt),
           createdById: String(r.createdById),
@@ -277,12 +279,21 @@ async function main() {
           location: r.location ?? null,
           resolution: r.resolution ?? null,
           resolvedAt: date(r.resolvedAt),
+          aiTriage: r.aiTriage ?? undefined,
           reporterId: String(r.reporterId),
         }))
         await upsert("requestComment", asRows(snap.comments), (r) => ({
           requestId: String(r.requestId),
           authorId: String(r.authorId),
           body: String(r.body),
+        }))
+        await upsert("document", asRows(snap.photos), (r) => ({
+          name: String(r.name),
+          url: r.url ?? null,
+          fileId: r.fileId ?? null,
+          size: r.size ?? null,
+          mimeType: r.mimeType ?? null,
+          requestId: r.requestId ?? null,
         }))
         break
 

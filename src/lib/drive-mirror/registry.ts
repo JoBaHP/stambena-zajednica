@@ -2,6 +2,7 @@
 // Dodavanje novog modula = jedan unos u MIRROR_DEFS + poziv scheduleMirror u akciji.
 
 import { db } from "@/lib/db"
+import { formatArea, tallyPoll } from "@/lib/glasanje"
 import {
   contactCategoryLabels,
   inspectionResultLabels,
@@ -192,6 +193,7 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
             orderBy: { createdAt: "asc" },
             include: { author: { select: { name: true } } },
           },
+          photos: { orderBy: { createdAt: "asc" }, select: { name: true } },
         },
       })
       if (!rec) return null
@@ -214,6 +216,10 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
             field("Reseno", rec.resolvedAt ? formatDateTime(rec.resolvedAt) : "—"),
             ...section("Opis", paragraph(rec.description)),
             ...section("Resenje", paragraph(rec.resolution)),
+            ...section(
+              "Fotografije",
+              rec.photos.map((p) => p.name),
+            ),
             ...section(
               "Komentari",
               rec.comments.map(
@@ -391,6 +397,7 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
       if (!rec) return null
 
       const total = rec.votes.length
+      const tally = await tallyPoll(rec.id, rec.options, rec.requiredShare)
 
       return {
         folderPath: ["Glasanja", String(yearOf(rec.createdAt))],
@@ -406,13 +413,22 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
             field("Istice", rec.endsAt ? formatDateTime(rec.endsAt) : "—"),
             field("Kreirao", rec.createdBy.name),
             field("Ukupno glasova", total),
+            field("Potrebna vecina", `${rec.requiredShare}% ukupnog udela`),
+            field(
+              "Kvorum",
+              tally.weighted
+                ? `${tally.quorumPct.toFixed(1)}% (${formatArea(tally.votedArea)} od ${formatArea(tally.totalArea)})`
+                : "nije racunat — kvadrature nisu unete",
+            ),
             ...section("Opis", paragraph(rec.description)),
             ...section(
               "Rezultat",
               rec.options.map((o) => {
                 const count = o._count.votes
                 const pct = total > 0 ? ((count / total) * 100).toFixed(1) : "0.0"
-                return `${o.text}: ${count} (${pct}%)`
+                const share = tally.options.find((t) => t.id === o.id)
+                if (!tally.weighted) return `${o.text}: ${count} (${pct}% glasova)`
+                return `${o.text}: ${share?.sharePct.toFixed(1) ?? "0.0"}% udela, ${count} ${count === 1 ? "glas" : "glasova"}${share?.passes ? "  ← odluka doneta" : ""}`
               }),
             ),
             ...section(
@@ -551,6 +567,7 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
           phone: true,
           unit: true,
           role: true,
+          area: true,
           active: true,
           lastLoginAt: true,
           createdAt: true,
@@ -581,6 +598,7 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
         `${u.name}${u.unit ? ` — stan ${u.unit}` : ""}`,
         `  Email:     ${u.email}`,
         `  Telefon:   ${u.phone ?? "—"}`,
+        `  Kvadratura:${u.area ? ` ${formatArea(Number(u.area))}` : " nije uneta"}`,
         `  Uloga:     ${label(roleLabels, u.role)}`,
         `  Pristup:   ${u.active ? "aktivan" : "onemogucen"}`,
         `  Prijava:   ${u.lastLoginAt ? formatDateTime(u.lastLoginAt) : "nikad"}`,

@@ -81,6 +81,19 @@ export default async function EditStanarPage({
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="area">Kvadratura (m²)</Label>
+              <Input
+                id="area"
+                name="area"
+                type="number"
+                step="0.01"
+                min="0"
+                defaultValue={user.area ? String(user.area) : ""}
+              />
+              <p className="text-xs text-muted-foreground">Osnova za vlasnicki udeo pri glasanju.</p>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="role">Uloga</Label>
               <select
                 id="role"

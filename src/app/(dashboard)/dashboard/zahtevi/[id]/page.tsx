@@ -1,5 +1,11 @@
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { readTriage } from "@/lib/ai-triage"
+import {
+  requestCategoryLabels,
+  requestPriorityLabels,
+  label as enumLabel,
+} from "@/lib/labels"
 import { notFound, redirect } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -7,12 +13,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { ArrowLeft, AlertTriangle, MessageSquare } from "lucide-react"
+import { ArrowLeft, AlertTriangle, MessageSquare, Sparkles } from "lucide-react"
 import Link from "next/link"
 import {
   addComment,
   updateRequestStatus,
   deleteRequest,
+  applyTriage,
 } from "@/server/actions/zahtevi"
 import { ConfirmDelete } from "@/components/confirm-delete"
 
@@ -61,6 +68,10 @@ export default async function ZahtevDetaljiPage({
     where: { id },
     include: {
       reporter: { select: { name: true, unit: true } },
+      photos: {
+        orderBy: { createdAt: "asc" },
+        select: { id: true, name: true },
+      },
       comments: {
         orderBy: { createdAt: "asc" },
         include: { author: { select: { name: true, role: true } } },
@@ -69,6 +80,8 @@ export default async function ZahtevDetaljiPage({
   })
 
   if (!request) notFound()
+
+  const triage = isManager ? readTriage(request.aiTriage) : null
 
   const isReporter = request.reporterId === session.user.id
   if (!isManager && !isReporter) redirect("/dashboard/zahtevi")
@@ -116,6 +129,27 @@ export default async function ZahtevDetaljiPage({
       <Card>
         <CardContent className="pt-6 space-y-3">
           <p className="whitespace-pre-wrap">{request.description}</p>
+
+          {request.photos.length > 0 && (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {request.photos.map((photo, i) => (
+                <a
+                  key={photo.id}
+                  href={`/api/zahtevi/${photo.id}/download`}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={`Otvori fotografiju ${i + 1}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`/api/zahtevi/${photo.id}/download`}
+                    alt={`Fotografija ${i + 1} uz zahtev`}
+                    className="w-24 h-24 object-cover rounded-lg border hover:opacity-90"
+                  />
+                </a>
+              ))}
+            </div>
+          )}
           <div className="text-xs text-muted-foreground space-y-1 pt-3 border-t">
             <p>
               Prijavio: {request.reporter.name}
@@ -149,6 +183,54 @@ export default async function ZahtevDetaljiPage({
           )}
         </CardContent>
       </Card>
+
+      {triage && (
+        <Card className="border-dashed">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              Predlog razvrstavanja
+            </CardTitle>
+            <p className="text-xs text-muted-foreground pt-1">
+              Predlog na osnovu opisa. Odluka je vasa — zapis se ne menja dok ga
+              ne prihvatite.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex flex-wrap gap-2 text-xs">
+              {triage.category && (
+                <span className="px-2 py-1 rounded-md bg-muted">
+                  Kategorija: {enumLabel(requestCategoryLabels, triage.category)}
+                </span>
+              )}
+              {triage.priority && (
+                <span className="px-2 py-1 rounded-md bg-muted">
+                  Prioritet: {enumLabel(requestPriorityLabels, triage.priority)}
+                </span>
+              )}
+              {triage.contractor && (
+                <span className="px-2 py-1 rounded-md bg-muted">
+                  Izvodjac: {triage.contractor}
+                </span>
+              )}
+            </div>
+
+            {triage.reason && (
+              <p className="text-sm text-muted-foreground">{triage.reason}</p>
+            )}
+
+            {(triage.category || triage.priority) &&
+              (triage.category !== request.category ||
+                triage.priority !== request.priority) && (
+                <form action={applyTriage.bind(null, request.id)}>
+                  <Button type="submit" size="sm" variant="outline">
+                    Prihvati kategoriju i prioritet
+                  </Button>
+                </form>
+              )}
+          </CardContent>
+        </Card>
+      )}
 
       {isManager && (
         <Card>

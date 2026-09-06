@@ -7,6 +7,7 @@ import { redirect } from "next/navigation"
 import { findOrCreateFolder, uploadFile } from "@/lib/drive"
 import { scheduleMirror } from "@/lib/drive-mirror/schedule"
 import { sanitizeFileName } from "@/lib/drive-mirror/format"
+import { formatArea, tallyPoll } from "@/lib/glasanje"
 
 export async function createPoll(formData: FormData) {
   const session = await auth()
@@ -19,6 +20,11 @@ export async function createPoll(formData: FormData) {
   const endsAt = formData.get("endsAt") as string
   const options = formData.getAll("option") as string[]
   const status = formData.get("status") as string
+  const requiredShareRaw = Number(formData.get("requiredShare"))
+  const requiredShare =
+    Number.isFinite(requiredShareRaw) && requiredShareRaw > 0 && requiredShareRaw <= 100
+      ? Math.round(requiredShareRaw)
+      : 50
 
   if (!title || options.filter(Boolean).length < 2) {
     throw new Error("Unesite naslov i bar dve opcije")
@@ -29,6 +35,7 @@ export async function createPoll(formData: FormData) {
       title,
       description: description || null,
       status: (status as "DRAFT" | "ACTIVE") ?? "DRAFT",
+      requiredShare,
       startsAt: status === "ACTIVE" ? new Date() : null,
       endsAt: endsAt ? new Date(endsAt) : null,
       createdById: session.user.id,
@@ -166,11 +173,19 @@ async function exportPollResultsImpl(pollId: string) {
 
   const totalVotes = votes.length
   const exportedAt = new Date()
+  const tally = await tallyPoll(poll.id, poll.options, poll.requiredShare)
   const summaryRows = poll.options
     .map((o) => {
       const count = o._count.votes
       const pct = totalVotes > 0 ? ((count / totalVotes) * 100).toFixed(1) : "0.0"
-      return [o.text, String(count), `${pct}%`]
+      const share = tally.options.find((t) => t.id === o.id)
+      return [
+        o.text,
+        String(count),
+        `${pct}%`,
+        tally.weighted ? `${share?.sharePct.toFixed(1) ?? "0.0"}%` : "",
+        tally.weighted ? (share?.passes ? "da" : "ne") : "",
+      ]
     })
     .map((cols) => cols.map(csvEscape).join(","))
 
@@ -194,9 +209,11 @@ async function exportPollResultsImpl(pollId: string) {
     `# Istice: ${poll.endsAt ? poll.endsAt.toISOString() : ""}`,
     `# Eksportovano: ${exportedAt.toISOString()}`,
     `# Ukupno glasova: ${totalVotes}`,
+    `# Potrebna vecina: ${poll.requiredShare}% ukupnog udela`,
+    `# Kvorum: ${tally.weighted ? `${tally.quorumPct.toFixed(1)}% (${formatArea(tally.votedArea)} od ${formatArea(tally.totalArea)})` : "nije racunat — kvadrature nisu unete"}`,
     "",
     "Sumarno",
-    "Opcija,Glasovi,Procenat",
+    "Opcija,Glasovi,Procenat glasova,Udeo u kvadraturi,Odluka doneta",
     ...summaryRows,
     "",
     "Detaljno",

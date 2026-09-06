@@ -7,6 +7,15 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import bcrypt from "bcryptjs"
 
+/** Kvadratura stana; prazno polje znaci "nije uneta", ne nula. */
+function parseArea(value: FormDataEntryValue | null): number | null {
+  const raw = typeof value === "string" ? value.trim().replace(",", ".") : ""
+  if (!raw) return null
+  const num = Number(raw)
+  if (!Number.isFinite(num) || num <= 0) return null
+  return num
+}
+
 export async function createResident(formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
@@ -17,6 +26,7 @@ export async function createResident(formData: FormData) {
   const email = formData.get("email") as string
   const phone = formData.get("phone") as string
   const unit = formData.get("unit") as string
+  const area = parseArea(formData.get("area"))
   const password = formData.get("password") as string
 
   if (!name || !email || !password) {
@@ -36,6 +46,7 @@ export async function createResident(formData: FormData) {
       email,
       phone: phone || null,
       unit: unit || null,
+      area,
       password: hashedPassword,
       role: "RESIDENT",
     },
@@ -60,6 +71,7 @@ export async function updateUser(id: string, formData: FormData) {
   const email = (formData.get("email") as string)?.trim().toLowerCase()
   const phone = (formData.get("phone") as string)?.trim()
   const unit = (formData.get("unit") as string)?.trim()
+  const area = parseArea(formData.get("area"))
   const role = formData.get("role") as "MANAGER" | "RESIDENT"
 
   if (!name || !email) {
@@ -85,6 +97,7 @@ export async function updateUser(id: string, formData: FormData) {
       email,
       phone: phone || null,
       unit: unit || null,
+      area,
       role,
     },
   })

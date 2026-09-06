@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { castVote, closePoll, activatePoll } from "@/server/actions/glasanje"
 import Link from "next/link"
 import { ExportPollResultsButton } from "./export-button"
+import { tallyPoll, formatArea } from "@/lib/glasanje"
 
 export default async function GlasanjeDetaljPage({
   params,
@@ -34,6 +35,8 @@ export default async function GlasanjeDetaljPage({
         where: { pollId_voterId: { pollId: id, voterId: session.user.id } },
       })
     : null
+
+  const tally = await tallyPoll(poll.id, poll.options, poll.requiredShare)
 
   const totalVotes = poll._count.votes
   const hasVoted = !!userVote
@@ -66,8 +69,15 @@ export default async function GlasanjeDetaljPage({
         </CardHeader>
         <CardContent className="space-y-3">
           {poll.options.map((option) => {
+            const result = tally.options.find((o) => o.id === option.id)
             const voteCount = option._count.votes
-            const percentage = totalVotes > 0 ? (voteCount / totalVotes) * 100 : 0
+            // Kad su kvadrature unete, traka prikazuje udeo u ukupnoj kvadraturi
+            // zgrade — to je velicina od koje zavisi da li je odluka doneta.
+            const percentage = tally.weighted
+              ? (result?.sharePct ?? 0)
+              : totalVotes > 0
+                ? (voteCount / totalVotes) * 100
+                : 0
             const isUserChoice = userVote?.optionId === option.id
 
             if (canVote) {
@@ -89,8 +99,10 @@ export default async function GlasanjeDetaljPage({
                   <span className={`font-medium ${isUserChoice ? "text-primary" : ""}`}>
                     {option.text} {isUserChoice && "(vas glas)"}
                   </span>
-                  <span className="text-muted-foreground">
-                    {voteCount} ({percentage.toFixed(0)}%)
+                  <span className="text-muted-foreground tabular-nums">
+                    {tally.weighted
+                      ? `${percentage.toFixed(1)}% udela · ${voteCount} ${voteCount === 1 ? "glas" : "glasova"}`
+                      : `${voteCount} (${percentage.toFixed(0)}%)`}
                   </span>
                 </div>
                 <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
@@ -98,17 +110,54 @@ export default async function GlasanjeDetaljPage({
                     className={`h-full rounded-full transition-all ${
                       isUserChoice ? "bg-primary" : "bg-slate-400"
                     }`}
-                    style={{ width: `${percentage}%` }}
+                    style={{ width: `${Math.min(100, percentage)}%` }}
                   />
                 </div>
+                {result?.passes && (
+                  <p className="text-xs text-green-700">
+                    Presla prag od {tally.requiredShare}% — odluka je doneta
+                  </p>
+                )}
               </div>
             )
           })}
 
-          <p className="text-xs text-muted-foreground pt-2">
-            Ukupno glasova: {totalVotes}
-            {poll.endsAt && ` · Istice: ${new Date(poll.endsAt).toLocaleDateString("sr-RS")}`}
-          </p>
+          {tally.weighted ? (
+            <div className="pt-3 border-t space-y-1 text-xs text-muted-foreground">
+              <p>
+                <span className="font-medium text-foreground">
+                  Kvorum: {tally.quorumPct.toFixed(1)}%
+                </span>{" "}
+                ({formatArea(tally.votedArea)} od {formatArea(tally.totalArea)}) ·{" "}
+                {tally.quorumMet ? "kvorum je ispunjen" : "potrebno je preko 50%"}
+              </p>
+              <p>
+                Glasalo {totalVotes} od {tally.ownersTotal} vlasnika · prag za
+                odluku {tally.requiredShare}% ukupnog udela
+                {poll.endsAt &&
+                  ` · Istice: ${new Date(poll.endsAt).toLocaleDateString("sr-RS")}`}
+              </p>
+            </div>
+          ) : (
+            <div className="pt-3 border-t space-y-1 text-xs text-muted-foreground">
+              <p>
+                Ukupno glasova: {totalVotes}
+                {poll.endsAt &&
+                  ` · Istice: ${new Date(poll.endsAt).toLocaleDateString("sr-RS")}`}
+              </p>
+              {isManager && tally.ownersMissingArea > 0 && (
+                <p className="text-amber-700">
+                  Racuna se broj glasova, ne vlasnicki udeo — {tally.ownersMissingArea}{" "}
+                  {tally.ownersMissingArea === 1 ? "stan nema" : "stanova nema"} unetu
+                  kvadraturu.{" "}
+                  <Link href="/dashboard/stanari" className="underline">
+                    Unesi kvadrature
+                  </Link>{" "}
+                  da bi se odluka racunala po udelu.
+                </p>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 

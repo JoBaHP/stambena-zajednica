@@ -55,6 +55,7 @@ const DUMPS: Record<DataEntity, DataDump> = {
     load: async () => ({
       records: await db.maintenanceRequest.findMany(),
       comments: await db.requestComment.findMany(),
+      photos: await db.document.findMany({ where: { requestId: { not: null } } }),
     }),
   },
 
@@ -130,6 +131,7 @@ const DUMPS: Record<DataEntity, DataDump> = {
           role: true,
           phone: true,
           unit: true,
+          area: true,
           notifyEmail: true,
           notifySms: true,
           active: true,

@@ -48,6 +48,19 @@ export default async function NoviStanarPage() {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="area">Kvadratura (m²)</Label>
+              <Input
+                id="area"
+                name="area"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="npr. 54.30"
+              />
+              <p className="text-xs text-muted-foreground">Osnova za vlasnicki udeo pri glasanju.</p>
+            </div>
+
             <div className="flex gap-3 pt-2">
               <Button type="submit" className="flex-1">Dodaj stanara</Button>
               <Button type="button" variant="outline" render={<Link href="/dashboard/stanari" />}>

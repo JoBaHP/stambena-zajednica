@@ -17,6 +17,9 @@ model User {
   role      Role     @default(RESIDENT)
   phone     String?
   unit      String?  // broj stana npr. "12", "PP1"
+  // Kvadratura stana u m². Iz nje se racuna vlasnicki udeo, pa i tezina glasa i
+  // kvorum na glasanju (Zakon o stanovanju odluke vezuje za udeo, ne za broj glava).
+  area        Decimal? @db.Decimal(8, 2)
   notifyEmail Boolean @default(true)
   notifySms   Boolean @default(false)
   active      Boolean @default(true)
@@ -188,10 +191,13 @@ enum InvestmentStatus {
 
 // ─── DOKUMENTI ───────────────────────────────────────────────────────────────
 
+// Prilog uz zapis. `fileId` je id fajla na Google Drive-u; `url` je zaostao iz
+// vremena Vercel Blob-a i ostaje opcion zbog starih redova.
 model Document {
   id             String        @id @default(cuid())
   name           String
-  url            String
+  url            String?
+  fileId         String?
   size           Int?
   mimeType       String?
   transactionId  String?
@@ -202,7 +208,11 @@ model Document {
   investment     Investment?   @relation(fields: [investmentId], references: [id], onDelete: Cascade)
   announcementId String?
   announcement   Announcement? @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  requestId      String?
+  request        MaintenanceRequest? @relation(fields: [requestId], references: [id], onDelete: Cascade)
   createdAt      DateTime      @default(now())
+
+  @@index([requestId])
 }
 
 // ─── ZAHTEVI ZA INTERVENCIJE ────────────────────────────────────────────────
@@ -220,6 +230,10 @@ model MaintenanceRequest {
   reporterId  String
   reporter    User             @relation(fields: [reporterId], references: [id])
   comments    RequestComment[]
+  photos      Document[]
+  // Predlog AI trijaze: kategorija, prioritet, izvodjac i obrazlozenje.
+  // Samo predlog za upravnika — ne menja sam zapis.
+  aiTriage    Json?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 }
@@ -375,6 +389,9 @@ model Poll {
   title       String
   description String?
   status      PollStatus @default(DRAFT)
+  // Koliki deo ukupnog vlasnickog udela (u %) opcija mora da skupi da bi odluka
+  // bila doneta. 50 za redovne odluke, 66 za one koje traze dvotrecinsku vecinu.
+  requiredShare Int      @default(50)
   startsAt    DateTime?
   endsAt      DateTime?
   createdById String
