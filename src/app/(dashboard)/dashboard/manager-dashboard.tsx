@@ -155,8 +155,8 @@ export async function ManagerDashboard({ name }: { name: string }) {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            {/* sr-Latn: ostatak sucelja je latinica, sr-RS bi dao cirilicu */}
-            {now.toLocaleDateString("sr-Latn-RS", {
+            {/* sr-Cyrl: datum ide cirilicom, kao i sadrzaj obavestenja. */}
+            {now.toLocaleDateString("sr-Cyrl-RS", {
               weekday: "long",
               day: "numeric",
               month: "long",

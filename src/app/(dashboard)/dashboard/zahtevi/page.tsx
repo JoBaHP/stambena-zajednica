@@ -160,7 +160,7 @@ export default async function ZahteviPage() {
                 </span>
 
                 <span className="shrink-0 text-sm text-muted-foreground nums text-right w-16">
-                  {new Date(r.createdAt).toLocaleDateString("sr-RS", {
+                  {new Date(r.createdAt).toLocaleDateString("sr-Cyrl-RS", {
                     day: "numeric",
                     month: "short",
                   })}
