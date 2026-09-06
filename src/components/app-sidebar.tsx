@@ -41,7 +41,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 const managerNav = [
   { title: "Pregled", href: "/dashboard", icon: LayoutDashboard },
-  { title: "Finansije", href: "/dashboard/finansije", icon: ArrowLeftRight },
   { title: "PP Inspekcije", href: "/dashboard/inspekcije", icon: ShieldCheck },
   { title: "Investicije", href: "/dashboard/investicije", icon: HardHat },
   { title: "Stanari", href: "/dashboard/stanari", icon: Users },
@@ -55,6 +54,7 @@ const managerNav = [
 
 const communityNav = [
   { title: "Obavestenja", href: "/dashboard/obavestenja", icon: Megaphone },
+  { title: "Finansije", href: "/dashboard/finansije", icon: ArrowLeftRight },
   { title: "Glasanje", href: "/dashboard/glasanje", icon: Vote },
   { title: "Tenderi", href: "/dashboard/tenderi", icon: Gavel },
   { title: "Zahtevi", href: "/dashboard/zahtevi", icon: Wrench },

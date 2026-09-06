@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { TransactionFilters } from "./transaction-filters"
 import { Prisma } from "@/generated/prisma/client"
+import { ResidentFinanceView } from "./resident-view"
 
 export default async function FinansijePage({
   searchParams,
@@ -15,7 +16,9 @@ export default async function FinansijePage({
   searchParams: Promise<{ mesec?: string; tip?: string; kategorija?: string }>
 }) {
   const session = await auth()
-  if (session?.user.role !== "MANAGER") redirect("/dashboard")
+  if (!session) redirect("/login")
+  // Stanari vide isti novac, ali samo za citanje — transparentnost racuna.
+  if (session.user.role !== "MANAGER") return <ResidentFinanceView />
 
   const { mesec, tip, kategorija } = await searchParams
 
