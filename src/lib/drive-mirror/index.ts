@@ -311,10 +311,19 @@ export type SyncSummary = {
  * Obradi do `limit` zapisa koji nisu na Drive-u ili su zastareli. Poziva se u
  * petlji (dugme u podesavanjima, backfill skripta) da jedan poziv ne pregori
  * timeout serverless funkcije.
+ *
+ * Bez `force` spisak se sam skracuje jer obradjeni zapisi dobijaju `syncedAt`,
+ * pa petlja napreduje sama. Sa `force` spisak ostaje isti u svakom prolazu —
+ * tada pozivalac mora da prosledi `offset`, inace bi se stalno obradjivala
+ * ista prva tura.
  */
 export async function syncPending(
   limit = 25,
-  opts: { force?: boolean; entities?: readonly DataEntity[] } = {},
+  opts: {
+    force?: boolean
+    entities?: readonly DataEntity[]
+    offset?: number
+  } = {},
 ): Promise<SyncSummary> {
   if (!mirrorEnabled()) {
     return {
@@ -327,7 +336,8 @@ export async function syncPending(
   }
 
   const pending = await collectPending(opts)
-  const batch = pending.slice(0, limit)
+  const start = Math.max(0, opts.offset ?? 0)
+  const batch = pending.slice(start, start + limit)
 
   let synced = 0
   let unchanged = 0
@@ -357,7 +367,7 @@ export async function syncPending(
     synced,
     unchanged,
     failed,
-    remaining: Math.max(0, pending.length - batch.length),
+    remaining: Math.max(0, pending.length - (start + batch.length)),
     errors,
   }
 }

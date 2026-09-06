@@ -60,8 +60,19 @@ async function main() {
   let totalFailed = 0
   const allErrors: string[] = []
 
-  for (let round = 1; ; round++) {
-    const result = await syncPending(batch, { force, entities })
+  // Zastita od beskonacne petlje: i najveca baza ove zajednice se obrise u
+  // nekoliko tura, pa sve preko ovoga znaci da nesto ne napreduje.
+  const MAX_ROUNDS = 200
+  let processed = 0
+
+  for (let round = 1; round <= MAX_ROUNDS; round++) {
+    // Sa `force` spisak se ne skracuje sam, pa se tura pomera offsetom.
+    const result = await syncPending(batch, {
+      force,
+      entities,
+      offset: force ? processed : 0,
+    })
+    processed += result.synced + result.unchanged + result.failed
 
     totalSynced += result.synced
     totalUnchanged += result.unchanged
@@ -74,10 +85,12 @@ async function main() {
 
     if (result.remaining === 0) break
 
-    // Zastita od beskonacne petlje: ako tura nije nista obradila, stani.
     if (result.synced + result.unchanged + result.failed === 0) {
       console.error("Tura nije obradila nista — prekidam da ne bih vrtio u krug.")
       break
+    }
+    if (round === MAX_ROUNDS) {
+      console.error(`Dosegnuto ${MAX_ROUNDS} tura — prekidam. Preostalo: ${result.remaining}`)
     }
   }
 
