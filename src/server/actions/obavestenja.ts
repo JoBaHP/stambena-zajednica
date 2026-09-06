@@ -22,7 +22,10 @@ export async function generateAnnouncementText(title: string, priority: string):
 
   const response = await client.chat.completions.create({
     model: GROQ_MODEL,
-    max_tokens: 300,
+    // Rezerva za reasoning modele: oni deo budzeta trose na razmisljanje pre
+    // odgovora, pa pretesan limit vrati prazan tekst umesto greske. Duzinu
+    // odgovora ogranicava prompt, ne ovaj broj.
+    max_tokens: 1000,
     messages: [
       {
         role: "system",

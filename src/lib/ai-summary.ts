@@ -21,7 +21,9 @@ export async function summarizeOffer(opts: {
     const client = new Groq({ apiKey })
     const response = await client.chat.completions.create({
       model: MODEL,
-      max_tokens: 400,
+      // Rezerva za reasoning modele (vidi obavestenja.ts) — duzinu sazetka
+      // ogranicava prompt na 150 reci, ne ovaj broj.
+      max_tokens: 1200,
       messages: [
         { role: "user", content: `${PROMPT}\n\n${text.slice(0, 12000)}` },
       ],
