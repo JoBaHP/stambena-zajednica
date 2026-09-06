@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
+import { GROQ_MODEL } from "@/lib/groq"
 import { scheduleMirror } from "@/lib/drive-mirror/schedule"
 import { notifyAllResidents } from "@/lib/notifications"
 import { revalidatePath } from "next/cache"
@@ -20,7 +21,7 @@ export async function generateAnnouncementText(title: string, priority: string):
   const isUrgent = priority === "URGENT"
 
   const response = await client.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+    model: GROQ_MODEL,
     max_tokens: 300,
     messages: [
       {

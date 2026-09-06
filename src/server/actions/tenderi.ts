@@ -7,6 +7,7 @@ import { redirect } from "next/navigation"
 import { uploadFile, findOrCreateFolder } from "@/lib/drive"
 import { scheduleMirror } from "@/lib/drive-mirror/schedule"
 import { summarizeOffer } from "@/lib/ai-summary"
+import { GROQ_MODEL } from "@/lib/groq"
 
 const MAX_FILE_SIZE = 4 * 1024 * 1024
 
@@ -230,7 +231,7 @@ export async function compareOffers(tenderId: string) {
   const client = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
   const response = await client.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
+    model: GROQ_MODEL,
     max_tokens: 800,
     messages: [
       {

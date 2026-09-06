@@ -1,6 +1,8 @@
 import Groq from "groq-sdk"
 
-const MODEL = "llama-3.3-70b-versatile"
+import { GROQ_MODEL } from "@/lib/groq"
+
+const MODEL = GROQ_MODEL
 
 const PROMPT =
   "Направи сажетак ове понуде на српском језику, ћириличним писмом, екавицом. Извуци кључне информације: предмет понуде, цену, услове, рокове испоруке, гаранције. Буди концизан, максимално 150 речи."
