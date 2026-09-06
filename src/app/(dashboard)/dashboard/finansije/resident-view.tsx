@@ -2,7 +2,8 @@ import { db } from "@/lib/db"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { FolderArchive } from "lucide-react"
+import { ArrowLeftRight, FolderArchive } from "lucide-react"
+import { moduleAccent } from "@/lib/modules"
 
 // Boje serija su provalidirane za daltonizam (CVD ΔE 9.2) na svetloj podlozi.
 // Aqua je ispod 3:1 kontrasta, pa svaki iznos mora da stoji ispisan pored trake.
@@ -92,46 +93,58 @@ export async function ResidentFinanceView() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Finansije zajednice</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Pregled prihoda i rashoda zajednickog racuna. Podaci su isti oni koje
-          vodi upravnik.
-        </p>
+      <div className="flex items-center gap-3">
+        <span
+          className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+          style={{ background: moduleAccent.finansije.tint }}
+        >
+          <ArrowLeftRight
+            className="w-5 h-5"
+            style={{ color: moduleAccent.finansije.color }}
+          />
+        </span>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Finansije zajednice</h1>
+          <p className="text-sm text-muted-foreground">
+            Isti podaci koje vodi upravnik — samo za uvid
+          </p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card>
+      <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)] gap-4">
+        <Card className="card-lift">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Stanje racuna
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold tabular-nums">{rsd2(balance)}</p>
+            <p className="text-3xl font-bold tracking-tight nums">{rsd2(balance)}</p>
             <p className="text-xs text-muted-foreground mt-1">Od pocetka evidencije</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="card-lift">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <span className={`w-2.5 h-2.5 rounded-sm ${INCOME}`} />
               Uplate ovog meseca
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold tabular-nums">{rsd2(monthIncome)}</p>
+            <p className="text-2xl font-bold tracking-tight nums">{rsd2(monthIncome)}</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="card-lift">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <span className={`w-2.5 h-2.5 rounded-sm ${EXPENSE}`} />
               Rashodi ovog meseca
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold tabular-nums">{rsd2(monthExpense)}</p>
+            <p className="text-2xl font-bold tracking-tight nums">{rsd2(monthExpense)}</p>
           </CardContent>
         </Card>
       </div>
@@ -171,7 +184,7 @@ export async function ResidentFinanceView() {
                           className={`h-2 rounded-r-[4px] ${INCOME}`}
                           style={{ width: `${(m.income / monthMax) * 100}%` }}
                         />
-                        <span className="text-xs tabular-nums text-muted-foreground whitespace-nowrap">
+                        <span className="text-xs nums text-muted-foreground whitespace-nowrap">
                           {rsd(m.income)}
                         </span>
                       </div>
@@ -180,7 +193,7 @@ export async function ResidentFinanceView() {
                           className={`h-2 rounded-r-[4px] ${EXPENSE}`}
                           style={{ width: `${(m.expense / monthMax) * 100}%` }}
                         />
-                        <span className="text-xs tabular-nums text-muted-foreground whitespace-nowrap">
+                        <span className="text-xs nums text-muted-foreground whitespace-nowrap">
                           {rsd(m.expense)}
                         </span>
                       </div>
@@ -207,7 +220,7 @@ export async function ResidentFinanceView() {
                     <li key={name} className="space-y-1">
                       <div className="flex items-baseline justify-between gap-3">
                         <span className="text-sm truncate">{name}</span>
-                        <span className="text-sm tabular-nums whitespace-nowrap">
+                        <span className="text-sm nums whitespace-nowrap">
                           {rsd(value)}{" "}
                           <span className="text-muted-foreground">
                             ({((value / catTotal) * 100).toFixed(0)}%)
@@ -227,7 +240,7 @@ export async function ResidentFinanceView() {
         </>
       )}
 
-      <Card>
+      <Card className="card-lift">
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Poslednje stavke</CardTitle>
         </CardHeader>

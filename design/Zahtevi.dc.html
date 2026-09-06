@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg: oklch(0.99 0.005 260);
+      --card: oklch(1 0 0);
+      --fg: oklch(0.18 0.02 260);
+      --muted-fg: oklch(0.5 0.02 260);
+      --border: oklch(0.92 0.01 260);
+      --primary: oklch(0.49 0.19 270);
+      --radius: 11.9px;
+      --m-zahtevi: oklch(0.55 0.15 40);
+    }
+    body {
+      margin: 0;
+      font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
+      font-size: 17px; line-height: 1.6; color: var(--fg);
+      background: var(--bg); -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { color: oklch(0.42 0.19 270); }
+    .row { transition: background 140ms ease; }
+    .row:hover { background: oklch(0.985 0.005 260); }
+  </style>
+</helmet>
+
+<div style="width: 1168px; padding: 26px 30px; background:
+    radial-gradient(at 100% 100%, oklch(0.95 0.05 200 / 0.4) 0px, transparent 50%), var(--bg);
+    display: flex; flex-direction: column; gap: 22px; box-sizing: border-box;">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 38px; height: 38px; border-radius: 10px; background: oklch(0.96 0.04 40); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--m-zahtevi)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      </div>
+      <div>
+        <div style="font-size: 25.5px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25;">Zahtevi za intervenciju</div>
+        <div style="font-size: 14.2px; color: var(--muted-fg);">3 otvorena · 12 rešenih ove godine</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border-radius: 10px; background: var(--primary); color: #fff; font-size: 14.9px; font-weight: 600;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      Prijavi kvar
+    </div>
+  </div>
+
+  <!-- Filteri kao trake, ne kao select -->
+  <div style="display: flex; gap: 8px;">
+    <div style="height: 32px; padding: 0 14px; border-radius: 99px; background: var(--fg); color: #fff; font-size: 13.6px; font-weight: 600; display: flex; align-items: center;">Sve (15)</div>
+    <div style="height: 32px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--border); background: var(--card); font-size: 13.6px; display: flex; align-items: center; gap: 7px;"><span style="width: 7px; height: 7px; border-radius: 99px; background: oklch(0.6 0.15 250);"></span>Prijavljeno (2)</div>
+    <div style="height: 32px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--border); background: var(--card); font-size: 13.6px; display: flex; align-items: center; gap: 7px;"><span style="width: 7px; height: 7px; border-radius: 99px; background: oklch(0.68 0.15 70);"></span>U toku (1)</div>
+    <div style="height: 32px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--border); background: var(--card); font-size: 13.6px; display: flex; align-items: center; gap: 7px;"><span style="width: 7px; height: 7px; border-radius: 99px; background: oklch(0.6 0.14 155);"></span>Rešeno (12)</div>
+  </div>
+
+  <!-- Lista: gušća nego sada, jedan red = jedan zahtev -->
+  <div style="background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+    <sc-for list="{{items}}" as="r" hint-placeholder-count="4">
+      <div class="row" style="display: grid; grid-template-columns: 4px minmax(0, 1fr) 128px 104px 96px; gap: 16px; align-items: center; padding: 14px 18px 14px 0; border-bottom: 1px solid oklch(0.955 0.005 260);">
+        <div style="height: 34px; border-radius: 0 99px 99px 0; background: {{r.bar}};"></div>
+
+        <div style="min-width: 0; display: flex; flex-direction: column; gap: 3px;">
+          <div style="display: flex; align-items: center; gap: 9px;">
+            <span style="font-size: 15.3px; font-weight: 600;">{{r.title}}</span>
+            <sc-if value="{{r.hasPhoto}}" hint-placeholder-val="{{ true }}">
+              <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 11.9px; color: var(--muted-fg); border: 1px solid var(--border); border-radius: 6px; padding: 0 6px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                {{r.photoCount}}
+              </span>
+            </sc-if>
+          </div>
+          <div style="font-size: 12.75px; color: var(--muted-fg);">{{r.meta}}</div>
+        </div>
+
+        <div>
+          <span style="font-size: 12.2px; font-weight: 600; padding: 3px 10px; border-radius: 7px; background: {{r.statusBg}}; color: {{r.statusFg}};">{{r.status}}</span>
+        </div>
+
+        <div style="font-size: 13.6px; color: {{r.prioColor}}; font-weight: {{r.prioWeight}};">{{r.prio}}</div>
+
+        <div style="font-size: 13.6px; color: var(--muted-fg); text-align: right; font-variant-numeric: tabular-nums;">{{r.date}}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- Prazno stanje: kaže šta dalje, umesto "nema stavki" -->
+  <div>
+    <div style="font-size: 12.75px; color: var(--muted-fg); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Kada nema nijednog zahteva</div>
+    <div style="background: var(--card); border: 1px dashed oklch(0.87 0.01 260); border-radius: var(--radius); padding: 44px 30px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center;">
+      <div style="width: 54px; height: 54px; border-radius: 16px; background: oklch(0.96 0.04 40); display: flex; align-items: center; justify-content: center;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--m-zahtevi)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      </div>
+      <div>
+        <div style="font-size: 17px; font-weight: 700;">Nema otvorenih zahteva</div>
+        <div style="font-size: 14.2px; color: var(--muted-fg); max-width: 420px; margin: 4px auto 0; text-wrap: pretty;">Ako primetite kvar u zgradi — curenje, lift, rasveta — prijavite ga ovde. Možete dodati i fotografiju, upravnik odmah dobija obaveštenje.</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 7px; height: 34px; padding: 0 16px; border-radius: 10px; background: var(--primary); color: #fff; font-size: 14.9px; font-weight: 600; margin-top: 2px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+        Prijavi kvar
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const S = {
+      prijavljeno: { label: 'Prijavljeno', bg: 'oklch(0.95 0.04 250)', fg: 'oklch(0.42 0.15 250)', bar: 'oklch(0.6 0.15 250)' },
+      utoku:       { label: 'U toku',      bg: 'oklch(0.96 0.05 70)',  fg: 'oklch(0.45 0.13 70)',  bar: 'oklch(0.68 0.15 70)' },
+      reseno:      { label: 'Rešeno',      bg: 'oklch(0.96 0.04 155)', fg: 'oklch(0.42 0.12 155)', bar: 'oklch(0.6 0.14 155)' },
+    }
+    const rows = [
+      { title: 'Lift stao između spratova', meta: 'Ilija Brkić, stan 53 · Lift', s: 'prijavljeno', prio: 'Hitno', hot: true, photos: 2, date: '5. sep' },
+      { title: 'Kaplje voda sa plafona u podrumu', meta: 'Nada Rajić, stan 19 · Vodovod', s: 'utoku', prio: 'Visok', hot: false, photos: 3, date: '2. sep' },
+      { title: 'Ne radi rasveta u hodniku 3. sprat', meta: 'Milica Zarić, stan 47 · Elektrika', s: 'prijavljeno', prio: 'Normalan', hot: false, photos: 0, date: '29. avg' },
+      { title: 'Zamena brave na zadnjem ulazu', meta: 'Sava Budošan, stan 27 · Gradjevinski', s: 'reseno', prio: 'Nizak', hot: false, photos: 1, date: '21. avg' },
+    ]
+    return {
+      items: rows.map((r) => ({
+        title: r.title,
+        meta: r.meta,
+        status: S[r.s].label,
+        statusBg: S[r.s].bg,
+        statusFg: S[r.s].fg,
+        bar: S[r.s].bar,
+        prio: r.prio,
+        prioColor: r.hot ? 'oklch(0.52 0.18 25)' : 'var(--muted-fg)',
+        prioWeight: r.hot ? '700' : '500',
+        hasPhoto: r.photos > 0,
+        photoCount: String(r.photos),
+        date: r.date,
+      })),
+    }
+  }
+}
+</script>
+</body>
+</html>

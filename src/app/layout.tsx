@@ -1,11 +1,14 @@
 import type { Metadata, Viewport } from "next"
-import { Geist } from "next/font/google"
+import { Manrope } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "@/components/ui/sonner"
 
-const geist = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Manrope ima cirilicu i latinicu i cita se bolje od sistemskog fonta na
+// gustim listama; sistemski font je bio dobar deo "ravnog" utiska.
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin", "latin-ext", "cyrillic"],
+  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -65,7 +68,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="sr" className={`${geist.variable} h-full`}>
+    <html lang="sr" className={`${manrope.variable} h-full`}>
       <body className="h-full antialiased">
         {children}
         <Toaster richColors position="top-right" />

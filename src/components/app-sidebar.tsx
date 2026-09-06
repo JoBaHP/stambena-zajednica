@@ -38,28 +38,30 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { moduleAccent } from "@/lib/modules"
 
 const managerNav = [
-  { title: "Pregled", href: "/dashboard", icon: LayoutDashboard },
-  { title: "PP Inspekcije", href: "/dashboard/inspekcije", icon: ShieldCheck },
-  { title: "Investicije", href: "/dashboard/investicije", icon: HardHat },
-  { title: "Stanari", href: "/dashboard/stanari", icon: Users },
+  { title: "Pregled", href: "/dashboard", icon: LayoutDashboard, module: "pregled" as const },
+  { title: "PP Inspekcije", href: "/dashboard/inspekcije", icon: ShieldCheck, module: "inspekcije" as const },
+  { title: "Investicije", href: "/dashboard/investicije", icon: HardHat, module: "investicije" as const },
+  { title: "Stanari", href: "/dashboard/stanari", icon: Users, module: "stanari" as const },
   {
     title: "Zahtevi za pristup",
     href: "/dashboard/zahtevi-za-pristup",
     icon: UserPlus,
+    module: "stanari" as const,
   },
-  { title: "Kalendar", href: "/dashboard/kalendar", icon: CalendarClock },
+  { title: "Kalendar", href: "/dashboard/kalendar", icon: CalendarClock, module: "kalendar" as const },
 ]
 
 const communityNav = [
-  { title: "Obavestenja", href: "/dashboard/obavestenja", icon: Megaphone },
-  { title: "Finansije", href: "/dashboard/finansije", icon: ArrowLeftRight },
-  { title: "Glasanje", href: "/dashboard/glasanje", icon: Vote },
-  { title: "Tenderi", href: "/dashboard/tenderi", icon: Gavel },
-  { title: "Zahtevi", href: "/dashboard/zahtevi", icon: Wrench },
-  { title: "Arhiva", href: "/dashboard/arhiva", icon: FolderArchive },
-  { title: "Kontakti", href: "/dashboard/kontakti", icon: Phone },
+  { title: "Obavestenja", href: "/dashboard/obavestenja", icon: Megaphone, module: "obavestenja" as const },
+  { title: "Finansije", href: "/dashboard/finansije", icon: ArrowLeftRight, module: "finansije" as const },
+  { title: "Glasanje", href: "/dashboard/glasanje", icon: Vote, module: "glasanje" as const },
+  { title: "Tenderi", href: "/dashboard/tenderi", icon: Gavel, module: "tenderi" as const },
+  { title: "Zahtevi", href: "/dashboard/zahtevi", icon: Wrench, module: "zahtevi" as const },
+  { title: "Arhiva", href: "/dashboard/arhiva", icon: FolderArchive, module: "arhiva" as const },
+  { title: "Kontakti", href: "/dashboard/kontakti", icon: Phone, module: "kontakti" as const },
 ]
 
 interface AppSidebarProps {
@@ -123,7 +125,10 @@ export function AppSidebar({
                         isActive={pathname === item.href}
                         render={<Link href={item.href} />}
                       >
-                        <item.icon className="w-4 h-4" />
+                        <item.icon
+                          className="w-4 h-4"
+                          style={{ color: moduleAccent[item.module].color }}
+                        />
                         <span className="flex-1 flex items-center justify-between gap-2 min-w-0">
                           <span className="truncate">{item.title}</span>
                           {showBadge && (
@@ -176,7 +181,10 @@ export function AppSidebar({
                     isActive={pathname === item.href}
                     render={<Link href={item.href} />}
                   >
-                    <item.icon className="w-4 h-4" />
+                    <item.icon
+                      className="w-4 h-4"
+                      style={{ color: moduleAccent[item.module].color }}
+                    />
                     <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

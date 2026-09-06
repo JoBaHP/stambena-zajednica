@@ -7,7 +7,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -81,6 +81,33 @@
   --sidebar-accent-foreground: oklch(0.97 0.005 260);
   --sidebar-border: oklch(0.31 0.06 268);
   --sidebar-ring: oklch(0.65 0.15 270);
+
+  /* Akcenat po modulu: ista svetlina i hroma, menja se samo nijansa — pa boje
+     stoje zajedno bez da neka viče. `-tint` je pozadina ikonice. */
+  --m-pregled: oklch(0.55 0.15 270);
+  --m-pregled-tint: oklch(0.95 0.04 270);
+  --m-finansije: oklch(0.55 0.15 165);
+  --m-finansije-tint: oklch(0.95 0.04 165);
+  --m-obavestenja: oklch(0.55 0.15 70);
+  --m-obavestenja-tint: oklch(0.96 0.05 70);
+  --m-glasanje: oklch(0.55 0.15 300);
+  --m-glasanje-tint: oklch(0.95 0.04 300);
+  --m-tenderi: oklch(0.55 0.15 240);
+  --m-tenderi-tint: oklch(0.95 0.04 240);
+  --m-zahtevi: oklch(0.55 0.15 40);
+  --m-zahtevi-tint: oklch(0.96 0.04 40);
+  --m-stanari: oklch(0.55 0.15 210);
+  --m-stanari-tint: oklch(0.95 0.04 210);
+  --m-kalendar: oklch(0.55 0.15 15);
+  --m-kalendar-tint: oklch(0.96 0.04 15);
+  --m-inspekcije: oklch(0.55 0.15 25);
+  --m-inspekcije-tint: oklch(0.96 0.04 25);
+  --m-investicije: oklch(0.55 0.15 130);
+  --m-investicije-tint: oklch(0.95 0.04 130);
+  --m-arhiva: oklch(0.55 0.09 260);
+  --m-arhiva-tint: oklch(0.95 0.02 260);
+  --m-kontakti: oklch(0.55 0.15 340);
+  --m-kontakti-tint: oklch(0.95 0.04 340);
 }
 
 .dark {
@@ -144,4 +171,20 @@
   h2, h3 {
     @apply tracking-tight;
   }
+}
+
+@layer components {
+  /* Kartica koja se blago podigne na hover — jedini pokret u interfejsu. */
+  .card-lift {
+    transition: box-shadow 160ms ease, transform 160ms ease;
+  }
+  .card-lift:hover {
+    box-shadow: 0 6px 20px -8px oklch(0.23 0.07 268 / 0.18);
+    transform: translateY(-1px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card-lift:hover { transform: none; }
+  }
+  /* Brojke u kolonama moraju da se poklapaju. */
+  .nums { font-variant-numeric: tabular-nums; }
 }

@@ -42,3 +42,8 @@ next-env.d.ts
 
 /src/generated/prisma
 src/generated/
+
+# Seedovani canvas predloga dizajna je ~2.4 MB generisanog fajla — izvorni
+# .dc.html artboardovi ostaju u repou, seedovana stranica ne.
+design/*.html
+!design/*.dc.html

@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg: oklch(0.99 0.005 260);
+      --card: oklch(1 0 0);
+      --fg: oklch(0.18 0.02 260);
+      --muted-fg: oklch(0.5 0.02 260);
+      --border: oklch(0.92 0.01 260);
+      --input-border: oklch(0.92 0.01 260);
+      --primary: oklch(0.49 0.19 270);
+      --radius: 11.9px;
+      --m-stanari: oklch(0.55 0.15 210);
+    }
+    body {
+      margin: 0;
+      font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
+      font-size: 17px; line-height: 1.6; color: var(--fg);
+      background: var(--bg); -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { color: oklch(0.42 0.19 270); }
+    .fld {
+      height: 34px; border: 1px solid var(--input-border); border-radius: 10px;
+      background: var(--card); display: flex; align-items: center; padding: 0 11px;
+      font-size: 14.9px; box-sizing: border-box;
+    }
+    .lbl { font-size: 13.6px; font-weight: 600; }
+    .hint { font-size: 12.2px; color: var(--muted-fg); }
+  </style>
+</helmet>
+
+<div style="width: 1168px; padding: 26px 30px; background:
+    radial-gradient(at 100% 100%, oklch(0.95 0.05 200 / 0.4) 0px, transparent 50%), var(--bg);
+    display: flex; flex-direction: column; gap: 20px; box-sizing: border-box;">
+
+  <div style="display: flex; align-items: center; gap: 12px;">
+    <div style="width: 30px; height: 30px; border-radius: 9px; border: 1px solid var(--border); background: var(--card); display: flex; align-items: center; justify-content: center;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </div>
+    <div style="font-size: 13.6px; color: var(--muted-fg);">Stanari</div>
+  </div>
+
+  <!-- Zaglavlje sa identitetom stana, ne samo ime -->
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <div style="width: 56px; height: 56px; border-radius: 16px; background: oklch(0.95 0.04 210); color: var(--m-stanari); display: flex; align-items: center; justify-content: center; font-size: 19px; font-weight: 700; flex-shrink: 0;">JR</div>
+    <div style="flex-grow: 1;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="font-size: 25.5px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25;">Jovan Raosavljevic</div>
+        <span style="font-size: 12.2px; font-weight: 600; padding: 3px 10px; border-radius: 7px; background: oklch(0.95 0.04 270); color: oklch(0.4 0.15 270);">Upravnik</span>
+      </div>
+      <div style="font-size: 14.2px; color: var(--muted-fg);">Stan 25 · 49 m² · udeo 5,1% · poslednja prijava pre 2 sata</div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 18px; align-items: start;">
+
+    <!-- Forma -->
+    <div style="background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+      <div style="padding: 16px 20px 13px; border-bottom: 1px solid var(--border); font-size: 16px; font-weight: 700;">Podaci</div>
+
+      <div style="padding: 18px 20px; display: flex; flex-direction: column; gap: 16px;">
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div class="lbl">Ime i prezime</div>
+          <div class="fld">Jovan Raosavljevic</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div class="lbl">Email</div>
+          <div class="fld">raosavljevicjovan.jr@gmail.com</div>
+        </div>
+
+        <!-- Tri kratka polja u istom redu — ranije je kvadratura sama zauzimala ceo red -->
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div class="lbl">Telefon</div>
+            <div class="fld">0649368989</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div class="lbl">Stan</div>
+            <div class="fld">25</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div class="lbl">Kvadratura (m²)</div>
+            <div class="fld" style="justify-content: space-between;">
+              <span>49</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted-fg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+            </div>
+            <div class="hint">Za vlasnički udeo</div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div class="lbl">Uloga</div>
+          <div class="fld" style="background: oklch(0.975 0.005 260); color: var(--muted-fg); justify-content: space-between;">
+            <span>Upravnik</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted-fg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="hint">Ne možete promeniti sopstvenu ulogu</div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; padding-top: 4px;">
+          <div style="display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 16px; border-radius: 10px; background: var(--primary); color: #fff; font-size: 14.9px; font-weight: 600;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="animation: none;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+            Čuvam…
+          </div>
+          <div class="hint">Dugme pokazuje da slanje traje</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bočno: udeo i akcije -->
+    <div style="display: flex; flex-direction: column; gap: 18px;">
+
+      <div style="background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="font-size: 16px; font-weight: 700;">Vlasnički udeo</div>
+        <div style="display: flex; align-items: baseline; gap: 8px;">
+          <div style="font-size: 32px; font-weight: 700; letter-spacing: -0.025em; line-height: 1; font-variant-numeric: tabular-nums;">5,1%</div>
+          <div style="font-size: 14.2px; color: var(--muted-fg);">49 od 970 m²</div>
+        </div>
+        <div style="height: 9px; border-radius: 99px; background: oklch(0.94 0.01 260); overflow: hidden;">
+          <div style="height: 100%; width: 5.1%; background: var(--m-stanari); border-radius: 99px;"></div>
+        </div>
+        <div class="hint" style="text-wrap: pretty;">Toliko nosi glas ovog stana na glasanju. Kvorum i odluke računaju se po kvadraturi.</div>
+      </div>
+
+      <div style="background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+        <div style="padding: 15px 20px 12px; border-bottom: 1px solid var(--border); font-size: 16px; font-weight: 700;">Aktivnost</div>
+        <div style="padding: 6px 20px 14px; display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid oklch(0.96 0.005 260); font-size: 14.2px;">
+            <span style="color: var(--muted-fg);">Glasao</span><span style="font-weight: 600;">3 od 4 puta</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid oklch(0.96 0.005 260); font-size: 14.2px;">
+            <span style="color: var(--muted-fg);">Prijavio kvarova</span><span style="font-weight: 600;">2</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 14.2px;">
+            <span style="color: var(--muted-fg);">Dodat</span><span style="font-weight: 600;">04.05.2026.</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: var(--card); border: 1px solid oklch(0.9 0.04 25); border-radius: var(--radius); padding: 16px 20px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="font-size: 15px; font-weight: 700;">Pristup</div>
+        <div class="hint" style="text-wrap: pretty;">Uklanjanjem pristupa nalog se odmah odjavljuje i prestaje da prima obaveštenja. Podaci o stanu ostaju.</div>
+        <div style="height: 32px; padding: 0 14px; border-radius: 9px; border: 1px solid oklch(0.85 0.06 25); color: oklch(0.5 0.18 25); font-size: 13.6px; font-weight: 600; display: inline-flex; align-items: center; align-self: flex-start;">Ukloni pristup</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+</body>
+</html>

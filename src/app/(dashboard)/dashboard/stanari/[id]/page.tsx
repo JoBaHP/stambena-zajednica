@@ -12,6 +12,7 @@ import {
   resetUserPassword,
   setUserActive,
 } from "@/server/actions/stanari"
+import { moduleAccent } from "@/lib/modules"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
@@ -29,6 +30,22 @@ export default async function EditStanarPage({
 
   const isSelf = session.user.id === id
 
+  // Vlasnicki udeo — koliko ovaj stan nosi na glasanju.
+  const owners = await db.user.findMany({
+    where: { active: true, unit: { not: null } },
+    select: { area: true },
+  })
+  const myArea = Number(user.area ?? 0)
+  const totalArea = owners.reduce((sum, o) => sum + Number(o.area ?? 0), 0)
+  const sharePct = myArea > 0 && totalArea > 0 ? (myArea / totalArea) * 100 : null
+
+  const initials = user.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2)
+
   return (
     <div className="max-w-2xl space-y-6">
       <div>
@@ -36,12 +53,62 @@ export default async function EditStanarPage({
           <ArrowLeft className="w-4 h-4 mr-2" />
           Nazad
         </Button>
-        <div className="mt-2 flex items-center gap-3">
-          <h1 className="text-2xl font-semibold">{user.name}</h1>
-          {!user.active && <Badge variant="destructive">Pristup uklonjen</Badge>}
-          {user.role === "MANAGER" && <Badge>Upravnik</Badge>}
+
+        <div className="mt-3 flex items-center gap-4">
+          <span
+            className="shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center text-lg font-bold"
+            style={{
+              background: moduleAccent.stanari.tint,
+              color: moduleAccent.stanari.color,
+            }}
+          >
+            {initials}
+          </span>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h1 className="text-2xl font-bold tracking-tight">{user.name}</h1>
+              {!user.active && <Badge variant="destructive">Pristup uklonjen</Badge>}
+              {user.role === "MANAGER" && <Badge>Upravnik</Badge>}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {user.unit ? `Stan ${user.unit}` : "Bez dodeljenog stana"}
+              {myArea > 0 && ` · ${myArea.toLocaleString("sr-RS")} m²`}
+              {sharePct !== null &&
+                ` · udeo ${sharePct.toFixed(1).replace(".", ",")}%`}
+            </p>
+          </div>
         </div>
       </div>
+
+      {sharePct !== null && (
+        <Card className="card-lift">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Vlasnicki udeo</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-baseline gap-2.5">
+              <span className="text-3xl font-bold tracking-tight nums">
+                {sharePct.toFixed(1).replace(".", ",")}%
+              </span>
+              <span className="text-sm text-muted-foreground nums">
+                {myArea.toLocaleString("sr-RS")} od {totalArea.toLocaleString("sr-RS")} m²
+              </span>
+            </div>
+            <div className="h-2 rounded-full bg-muted overflow-hidden">
+              <div
+                className="h-full rounded-full"
+                style={{
+                  width: `${Math.min(100, sharePct)}%`,
+                  background: moduleAccent.stanari.color,
+                }}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Toliko nosi glas ovog stana. Kvorum i odluke racunaju se po kvadraturi.
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

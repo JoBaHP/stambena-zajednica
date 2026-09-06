@@ -1,0 +1,47 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "title": "Pregled — upravnik", "x": 0, "y": 0, "w": 1440, "h": 940 },
+    { "file": "PregledStanar.dc.html", "title": "Pregled — stanar", "x": 1560, "y": 0, "w": 1168, "h": 880 },
+    { "file": "Finansije.dc.html", "title": "Finansije — stanar", "x": 0, "y": 1080, "w": 1168, "h": 1240 },
+    { "file": "Zahtevi.dc.html", "title": "Zahtevi — lista i prazno stanje", "x": 1288, "y": 1080, "w": 1168, "h": 860 },
+    { "file": "Stanari.dc.html", "title": "Stanar — detalj i forma", "x": 0, "y": 2460, "w": 1168, "h": 820 }
+  ],
+  "annotations": [
+    {
+      "id": "smer-1",
+      "x": 0,
+      "y": -190,
+      "w": 440,
+      "text": "1. Doterivanje\n\nIste boje i tokeni kao sada — menja se disanje. Mekša senka na hover, veći razmaci, ikonice u zaglavljima, brojke u tabularnim ciframa da se kolone poklapaju."
+    },
+    {
+      "id": "smer-2",
+      "x": 480,
+      "y": -190,
+      "w": 440,
+      "text": "2. Boja po modulu\n\nSvaki modul ima svoju nijansu na istoj svetlini i hromi — menja se samo ton. Boja stoji u ikonici i malom kvadratu iza nje, ne kao široka traka, da ne viče."
+    },
+    {
+      "id": "smer-3",
+      "x": 960,
+      "y": -190,
+      "w": 480,
+      "text": "3. Preraspored\n\nUpravnik prvo vidi šta traži njegovu akciju, pa tek onda brojke. Stanar vidi hitno obaveštenje i glasanje koje čeka — ne finansijske KPI kartice koje mu ništa ne znače."
+    },
+    {
+      "id": "napomena-podaci",
+      "x": 1560,
+      "y": 940,
+      "w": 440,
+      "text": "Brojke su izmišljene za prikaz — imena stanara i naslovi obaveštenja su iz vaše baze, iznosi i datumi nisu."
+    },
+    {
+      "id": "napomena-prazno",
+      "x": 2496,
+      "y": 1080,
+      "w": 400,
+      "text": "Prazno stanje sad kaže šta dalje i zašto, umesto „nema stavki\"."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}
