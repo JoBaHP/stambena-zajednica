@@ -72,12 +72,17 @@ export async function updateUser(id: string, formData: FormData) {
   const phone = (formData.get("phone") as string)?.trim()
   const unit = (formData.get("unit") as string)?.trim()
   const area = parseArea(formData.get("area"))
-  const role = formData.get("role") as "MANAGER" | "RESIDENT"
+  // Kad upravnik uredjuje sam sebe, polje za ulogu je onemoguceno u formi, a
+  // onemoguceno polje se ne salje — odsustvo vrednosti znaci "ostavi kako jeste",
+  // ne "nevazeca uloga".
+  const roleRaw = formData.get("role")
+  const role =
+    roleRaw === "MANAGER" || roleRaw === "RESIDENT" ? roleRaw : target.role
 
   if (!name || !email) {
     throw new Error("Ime i email su obavezni")
   }
-  if (role !== "MANAGER" && role !== "RESIDENT") {
+  if (roleRaw !== null && roleRaw !== "MANAGER" && roleRaw !== "RESIDENT") {
     throw new Error("Nevazeca uloga")
   }
 
