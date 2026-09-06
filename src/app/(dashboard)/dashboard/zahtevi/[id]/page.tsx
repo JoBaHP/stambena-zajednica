@@ -8,9 +8,8 @@ import {
 } from "@/lib/labels"
 import { notFound, redirect } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/submit-button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeft, AlertTriangle, MessageSquare, Sparkles } from "lucide-react"
@@ -223,9 +222,9 @@ export default async function ZahtevDetaljiPage({
               (triage.category !== request.category ||
                 triage.priority !== request.priority) && (
                 <form action={applyTriage.bind(null, request.id)}>
-                  <Button type="submit" size="sm" variant="outline">
+                  <SubmitButton size="sm" variant="outline">
                     Prihvati kategoriju i prioritet
-                  </Button>
+                  </SubmitButton>
                 </form>
               )}
           </CardContent>
@@ -266,7 +265,7 @@ export default async function ZahtevDetaljiPage({
                   placeholder="Opis resenja ili razlog odbijanja"
                 />
               </div>
-              <Button type="submit">Sacuvaj</Button>
+              <SubmitButton>Sacuvaj</SubmitButton>
             </form>
           </CardContent>
         </Card>
@@ -320,9 +319,9 @@ export default async function ZahtevDetaljiPage({
               placeholder="Napisi komentar..."
               required
             />
-            <Button type="submit" size="sm">
+            <SubmitButton size="sm">
               Posalji
-            </Button>
+            </SubmitButton>
           </form>
         </CardContent>
       </Card>

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/submit-button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -158,9 +159,9 @@ export function TransactionForm({ categories, defaultValues }: TransactionFormPr
 
           {/* Dugmad */}
           <div className="flex gap-3 pt-2">
-            <Button type="submit" className="flex-1">
+            <SubmitButton className="flex-1">
               {isEdit ? "Sacuvaj izmene" : "Sacuvaj"}
-            </Button>
+            </SubmitButton>
             <Button type="button" variant="outline" render={<Link href="/dashboard/finansije" />}>
               Otkazi
             </Button>

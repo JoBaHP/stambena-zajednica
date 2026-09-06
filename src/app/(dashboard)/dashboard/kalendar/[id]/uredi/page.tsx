@@ -3,6 +3,7 @@ import { db } from "@/lib/db"
 import { notFound, redirect } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/submit-button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -102,9 +103,9 @@ export default async function UrediObavezuPage({
             </div>
 
             <div className="flex gap-3 pt-2">
-              <Button type="submit" className="flex-1">
+              <SubmitButton className="flex-1">
                 Sacuvaj
-              </Button>
+              </SubmitButton>
               <Button
                 type="button"
                 variant="outline"

@@ -2,6 +2,7 @@ import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/submit-button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createResident } from "@/server/actions/stanari"
@@ -37,7 +38,7 @@ export default async function NoviStanarPage() {
               <p className="text-xs text-muted-foreground">Stanar moze da promeni lozinku nakon prve prijave</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="unit">Broj stana</Label>
                 <Input id="unit" name="unit" placeholder="npr. 12" />
@@ -46,23 +47,23 @@ export default async function NoviStanarPage() {
                 <Label htmlFor="phone">Telefon</Label>
                 <Input id="phone" name="phone" placeholder="Opciono" />
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="area">Kvadratura (m²)</Label>
-              <Input
-                id="area"
-                name="area"
-                type="number"
-                step="0.01"
-                min="0"
-                placeholder="npr. 54.30"
-              />
-              <p className="text-xs text-muted-foreground">Osnova za vlasnicki udeo pri glasanju.</p>
+              <div className="space-y-2">
+                <Label htmlFor="area">Kvadratura (m²)</Label>
+                <Input
+                  id="area"
+                  name="area"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  inputMode="decimal"
+                  placeholder="npr. 54.30"
+                />
+                <p className="text-xs text-muted-foreground">Za vlasnicki udeo pri glasanju.</p>
+              </div>
             </div>
 
             <div className="flex gap-3 pt-2">
-              <Button type="submit" className="flex-1">Dodaj stanara</Button>
+              <SubmitButton className="flex-1">Dodaj stanara</SubmitButton>
               <Button type="button" variant="outline" render={<Link href="/dashboard/stanari" />}>
                 Otkazi
               </Button>

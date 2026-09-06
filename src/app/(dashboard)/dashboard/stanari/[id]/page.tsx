@@ -3,6 +3,7 @@ import { db } from "@/lib/db"
 import { notFound, redirect } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/submit-button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -69,7 +70,7 @@ export default async function EditStanarPage({
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="phone">Telefon</Label>
                 <Input id="phone" name="phone" defaultValue={user.phone ?? ""} />
@@ -78,19 +79,19 @@ export default async function EditStanarPage({
                 <Label htmlFor="unit">Stan</Label>
                 <Input id="unit" name="unit" defaultValue={user.unit ?? ""} />
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="area">Kvadratura (m²)</Label>
-              <Input
-                id="area"
-                name="area"
-                type="number"
-                step="0.01"
-                min="0"
-                defaultValue={user.area ? String(user.area) : ""}
-              />
-              <p className="text-xs text-muted-foreground">Osnova za vlasnicki udeo pri glasanju.</p>
+              <div className="space-y-2">
+                <Label htmlFor="area">Kvadratura (m²)</Label>
+                <Input
+                  id="area"
+                  name="area"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  inputMode="decimal"
+                  defaultValue={user.area ? String(user.area) : ""}
+                />
+                <p className="text-xs text-muted-foreground">Za vlasnicki udeo pri glasanju.</p>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -112,7 +113,7 @@ export default async function EditStanarPage({
               )}
             </div>
 
-            <Button type="submit">Sacuvaj izmene</Button>
+            <SubmitButton>Sacuvaj izmene</SubmitButton>
           </form>
         </CardContent>
       </Card>
@@ -139,9 +140,9 @@ export default async function EditStanarPage({
                 Saopsti je korisniku da je promeni nakon prijave.
               </p>
             </div>
-            <Button type="submit" variant="outline">
+            <SubmitButton variant="outline">
               Postavi novu lozinku
-            </Button>
+            </SubmitButton>
           </form>
         </CardContent>
       </Card>
@@ -162,16 +163,16 @@ export default async function EditStanarPage({
                 zahtevi, transakcije) ostaje sacuvana. Mozes ga vratiti istim
                 klikom kasnije.
               </p>
-              <Button type="submit" variant="destructive">
+              <SubmitButton variant="destructive">
                 Ukloni pristup
-              </Button>
+              </SubmitButton>
             </form>
           ) : (
             <form action={setUserActive.bind(null, id, true)}>
               <p className="text-sm text-muted-foreground mb-3">
                 Korisniku je uklonjen pristup. Klikom ga vracas u aktivno stanje.
               </p>
-              <Button type="submit">Vrati pristup</Button>
+              <SubmitButton>Vrati pristup</SubmitButton>
             </form>
           )}
         </CardContent>

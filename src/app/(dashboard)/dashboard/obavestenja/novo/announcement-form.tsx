@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/submit-button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -103,7 +104,7 @@ export function AnnouncementForm() {
           </div>
 
           <div className="flex gap-3 pt-2">
-            <Button type="submit" className="flex-1">Objavi</Button>
+            <SubmitButton className="flex-1">Objavi</SubmitButton>
             <Button type="button" variant="outline" render={<Link href="/dashboard/obavestenja" />}>
               Otkazi
             </Button>

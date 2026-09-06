@@ -4,6 +4,7 @@ import { db } from "@/lib/db"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/submit-button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -173,7 +174,7 @@ export default async function InvesticijaDetaljPage({
                   <option value="CANCELLED">Otkazano</option>
                 </select>
               </div>
-              <Button type="submit">Sacuvaj izmene</Button>
+              <SubmitButton>Sacuvaj izmene</SubmitButton>
             </form>
           </CardContent>
         </Card>
@@ -240,10 +241,10 @@ export default async function InvesticijaDetaljPage({
                   placeholder="Šta se traži, kriterijumi izbora..."
                 />
               </div>
-              <Button type="submit" size="sm">
+              <SubmitButton size="sm">
                 <Gavel className="w-3.5 h-3.5 mr-1.5" />
                 Kreiraj tender
-              </Button>
+              </SubmitButton>
             </form>
           )}
         </CardContent>

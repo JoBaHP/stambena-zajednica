@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation"
 import { db } from "@/lib/db"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/submit-button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -93,7 +94,7 @@ export default async function NovaPonudaPage({
             </div>
 
             <div className="flex gap-2 pt-2">
-              <Button type="submit">Dodaj ponudu</Button>
+              <SubmitButton>Dodaj ponudu</SubmitButton>
               <Button
                 type="button"
                 variant="outline"

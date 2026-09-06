@@ -4,6 +4,7 @@ import { db } from "@/lib/db"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/submit-button"
 import {
   Building2,
   Trophy,
@@ -204,10 +205,10 @@ export default async function TenderDetaljPage({
                   <div className="flex flex-wrap gap-2">
                     {tender.offers.map((offer) => (
                       <form key={offer.id} action={closeTender.bind(null, tender.id, offer.id)}>
-                        <Button type="submit" size="sm" variant="outline">
+                        <SubmitButton size="sm" variant="outline">
                           <Trophy className="w-3.5 h-3.5 mr-1.5 text-amber-500" />
                           {offer.company}
-                        </Button>
+                        </SubmitButton>
                       </form>
                     ))}
                   </div>
@@ -218,10 +219,10 @@ export default async function TenderDetaljPage({
 
           {tender.status === "CLOSED" && (
             <form action={reopenTender.bind(null, tender.id)}>
-              <Button type="submit" variant="outline" size="sm">
+              <SubmitButton variant="outline" size="sm">
                 <RotateCcw className="w-4 h-4 mr-2" />
                 Ponovo otvori glasanje
-              </Button>
+              </SubmitButton>
             </form>
           )}
         </div>
