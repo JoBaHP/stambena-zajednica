@@ -9,6 +9,8 @@ import Link from "next/link"
 import { TransactionFilters } from "./transaction-filters"
 import { Prisma } from "@/generated/prisma/client"
 import { ResidentFinanceView } from "./resident-view"
+import { ImportSheetButton } from "./import-button"
+import { RESIDENT_FINANCE_VISIBLE } from "@/lib/flags"
 
 export default async function FinansijePage({
   searchParams,
@@ -17,8 +19,12 @@ export default async function FinansijePage({
 }) {
   const session = await auth()
   if (!session) redirect("/login")
-  // Stanari vide isti novac, ali samo za citanje — transparentnost racuna.
-  if (session.user.role !== "MANAGER") return <ResidentFinanceView />
+  if (session.user.role !== "MANAGER") {
+    // Stanarski prikaz je napravljen ali stoji zatvoren dok upravnik ne
+    // pregleda kako izgleda sa pravim podacima iz tabele.
+    if (!RESIDENT_FINANCE_VISIBLE) redirect("/dashboard")
+    return <ResidentFinanceView />
+  }
 
   const { mesec, tip, kategorija } = await searchParams
 
@@ -53,15 +59,21 @@ export default async function FinansijePage({
     }),
   ])
 
+  // Preneto stanje iz tabele nije prihod ovog perioda — ulazi u saldo, ali ne
+  // u zbir prihoda, inace kartica "Ukupni prihodi" prikazuje naduvan broj.
+  const carried = transactions
+    .filter((t) => t.sourceRef === "PRENETO")
+    .reduce((sum, t) => sum + Number(t.amount), 0)
+
   const totalIncome = transactions
-    .filter((t) => t.type === "INCOME")
+    .filter((t) => t.type === "INCOME" && t.sourceRef !== "PRENETO")
     .reduce((sum, t) => sum + Number(t.amount), 0)
 
   const totalExpense = transactions
     .filter((t) => t.type === "EXPENSE")
     .reduce((sum, t) => sum + Number(t.amount), 0)
 
-  const balance = totalIncome - totalExpense
+  const balance = carried + totalIncome - totalExpense
 
   return (
     <div className="space-y-6">
@@ -75,6 +87,8 @@ export default async function FinansijePage({
           Нова ставка
         </Button>
       </div>
+
+      <ImportSheetButton />
 
       <TransactionFilters categories={categories} />
 
@@ -107,6 +121,12 @@ export default async function FinansijePage({
             <p className={`text-2xl font-bold ${balance >= 0 ? "text-green-600" : "text-red-600"}`}>
               {balance.toLocaleString("sr-RS", { minimumFractionDigits: 2 })} РСД
             </p>
+            {carried > 0 && (
+              <p className="text-xs text-muted-foreground mt-1">
+                укључује пренето стање{" "}
+                {carried.toLocaleString("sr-RS", { minimumFractionDigits: 2 })} РСД
+              </p>
+            )}
           </CardContent>
         </Card>
       </div>

@@ -131,6 +131,9 @@ model Transaction {
   category     TransactionCategory? @relation(fields: [categoryId], references: [id])
   referenceNum String?
   notes        String?
+  // Red u tabeli iz kog je stavka uvezena, npr. "MART/1" (kartica/redni broj).
+  // Po njemu se ponovni uvoz prepoznaje kao izmena a ne kao nova stavka.
+  sourceRef    String?              @unique
   documents    Document[]
   createdById  String
   createdBy    User                 @relation(fields: [createdById], references: [id])

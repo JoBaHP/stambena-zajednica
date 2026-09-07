@@ -39,9 +39,16 @@ import {
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { moduleAccent } from "@/lib/modules"
+import { RESIDENT_FINANCE_VISIBLE } from "@/lib/flags"
+
+// Dok stanarski prikaz stoji zatvoren, Финансије su upravnicka stavka.
+const FINANSIJE = { title: "Финансије", href: "/dashboard/finansije", icon: ArrowLeftRight, module: "finansije" as const }
+
+const managerOnlyFinance = RESIDENT_FINANCE_VISIBLE ? [] : [FINANSIJE]
 
 const managerNav = [
   { title: "Преглед", href: "/dashboard", icon: LayoutDashboard, module: "pregled" as const },
+  ...managerOnlyFinance,
   { title: "ПП инспекције", href: "/dashboard/inspekcije", icon: ShieldCheck, module: "inspekcije" as const },
   { title: "Инвестиције", href: "/dashboard/investicije", icon: HardHat, module: "investicije" as const },
   { title: "Станари", href: "/dashboard/stanari", icon: Users, module: "stanari" as const },
@@ -56,7 +63,7 @@ const managerNav = [
 
 const communityNav = [
   { title: "Обавештења", href: "/dashboard/obavestenja", icon: Megaphone, module: "obavestenja" as const },
-  { title: "Финансије", href: "/dashboard/finansije", icon: ArrowLeftRight, module: "finansije" as const },
+  ...(RESIDENT_FINANCE_VISIBLE ? [FINANSIJE] : []),
   { title: "Гласање", href: "/dashboard/glasanje", icon: Vote, module: "glasanje" as const },
   { title: "Тендери", href: "/dashboard/tenderi", icon: Gavel, module: "tenderi" as const },
   { title: "Захтеви", href: "/dashboard/zahtevi", icon: Wrench, module: "zahtevi" as const },

@@ -94,6 +94,54 @@ Za lokalni razvoj bez pisanja u pravi Drive: `DRIVE_MIRROR_DISABLED=1` u `.env`.
 
 **Poznato ogranicenje:** razresavanje foldera radi „potrazi pa napravi" bez transakcije, pa dva paralelna upisa u istoj sekundi teorijski mogu napraviti dva foldera istog imena. Id-evi foldera se kesiraju u memoriji procesa, pa se to svodi na prvi upis posle hladnog starta.
 
+## Финансије из табеле на Drive-у
+
+Портал чита табелу **„Troskovi stambene zajednice"** (Google Sheet) и уписује
+ставке у базу. Табела остаје извор истине — упис у њу никад не иде из портала.
+
+Покреће се дугметом **„Освежи из табеле"** на `/dashboard/finansije`, видљивим
+само управнику.
+
+### Како чита
+
+Drive извози цео радни лист као `.xlsx` једним позивом, па се добијају све
+картице без Sheets API-ја (који на пројекту није укључен). Свака картица је
+један месец; заглавље се тражи по реду који садржи „Datum", јер није на истом
+реду у свим картицама.
+
+| Колона у табели | Где иде |
+| --- | --- |
+| Datum | `date` |
+| Redni broj dokumenta | део `sourceRef` (`МАРТ/1`) |
+| Kategorija | `TransactionCategory` (прави се по потреби) |
+| Opis | `description` |
+| Status | `notes` |
+| Skeniran racun-Link | `referenceNum` (нпр. `MAR_1`) |
+| Rashod / Prihod | `type` + `amount` |
+
+`sourceRef` је `<КАРТИЦА>/<редни број>` и уникатан је — поновно освежавање
+ажурира постојећу ставку. Ред обрисан из табеле брише се и из базе. Ручно
+унете ставке (без `sourceRef`) се не дирају.
+
+### Шта се НЕ увози
+
+Ред без датума се **не** увози, али се **пријављује** управнику са описом и
+износом. То није безазлено: у августу 2026. таквих редова има за 40.045 РСД.
+Док им се не додају датуми, стање у порталу је веће од стања у табели.
+
+Пренето стање („STANJE NA RACUNU iz prethodnog meseca-preneto" из прве
+картице) уписује се као једна ставка са `sourceRef = "PRENETO"`, дан пре
+најраније трансакције. Улази у салдо, али је искључено из збира прихода.
+
+### Потребна env варијабла
+
+`GDRIVE_FINANCE_SHEET_ID` — id табеле на Drive-у. Мора и локално и на Vercelu.
+
+### Станарски приказ
+
+Стоји затворен. `RESIDENT_FINANCE_VISIBLE` у `src/lib/flags.ts` — једна линија
+кад се пусти; и рута и навигација то читају одатле.
+
 ## reset-prod-data.ts
 
 **Destruktivna skripta** — brise sve podatke iz baze osim odredjenog super admin korisnika i ostavlja njega kao MANAGER + active. Koristi se za reset produkcionog testnog okruzenja.
