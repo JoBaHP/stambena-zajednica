@@ -133,7 +133,6 @@ const DUMPS: Record<DataEntity, DataDump> = {
           unit: true,
           area: true,
           notifyEmail: true,
-          notifySms: true,
           active: true,
           lastLoginAt: true,
           createdAt: true,

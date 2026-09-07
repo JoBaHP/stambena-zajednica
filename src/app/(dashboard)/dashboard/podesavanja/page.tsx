@@ -14,7 +14,7 @@ export default async function PodesavanjaPage() {
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },
-    select: { email: true, phone: true, notifyEmail: true, notifySms: true },
+    select: { email: true, phone: true, notifyEmail: true },
   })
 
   if (!user) redirect("/login")
@@ -33,7 +33,6 @@ export default async function PodesavanjaPage() {
       <NotificationsForm
         defaults={{
           notifyEmail: user.notifyEmail,
-          notifySms: user.notifySms,
           phone: user.phone,
           email: user.email,
         }}

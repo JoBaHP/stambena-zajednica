@@ -136,7 +136,6 @@ async function main() {
             unit: r.unit ?? null,
             area: r.area !== null && r.area !== undefined ? String(r.area) : null,
             notifyEmail: Boolean(r.notifyEmail),
-            notifySms: Boolean(r.notifySms),
             active: Boolean(r.active),
             lastLoginAt: date(r.lastLoginAt),
           }),

@@ -4,7 +4,6 @@ import { db } from "@/lib/db"
 type NotifyOptions = {
   subject: string
   body: string
-  smsBody?: string
 }
 
 function getTransporter() {
@@ -36,42 +35,6 @@ async function sendEmail(to: string, subject: string, body: string) {
   }
 }
 
-async function sendSms(phone: string, body: string) {
-  const sid = process.env.TWILIO_ACCOUNT_SID
-  const token = process.env.TWILIO_AUTH_TOKEN
-  const from = process.env.TWILIO_FROM_NUMBER
-
-  if (!sid || !token || !from) {
-    console.log(`[sms skipped — twilio env vars missing] to=${phone}`)
-    return
-  }
-
-  try {
-    const res = await fetch(
-      `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${Buffer.from(`${sid}:${token}`).toString("base64")}`,
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          From: from,
-          To: phone,
-          Body: body,
-        }),
-      },
-    )
-
-    if (!res.ok) {
-      const text = await res.text()
-      console.error(`[sms failed] to=${phone} status=${res.status} ${text}`)
-    }
-  } catch (err) {
-    console.error(`[sms failed] to=${phone}`, err)
-  }
-}
-
 export async function notifyUsers(userIds: string[], opts: NotifyOptions) {
   if (userIds.length === 0) return
 
@@ -80,22 +43,13 @@ export async function notifyUsers(userIds: string[], opts: NotifyOptions) {
     // Filter je ovde jer notifyAllResidents i notifyManagers prolaze kroz ovu
     // funkciju, pa jedno mesto pokriva sve pozive.
     where: { id: { in: userIds }, active: true },
-    select: {
-      id: true,
-      email: true,
-      phone: true,
-      notifyEmail: true,
-      notifySms: true,
-    },
+    select: { id: true, email: true, notifyEmail: true },
   })
 
   const tasks: Promise<void>[] = []
   for (const u of users) {
     if (u.notifyEmail && u.email) {
       tasks.push(sendEmail(u.email, opts.subject, opts.body))
-    }
-    if (u.notifySms && u.phone) {
-      tasks.push(sendSms(u.phone, opts.smsBody ?? opts.body))
     }
   }
 

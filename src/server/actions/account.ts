@@ -48,16 +48,11 @@ export async function updateNotificationPreferences(formData: FormData) {
   if (!session) return { error: "Нисте пријављени" }
 
   const notifyEmail = formData.get("notifyEmail") === "on"
-  const notifySms = formData.get("notifySms") === "on"
   const phone = (formData.get("phone") as string)?.trim() || null
-
-  if (notifySms && !phone) {
-    return { error: "Унесите број телефона да бисте примали СМС" }
-  }
 
   await db.user.update({
     where: { id: session.user.id },
-    data: { notifyEmail, notifySms, phone },
+    data: { notifyEmail, phone },
   })
 
   revalidatePath("/dashboard/podesavanja")

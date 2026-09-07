@@ -17,7 +17,6 @@ import { updateNotificationPreferences } from "@/server/actions/account"
 interface NotificationsFormProps {
   defaults: {
     notifyEmail: boolean
-    notifySms: boolean
     phone: string | null
     email: string
   }
@@ -71,24 +70,6 @@ export function NotificationsForm({ defaults }: NotificationsFormProps) {
             </div>
           </div>
 
-          <div className="flex items-start gap-3">
-            <input
-              type="checkbox"
-              id="notifySms"
-              name="notifySms"
-              defaultChecked={defaults.notifySms}
-              className="h-4 w-4 mt-1 rounded border-gray-300"
-            />
-            <div>
-              <Label htmlFor="notifySms" className="font-normal">
-                СМС нотификације
-              </Label>
-              <p className="text-xs text-muted-foreground">
-                Само за хитне ствари (хитна обавештења, критични захтеви)
-              </p>
-            </div>
-          </div>
-
           <div className="space-y-2">
             <Label htmlFor="phone">Број телефона</Label>
             <Input
@@ -99,7 +80,8 @@ export function NotificationsForm({ defaults }: NotificationsFormProps) {
               placeholder="+381 60 123 4567"
             />
             <p className="text-xs text-muted-foreground">
-              Формат са позивним бројем (нпр. +381...)
+              Контакт податак — управник га види у списку станара. Обавештења
+              иду емаилом.
             </p>
           </div>
 

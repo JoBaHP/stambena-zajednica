@@ -118,7 +118,6 @@ export async function createRequest(formData: FormData) {
   await notifyManagers({
     subject: `[Пастерова 16] ${isUrgent ? "ХИТАН " : ""}Нови захтев: ${title}`,
     body: `Станар ${session.user.name ?? ""} је пријавио нови захтев за интервенцију.\n\nНаслов: ${title}\nКатегорија: ${category}\nПриоритет: ${created.priority}\n\n${description}\n\nВиди: ${process.env.APP_URL ?? ""}/dashboard/zahtevi/${created.id}`,
-    smsBody: `Пастерова 16: ${isUrgent ? "ХИТАН " : ""}нови захтев „${title}" од ${session.user.name ?? "станара"}.`,
   })
 
   revalidatePath("/dashboard")
@@ -156,7 +155,6 @@ export async function updateRequestStatus(id: string, formData: FormData) {
   await notifyUsers([updated.reporterId], {
     subject: `[Пастерова 16] Статус захтева: ${updated.title}`,
     body: `Статус вашег захтева „${updated.title}" је промењен на: ${statusLabels[updated.status]}.\n\n${resolution ? `Коментар управника:\n${resolution}\n\n` : ""}Види: ${process.env.APP_URL ?? ""}/dashboard/zahtevi/${updated.id}`,
-    smsBody: `Пастерова 16: ваш захтев „${updated.title}" је сада ${statusLabels[updated.status]}.`,
   })
 
   revalidatePath("/dashboard/zahtevi")

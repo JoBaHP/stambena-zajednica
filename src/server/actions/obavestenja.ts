@@ -75,7 +75,6 @@ export async function createAnnouncement(formData: FormData) {
   await notifyAllResidents({
     subject: `[Пастерова 16] ${subjectPrefix}${title}`,
     body: `${title}\n\n${body}\n\nВиди: ${process.env.NEXTAUTH_URL ?? ""}/dashboard/obavestenja`,
-    smsBody: `Пастерова 16${priority === "URGENT" ? " ХИТНО" : ""}: ${title}. Види обавештења у апликацији.`,
   })
 
   revalidatePath("/dashboard")

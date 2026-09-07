@@ -21,7 +21,6 @@ model User {
   // kvorum na glasanju (Zakon o stanovanju odluke vezuje za udeo, ne za broj glava).
   area        Decimal? @db.Decimal(8, 2)
   notifyEmail Boolean @default(true)
-  notifySms   Boolean @default(false)
   active      Boolean @default(true)
   lastLoginAt DateTime?
   lastSeenAt  DateTime?
