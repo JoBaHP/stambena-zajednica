@@ -133,12 +133,30 @@ export async function uploadFile(opts: {
   return { fileId: res.data.id }
 }
 
+/**
+ * Fajlovi koje aplikacija sme samo da CITA, nikad da menja ili brise.
+ *
+ * Tabela "Troskovi stambene zajednice" je rucna evidencija upravnika i izvor
+ * istine za finansije — portal je iz nje uvozi. OAuth token ima pravo upisa
+ * (potrebno za arhivu), pa je jedina prava zastita provera ovde: svaki upisni
+ * poziv nad ovim id-em puca umesto da tiho prepise tudji rad.
+ */
+function assertNotReadOnly(fileId: string, operation: string): void {
+  const protectedIds = [process.env.GDRIVE_FINANCE_SHEET_ID].filter(Boolean)
+  if (protectedIds.includes(fileId)) {
+    throw new Error(
+      `Odbijeno: ${operation} nad fajlom ${fileId}. Tabela finansija se samo cita.`,
+    )
+  }
+}
+
 export async function updateFile(opts: {
   fileId: string
   fileName?: string
   mimeType: string
   buffer: Buffer
 }): Promise<void> {
+  assertNotReadOnly(opts.fileId, "izmena")
   const drive = getDrive()
 
   await drive.files.update({
@@ -177,6 +195,7 @@ export async function downloadFile(
 }
 
 export async function deleteFile(fileId: string): Promise<void> {
+  assertNotReadOnly(fileId, "brisanje")
   const drive = getDrive()
   await drive.files.delete({ fileId, supportsAllDrives: true })
 }
