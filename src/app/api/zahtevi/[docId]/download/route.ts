@@ -11,13 +11,13 @@ export async function GET(
 ) {
   const session = await auth()
   if (!session) {
-    return NextResponse.json({ error: "Niste prijavljeni" }, { status: 401 })
+    return NextResponse.json({ error: "Нисте пријављени" }, { status: 401 })
   }
 
   const { docId } = await params
   const doc = await db.document.findUnique({ where: { id: docId } })
   if (!doc?.fileId || !doc.requestId) {
-    return NextResponse.json({ error: "Prilog ne postoji" }, { status: 404 })
+    return NextResponse.json({ error: "Прилог не постоји" }, { status: 404 })
   }
 
   try {
@@ -31,6 +31,6 @@ export async function GET(
     })
   } catch (err) {
     console.error("[zahtev foto]", err)
-    return NextResponse.json({ error: "Greska pri preuzimanju" }, { status: 500 })
+    return NextResponse.json({ error: "Грешка при преузимању" }, { status: 500 })
   }
 }

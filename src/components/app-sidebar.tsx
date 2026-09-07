@@ -41,27 +41,27 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { moduleAccent } from "@/lib/modules"
 
 const managerNav = [
-  { title: "Pregled", href: "/dashboard", icon: LayoutDashboard, module: "pregled" as const },
-  { title: "PP Inspekcije", href: "/dashboard/inspekcije", icon: ShieldCheck, module: "inspekcije" as const },
-  { title: "Investicije", href: "/dashboard/investicije", icon: HardHat, module: "investicije" as const },
-  { title: "Stanari", href: "/dashboard/stanari", icon: Users, module: "stanari" as const },
+  { title: "Преглед", href: "/dashboard", icon: LayoutDashboard, module: "pregled" as const },
+  { title: "ПП инспекције", href: "/dashboard/inspekcije", icon: ShieldCheck, module: "inspekcije" as const },
+  { title: "Инвестиције", href: "/dashboard/investicije", icon: HardHat, module: "investicije" as const },
+  { title: "Станари", href: "/dashboard/stanari", icon: Users, module: "stanari" as const },
   {
-    title: "Zahtevi za pristup",
+    title: "Захтеви за приступ",
     href: "/dashboard/zahtevi-za-pristup",
     icon: UserPlus,
     module: "stanari" as const,
   },
-  { title: "Kalendar", href: "/dashboard/kalendar", icon: CalendarClock, module: "kalendar" as const },
+  { title: "Календар", href: "/dashboard/kalendar", icon: CalendarClock, module: "kalendar" as const },
 ]
 
 const communityNav = [
-  { title: "Obavestenja", href: "/dashboard/obavestenja", icon: Megaphone, module: "obavestenja" as const },
-  { title: "Finansije", href: "/dashboard/finansije", icon: ArrowLeftRight, module: "finansije" as const },
-  { title: "Glasanje", href: "/dashboard/glasanje", icon: Vote, module: "glasanje" as const },
-  { title: "Tenderi", href: "/dashboard/tenderi", icon: Gavel, module: "tenderi" as const },
-  { title: "Zahtevi", href: "/dashboard/zahtevi", icon: Wrench, module: "zahtevi" as const },
-  { title: "Arhiva", href: "/dashboard/arhiva", icon: FolderArchive, module: "arhiva" as const },
-  { title: "Kontakti", href: "/dashboard/kontakti", icon: Phone, module: "kontakti" as const },
+  { title: "Обавештења", href: "/dashboard/obavestenja", icon: Megaphone, module: "obavestenja" as const },
+  { title: "Финансије", href: "/dashboard/finansije", icon: ArrowLeftRight, module: "finansije" as const },
+  { title: "Гласање", href: "/dashboard/glasanje", icon: Vote, module: "glasanje" as const },
+  { title: "Тендери", href: "/dashboard/tenderi", icon: Gavel, module: "tenderi" as const },
+  { title: "Захтеви", href: "/dashboard/zahtevi", icon: Wrench, module: "zahtevi" as const },
+  { title: "Архива", href: "/dashboard/arhiva", icon: FolderArchive, module: "arhiva" as const },
+  { title: "Контакти", href: "/dashboard/kontakti", icon: Phone, module: "kontakti" as const },
 ]
 
 interface AppSidebarProps {
@@ -94,13 +94,13 @@ export function AppSidebar({
             <Building2 className="w-4 h-4 text-white" />
           </div>
           <div className="flex flex-col flex-1 min-w-0">
-            <span className="font-semibold text-sm leading-tight">Pasterova 16</span>
-            <span className="text-xs text-muted-foreground">Stambena Zajednica</span>
+            <span className="font-semibold text-sm leading-tight">Пастерова 16</span>
+            <span className="text-xs text-muted-foreground">Стамбена заједница</span>
           </div>
           {isMobile && (
             <button
               onClick={() => setOpenMobile(false)}
-              aria-label="Zatvori meni"
+              aria-label="Затвори мени"
               className="h-9 w-9 inline-flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
             >
               <X className="w-5 h-5" />
@@ -112,7 +112,7 @@ export function AppSidebar({
       <SidebarContent>
         {isManager && (
           <SidebarGroup>
-            <SidebarGroupLabel>Upravljanje</SidebarGroupLabel>
+            <SidebarGroupLabel>Управљање</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {managerNav.map((item) => {
@@ -148,7 +148,7 @@ export function AppSidebar({
 
         {process.env.NEXT_PUBLIC_NVR_URL && (
           <SidebarGroup>
-            <SidebarGroupLabel>Nadzor</SidebarGroupLabel>
+            <SidebarGroupLabel>Надзор</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
@@ -162,7 +162,7 @@ export function AppSidebar({
                     }
                   >
                     <Cctv className="w-4 h-4" />
-                    <span className="flex-1">Kamere uživo</span>
+                    <span className="flex-1">Камере уживо</span>
                     <ExternalLink className="w-3 h-3 text-muted-foreground" />
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -172,7 +172,7 @@ export function AppSidebar({
         )}
 
         <SidebarGroup>
-          <SidebarGroupLabel>Zajednica</SidebarGroupLabel>
+          <SidebarGroupLabel>Заједница</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {communityNav.map((item) => (
@@ -202,7 +202,7 @@ export function AppSidebar({
               render={<Link href="/dashboard/podesavanja" />}
             >
               <Settings className="w-4 h-4" />
-              <span>Podesavanja</span>
+              <span>Подешавања</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -213,13 +213,13 @@ export function AppSidebar({
           <div className="flex flex-col flex-1 min-w-0">
             <span className="text-sm font-medium truncate">{userName}</span>
             <span className="text-xs text-muted-foreground">
-              {isManager ? "Upravnik" : "Stanar"}
+              {isManager ? "Управник" : "Станар"}
             </span>
           </div>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
             className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-            title="Odjava"
+            title="Одјава"
           >
             <LogOut className="w-4 h-4" />
           </button>

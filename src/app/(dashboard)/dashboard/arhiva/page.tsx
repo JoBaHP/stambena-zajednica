@@ -19,12 +19,12 @@ import { deleteDocument } from "@/server/actions/arhiva"
 import { ConfirmDelete } from "@/components/confirm-delete"
 
 const categoryConfig = {
-  MINUTES: { label: "Zapisnici", icon: ScrollText, color: "text-blue-600" },
-  CONTRACT: { label: "Ugovori", icon: FileSignature, color: "text-purple-600" },
-  INVOICE: { label: "Racuni", icon: Receipt, color: "text-emerald-600" },
-  REPORT: { label: "Izvestaji", icon: ClipboardList, color: "text-amber-600" },
-  REGULATION: { label: "Pravilnici", icon: Scale, color: "text-slate-700" },
-  OTHER: { label: "Ostalo", icon: File, color: "text-slate-500" },
+  MINUTES: { label: "Записници", icon: ScrollText, color: "text-blue-600" },
+  CONTRACT: { label: "Уговори", icon: FileSignature, color: "text-purple-600" },
+  INVOICE: { label: "Рачуни", icon: Receipt, color: "text-emerald-600" },
+  REPORT: { label: "Извештаји", icon: ClipboardList, color: "text-amber-600" },
+  REGULATION: { label: "Правилници", icon: Scale, color: "text-slate-700" },
+  OTHER: { label: "Остало", icon: File, color: "text-slate-500" },
 }
 
 const categoryOrder: Array<keyof typeof categoryConfig> = [
@@ -76,15 +76,15 @@ export default async function ArhivaPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Digitalna arhiva</h1>
+          <h1 className="text-2xl font-semibold">Дигитална архива</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Zapisnici, ugovori, racuni i ostali dokumenti
+            Записници, уговори, рачуни и остали документи
           </p>
         </div>
         {isManager && (
           <Button render={<Link href="/dashboard/arhiva/novi" />}>
             <Plus className="w-4 h-4 mr-2" />
-            Novi dokument
+            Нови документ
           </Button>
         )}
       </div>
@@ -98,7 +98,7 @@ export default async function ArhivaPage({
               : "hover:bg-accent"
           }`}
         >
-          Sve
+          Све
         </Link>
         {visibleCategories.map((cat) => {
           const cfg = categoryConfig[cat]
@@ -124,7 +124,7 @@ export default async function ArhivaPage({
           <CardContent className="text-center py-12">
             <FileText className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
             <p className="text-muted-foreground">
-              {kategorija ? "Nema dokumenata u ovoj kategoriji" : "Arhiva je prazna"}
+              {kategorija ? "Нема докумената у овој категорији" : "Архива је празна"}
             </p>
             {isManager && !kategorija && (
               <Button
@@ -132,7 +132,7 @@ export default async function ArhivaPage({
                 variant="outline"
                 render={<Link href="/dashboard/arhiva/novi" />}
               >
-                Otpremi prvi dokument
+                Отпреми први документ
               </Button>
             )}
           </CardContent>
@@ -141,7 +141,7 @@ export default async function ArhivaPage({
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base">
-              {documents.length} dokument{documents.length === 1 ? "" : "a"}
+              {documents.length} докумен{documents.length === 1 ? "т" : "та"}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -183,7 +183,7 @@ export default async function ArhivaPage({
                             download={doc.fileName}
                           />
                         }
-                        title="Preuzmi"
+                        title="Преузми"
                       >
                         <Download className="w-4 h-4" />
                       </Button>
@@ -191,7 +191,7 @@ export default async function ArhivaPage({
                         <ConfirmDelete
                           action={deleteDocument.bind(null, doc.id)}
                           label=""
-                          confirmLabel="Obrisi?"
+                          confirmLabel="Обриши?"
                         />
                       )}
                     </div>

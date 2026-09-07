@@ -51,7 +51,7 @@ export default async function EditStanarPage({
       <div>
         <Button variant="ghost" size="sm" render={<Link href="/dashboard/stanari" />}>
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Nazad
+          Назад
         </Button>
 
         <div className="mt-3 flex items-center gap-4">
@@ -67,11 +67,11 @@ export default async function EditStanarPage({
           <div className="min-w-0">
             <div className="flex items-center gap-2.5 flex-wrap">
               <h1 className="text-2xl font-bold tracking-tight">{user.name}</h1>
-              {!user.active && <Badge variant="destructive">Pristup uklonjen</Badge>}
-              {user.role === "MANAGER" && <Badge>Upravnik</Badge>}
+              {!user.active && <Badge variant="destructive">Приступ уклоњен</Badge>}
+              {user.role === "MANAGER" && <Badge>Управник</Badge>}
             </div>
             <p className="text-sm text-muted-foreground">
-              {user.unit ? `Stan ${user.unit}` : "Bez dodeljenog stana"}
+              {user.unit ? `Stan ${user.unit}` : "Без додељеног стана"}
               {myArea > 0 && ` · ${myArea.toLocaleString("sr-RS")} m²`}
               {sharePct !== null &&
                 ` · udeo ${sharePct.toFixed(1).replace(".", ",")}%`}
@@ -83,7 +83,7 @@ export default async function EditStanarPage({
       {sharePct !== null && (
         <Card className="card-lift">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base">Vlasnicki udeo</CardTitle>
+            <CardTitle className="text-base">Власнички удео</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-baseline gap-2.5">
@@ -91,7 +91,7 @@ export default async function EditStanarPage({
                 {sharePct.toFixed(1).replace(".", ",")}%
               </span>
               <span className="text-sm text-muted-foreground nums">
-                {myArea.toLocaleString("sr-RS")} od {totalArea.toLocaleString("sr-RS")} m²
+                {myArea.toLocaleString("sr-RS")} од {totalArea.toLocaleString("sr-RS")} m²
               </span>
             </div>
             <div className="h-2 rounded-full bg-muted overflow-hidden">
@@ -104,7 +104,7 @@ export default async function EditStanarPage({
               />
             </div>
             <p className="text-xs text-muted-foreground">
-              Toliko nosi glas ovog stana. Kvorum i odluke racunaju se po kvadraturi.
+              Толико носи глас овог стана. Кворум и одлуке рачунају се по квадратури.
             </p>
           </CardContent>
         </Card>
@@ -112,12 +112,12 @@ export default async function EditStanarPage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Podaci</CardTitle>
+          <CardTitle className="text-base">Подаци</CardTitle>
         </CardHeader>
         <CardContent>
           <form action={updateUser.bind(null, id)} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="name">Ime i prezime</Label>
+              <Label htmlFor="name">Име и презиме</Label>
               <Input
                 id="name"
                 name="name"
@@ -127,7 +127,7 @@ export default async function EditStanarPage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Емаил</Label>
               <Input
                 id="email"
                 name="email"
@@ -139,15 +139,15 @@ export default async function EditStanarPage({
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="phone">Telefon</Label>
+                <Label htmlFor="phone">Телефон</Label>
                 <Input id="phone" name="phone" defaultValue={user.phone ?? ""} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="unit">Stan</Label>
+                <Label htmlFor="unit">Стан</Label>
                 <Input id="unit" name="unit" defaultValue={user.unit ?? ""} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="area">Kvadratura (m²)</Label>
+                <Label htmlFor="area">Квадратура (m²)</Label>
                 <Input
                   id="area"
                   name="area"
@@ -157,12 +157,12 @@ export default async function EditStanarPage({
                   inputMode="decimal"
                   defaultValue={user.area ? String(user.area) : ""}
                 />
-                <p className="text-xs text-muted-foreground">Za vlasnicki udeo pri glasanju.</p>
+                <p className="text-xs text-muted-foreground">За власнички удео при гласању.</p>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="role">Uloga</Label>
+              <Label htmlFor="role">Улога</Label>
               <select
                 id="role"
                 name="role"
@@ -170,24 +170,24 @@ export default async function EditStanarPage({
                 disabled={isSelf}
                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"
               >
-                <option value="RESIDENT">Stanar</option>
-                <option value="MANAGER">Upravnik</option>
+                <option value="RESIDENT">Станар</option>
+                <option value="MANAGER">Управник</option>
               </select>
               {isSelf && (
                 <p className="text-xs text-muted-foreground">
-                  Ne mozete promeniti svoju ulogu
+                  Не можете променити своју улогу
                 </p>
               )}
             </div>
 
-            <SubmitButton>Sacuvaj izmene</SubmitButton>
+            <SubmitButton>Сачувај измене</SubmitButton>
           </form>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Resetuj lozinku</CardTitle>
+          <CardTitle className="text-base">Ресетуј лозинку</CardTitle>
         </CardHeader>
         <CardContent>
           <form
@@ -195,20 +195,20 @@ export default async function EditStanarPage({
             className="space-y-4"
           >
             <div className="space-y-2">
-              <Label htmlFor="password">Nova lozinka</Label>
+              <Label htmlFor="password">Нова лозинка</Label>
               <Input
                 id="password"
                 name="password"
                 type="text"
-                placeholder="Najmanje 6 karaktera"
+                placeholder="Најмање 6 карактера"
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Saopsti je korisniku da je promeni nakon prijave.
+                Саопшти је кориснику да је промени након пријаве.
               </p>
             </div>
             <SubmitButton variant="outline">
-              Postavi novu lozinku
+              Постави нову лозинку
             </SubmitButton>
           </form>
         </CardContent>
@@ -216,30 +216,30 @@ export default async function EditStanarPage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Pristup</CardTitle>
+          <CardTitle className="text-base">Приступ</CardTitle>
         </CardHeader>
         <CardContent>
           {isSelf ? (
             <p className="text-sm text-muted-foreground">
-              Ne mozete sebi ukloniti pristup.
+              Не можете себи уклонити приступ.
             </p>
           ) : user.active ? (
             <form action={setUserActive.bind(null, id, false)}>
               <p className="text-sm text-muted-foreground mb-3">
-                Korisnik vise nece moci da se prijavi. Istorija (glasovi,
-                zahtevi, transakcije) ostaje sacuvana. Mozes ga vratiti istim
+                Корисник више неће моћи да се пријави. Историја (гласови,
+                захтеви, трансакције) остаје сачувана. Можеш га вратити истим
                 klikom kasnije.
               </p>
               <SubmitButton variant="destructive">
-                Ukloni pristup
+                Уклони приступ
               </SubmitButton>
             </form>
           ) : (
             <form action={setUserActive.bind(null, id, true)}>
               <p className="text-sm text-muted-foreground mb-3">
-                Korisniku je uklonjen pristup. Klikom ga vracas u aktivno stanje.
+                Кориснику је уклоњен приступ. Кликом га враћаш у активно стање.
               </p>
-              <SubmitButton>Vrati pristup</SubmitButton>
+              <SubmitButton>Врати приступ</SubmitButton>
             </form>
           )}
         </CardContent>

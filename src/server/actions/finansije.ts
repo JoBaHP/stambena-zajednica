@@ -9,7 +9,7 @@ import { redirect } from "next/navigation"
 export async function createTransaction(formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const type = formData.get("type") as string
@@ -21,7 +21,7 @@ export async function createTransaction(formData: FormData) {
   const notes = formData.get("notes") as string
 
   if (!type || !amount || !description || !date) {
-    throw new Error("Popunite obavezna polja")
+    throw new Error("Попуните обавезна поља")
   }
 
   const created = await db.transaction.create({
@@ -47,7 +47,7 @@ export async function createTransaction(formData: FormData) {
 export async function updateTransaction(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const type = formData.get("type") as string
@@ -81,7 +81,7 @@ export async function updateTransaction(id: string, formData: FormData) {
 export async function deleteTransaction(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   await db.transaction.delete({ where: { id } })

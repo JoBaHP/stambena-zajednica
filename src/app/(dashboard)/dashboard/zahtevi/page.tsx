@@ -53,18 +53,18 @@ export default async function ZahteviPage() {
           </span>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              Zahtevi za intervencije
+              Захтеви за интервенције
             </h1>
             <p className="text-sm text-muted-foreground">
               {isManager
-                ? `${openCount} ${openCount === 1 ? "otvoren" : "otvorenih"} · ${requests.length} ukupno`
-                : "Vasi prijavljeni zahtevi"}
+                ? `${openCount} ${openCount === 1 ? "отворен" : "отворених"} · ${requests.length} укупно`
+                : "Ваши пријављени захтеви"}
             </p>
           </div>
         </div>
         <Button render={<Link href="/dashboard/zahtevi/novi" />}>
           <Plus className="w-4 h-4 mr-2" />
-          Prijavi kvar
+          Пријави квар
         </Button>
       </div>
 
@@ -96,15 +96,14 @@ export default async function ZahteviPage() {
             <Wrench className="w-7 h-7" style={{ color: moduleAccent.zahtevi.color }} />
           </span>
           <div>
-            <p className="text-lg font-bold">Nema otvorenih zahteva</p>
+            <p className="text-lg font-bold">Нема отворених захтева</p>
             <p className="text-sm text-muted-foreground max-w-md mt-1 text-pretty">
-              Ako primetite kvar u zgradi — curenje, lift, rasveta — prijavite ga
-              ovde. Mozete dodati i fotografiju, upravnik odmah dobija obavestenje.
+              Ако приметите квар у згради — цурење, лифт, расвета — пријавите га овде. Можете додати и фотографију, управник одмах добија обавештење.
             </p>
           </div>
           <Button render={<Link href="/dashboard/zahtevi/novi" />}>
             <Camera className="w-4 h-4 mr-2" />
-            Prijavi kvar
+            Пријави квар
           </Button>
         </div>
       ) : (

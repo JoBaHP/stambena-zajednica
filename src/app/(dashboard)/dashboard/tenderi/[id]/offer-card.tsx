@@ -81,7 +81,7 @@ export function OfferCard({
             {Number(offer.price).toLocaleString("sr-RS", {
               minimumFractionDigits: 2,
             })}{" "}
-            RSD
+            РСД
           </p>
         )}
       </CardHeader>
@@ -125,7 +125,7 @@ export function OfferCard({
                 className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
                 <FileText className="w-3.5 h-3.5" />
-                {offer.fileName ?? "Preuzmi"}
+                {offer.fileName ?? "Преузми"}
                 <Download className="w-3 h-3" />
               </a>
             )}
@@ -140,12 +140,12 @@ export function OfferCard({
             {expanded ? (
               <>
                 <ChevronUp className="w-3.5 h-3.5" />
-                Prikaži manje
+                Прикажи мање
               </>
             ) : (
               <>
                 <ChevronDown className="w-3.5 h-3.5" />
-                Prikaži više
+                Прикажи више
               </>
             )}
           </button>

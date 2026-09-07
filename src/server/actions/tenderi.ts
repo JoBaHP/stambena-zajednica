@@ -24,7 +24,7 @@ const ALLOWED_TYPES: Record<string, string> = {
 
 function requireManager(session: { user: { role: string; id: string } } | null): asserts session is { user: { role: string; id: string } } {
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 }
 
@@ -34,7 +34,7 @@ export async function createTender(investmentId: string, formData: FormData) {
 
   const title = (formData.get("title") as string)?.trim()
   const description = (formData.get("description") as string)?.trim() || null
-  if (!title) throw new Error("Naslov je obavezan")
+  if (!title) throw new Error("Наслов је обавезан")
 
   const created = await db.tender.create({
     data: { investmentId, title, description },
@@ -55,7 +55,7 @@ export async function createTenderOffer(tenderId: string, formData: FormData) {
   const tender = await db.tender.findUnique({ where: { id: tenderId } })
   if (!tender) redirect(`/dashboard/tenderi`)
   if (tender.status === "CLOSED") {
-    redirect(`/dashboard/tenderi/${tenderId}/nova-ponuda?error=${encodeURIComponent("Tender je zatvoren")}`)
+    redirect(`/dashboard/tenderi/${tenderId}/nova-ponuda?error=${encodeURIComponent("Тендер је затворен")}`)
   }
 
   const company = (formData.get("company") as string)?.trim()
@@ -65,7 +65,7 @@ export async function createTenderOffer(tenderId: string, formData: FormData) {
   const file = formData.get("file") as File | null
 
   if (!company) {
-    redirect(`/dashboard/tenderi/${tenderId}/nova-ponuda?error=${encodeURIComponent("Naziv kompanije je obavezan")}`)
+    redirect(`/dashboard/tenderi/${tenderId}/nova-ponuda?error=${encodeURIComponent("Назив компаније је обавезан")}`)
   }
 
   let fileName: string | null = null
@@ -75,15 +75,15 @@ export async function createTenderOffer(tenderId: string, formData: FormData) {
 
   if (file && file.size > 0) {
     if (file.size > MAX_FILE_SIZE) {
-      redirect(`/dashboard/tenderi/${tenderId}/nova-ponuda?error=${encodeURIComponent("Fajl je prevelik (maks 4MB)")}`)
+      redirect(`/dashboard/tenderi/${tenderId}/nova-ponuda?error=${encodeURIComponent("Фајл је превелик (макс 4MB)")}`)
     }
     if (!ALLOWED_TYPES[file.type]) {
-      redirect(`/dashboard/tenderi/${tenderId}/nova-ponuda?error=${encodeURIComponent("Nepodržan format fajla")}`)
+      redirect(`/dashboard/tenderi/${tenderId}/nova-ponuda?error=${encodeURIComponent("Неподржан формат фајла")}`)
     }
 
     const archiveRoot = process.env.GDRIVE_ARCHIVE_FOLDER_ID
     if (!archiveRoot) {
-      redirect(`/dashboard/tenderi/${tenderId}/nova-ponuda?error=${encodeURIComponent("Drive nije konfigurisan")}`)
+      redirect(`/dashboard/tenderi/${tenderId}/nova-ponuda?error=${encodeURIComponent("Drive није конфигурисан")}`)
     }
 
     try {
@@ -104,7 +104,7 @@ export async function createTenderOffer(tenderId: string, formData: FormData) {
       aiSummary = await summarizeOffer({ mimeType: file.type, buffer })
     } catch (err) {
       console.error("[createTenderOffer] upload failed", err)
-      redirect(`/dashboard/tenderi/${tenderId}/nova-ponuda?error=${encodeURIComponent("Upload nije uspeo. Pokušajte ponovo.")}`)
+      redirect(`/dashboard/tenderi/${tenderId}/nova-ponuda?error=${encodeURIComponent("Отпремање није успело. Покушајте поново.")}`)
     }
   }
 
@@ -127,7 +127,7 @@ export async function updateTenderOffer(offerId: string, formData: FormData) {
   const priceRaw = (formData.get("price") as string)?.trim()
   const price = priceRaw ? parseFloat(priceRaw) : null
 
-  if (!company) throw new Error("Naziv kompanije je obavezan")
+  if (!company) throw new Error("Назив компаније је обавезан")
 
   const offer = await db.tenderOffer.update({
     where: { id: offerId },
@@ -145,7 +145,7 @@ export async function deleteTenderOffer(offerId: string) {
   requireManager(session)
 
   const offer = await db.tenderOffer.findUnique({ where: { id: offerId } })
-  if (!offer) throw new Error("Ponuda ne postoji")
+  if (!offer) throw new Error("Понуда не постоји")
 
   if (offer.fileId) {
     try {
@@ -165,10 +165,10 @@ export async function deleteTenderOffer(offerId: string) {
 
 export async function castVote(tenderId: string, offerId: string) {
   const session = await auth()
-  if (!session) throw new Error("Niste prijavljeni")
+  if (!session) throw new Error("Нисте пријављени")
 
   const tender = await db.tender.findUnique({ where: { id: tenderId } })
-  if (!tender || tender.status !== "OPEN") throw new Error("Glasanje nije aktivno")
+  if (!tender || tender.status !== "OPEN") throw new Error("Гласање није активно")
 
   const userId = session.user.id
 
@@ -264,17 +264,17 @@ export async function regenerateSummary(offerId: string) {
   requireManager(session)
 
   if (!process.env.GROQ_API_KEY) {
-    throw new Error("GROQ_API_KEY nije postavljen u Vercel env vars")
+    throw new Error("GROQ_API_KEY није постављен у Vercel env варијаблама")
   }
 
   const offer = await db.tenderOffer.findUnique({ where: { id: offerId } })
-  if (!offer?.fileId || !offer.mimeType) throw new Error("Ponuda nema fajl")
+  if (!offer?.fileId || !offer.mimeType) throw new Error("Понуда нема фајл")
 
   const { downloadFile } = await import("@/lib/drive")
   const { buffer } = await downloadFile(offer.fileId)
   const aiSummary = await summarizeOffer({ mimeType: offer.mimeType, buffer })
 
-  if (!aiSummary) throw new Error("AI nije uspeo da generiše sažetak. Proverite format fajla.")
+  if (!aiSummary) throw new Error("АИ није успео да генерише сажетак. Проверите формат фајла.")
 
   await db.tenderOffer.update({ where: { id: offerId }, data: { aiSummary } })
 

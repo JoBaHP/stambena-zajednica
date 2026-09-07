@@ -30,15 +30,15 @@ export default async function UrediObavestenjePage({
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Izmeni obavestenje</h1>
-        <p className="text-sm text-muted-foreground mt-1">Azuriraj obavestenje</p>
+        <h1 className="text-2xl font-semibold">Измени обавештење</h1>
+        <p className="text-sm text-muted-foreground mt-1">Ажурирај обавештење</p>
       </div>
 
       <Card>
         <CardContent className="pt-6">
           <form action={updateWithId} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="title">Naslov</Label>
+              <Label htmlFor="title">Наслов</Label>
               <Input
                 id="title"
                 name="title"
@@ -48,7 +48,7 @@ export default async function UrediObavestenjePage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="body">Tekst</Label>
+              <Label htmlFor="body">Текст</Label>
               <Textarea
                 id="body"
                 name="body"
@@ -59,15 +59,15 @@ export default async function UrediObavestenjePage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="priority">Prioritet</Label>
+              <Label htmlFor="priority">Приоритет</Label>
               <select
                 id="priority"
                 name="priority"
                 defaultValue={announcement.priority}
                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
-                <option value="NORMAL">Normalan</option>
-                <option value="URGENT">Hitno</option>
+                <option value="NORMAL">Нормалан</option>
+                <option value="URGENT">Хитно</option>
               </select>
             </div>
 
@@ -79,11 +79,11 @@ export default async function UrediObavestenjePage({
                 className="h-4 w-4 rounded border-gray-300"
                 defaultChecked={announcement.isPinned}
               />
-              <Label htmlFor="isPinned" className="font-normal">Zakaci na vrh</Label>
+              <Label htmlFor="isPinned" className="font-normal">Закачи на врх</Label>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="expiresAt">Istice (opciono)</Label>
+              <Label htmlFor="expiresAt">Истиче (опционо)</Label>
               <Input
                 id="expiresAt"
                 name="expiresAt"
@@ -97,9 +97,9 @@ export default async function UrediObavestenjePage({
             </div>
 
             <div className="flex gap-3 pt-2">
-              <SubmitButton className="flex-1">Sacuvaj izmene</SubmitButton>
+              <SubmitButton className="flex-1">Сачувај измене</SubmitButton>
               <Button type="button" variant="outline" render={<Link href="/dashboard/obavestenja" />}>
-                Otkazi
+                Откажи
               </Button>
             </div>
           </form>
@@ -108,8 +108,8 @@ export default async function UrediObavestenjePage({
 
       <ConfirmDelete
         action={deleteWithId}
-        label="Obrisi obavestenje"
-        confirmLabel="Potvrdi brisanje obavestenja"
+        label="Обриши обавештење"
+        confirmLabel="Потврди брисање обавештења"
         className="w-full"
       />
     </div>

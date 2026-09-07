@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og"
 
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
-export const alt = "Pasterova 16 — Stambena zajednica"
+export const alt = "Пастерова 16 — Стамбена заједница"
 
 export default function Image() {
   return new ImageResponse(
@@ -68,7 +68,7 @@ export default function Image() {
             marginBottom: 20,
           }}
         >
-          Pasterova 16
+          Пастерова 16
         </div>
 
         {/* Divider */}
@@ -92,7 +92,7 @@ export default function Image() {
             textTransform: "uppercase",
           }}
         >
-          Stambena zajednica
+          Стамбена заједница
         </div>
       </div>
     ),

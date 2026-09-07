@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import bcrypt from "bcryptjs"
 
-/** Kvadratura stana; prazno polje znaci "nije uneta", ne nula. */
+/** Kvadratura stana; prazno polje znaci "није унета", ne nula. */
 function parseArea(value: FormDataEntryValue | null): number | null {
   const raw = typeof value === "string" ? value.trim().replace(",", ".") : ""
   if (!raw) return null
@@ -19,7 +19,7 @@ function parseArea(value: FormDataEntryValue | null): number | null {
 export async function createResident(formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const name = formData.get("name") as string
@@ -30,12 +30,12 @@ export async function createResident(formData: FormData) {
   const password = formData.get("password") as string
 
   if (!name || !email || !password) {
-    throw new Error("Popunite obavezna polja")
+    throw new Error("Попуните обавезна поља")
   }
 
   const existing = await db.user.findUnique({ where: { email } })
   if (existing) {
-    throw new Error("Korisnik sa ovim email-om vec postoji")
+    throw new Error("Корисник са овим емаилом већ постоји")
   }
 
   const hashedPassword = await bcrypt.hash(password, 12)
@@ -61,11 +61,11 @@ export async function createResident(formData: FormData) {
 export async function updateUser(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const target = await db.user.findUnique({ where: { id } })
-  if (!target) throw new Error("Korisnik ne postoji")
+  if (!target) throw new Error("Корисник не постоји")
 
   const name = (formData.get("name") as string)?.trim()
   const email = (formData.get("email") as string)?.trim().toLowerCase()
@@ -80,19 +80,19 @@ export async function updateUser(id: string, formData: FormData) {
     roleRaw === "MANAGER" || roleRaw === "RESIDENT" ? roleRaw : target.role
 
   if (!name || !email) {
-    throw new Error("Ime i email su obavezni")
+    throw new Error("Име и емаил су обавезни")
   }
   if (roleRaw !== null && roleRaw !== "MANAGER" && roleRaw !== "RESIDENT") {
-    throw new Error("Nevazeca uloga")
+    throw new Error("Неважећа улога")
   }
 
   if (session.user.id === id && role !== target.role) {
-    throw new Error("Ne mozete promeniti svoju ulogu")
+    throw new Error("Не можете променити своју улогу")
   }
 
   if (email !== target.email) {
     const taken = await db.user.findUnique({ where: { email } })
-    if (taken) throw new Error("Email je vec u upotrebi")
+    if (taken) throw new Error("Емаил је већ у употреби")
   }
 
   await db.user.update({
@@ -116,15 +116,15 @@ export async function updateUser(id: string, formData: FormData) {
 export async function resetUserPassword(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const target = await db.user.findUnique({ where: { id } })
-  if (!target) throw new Error("Korisnik ne postoji")
+  if (!target) throw new Error("Корисник не постоји")
 
   const password = formData.get("password") as string
   if (!password || password.length < 6) {
-    throw new Error("Lozinka mora imati najmanje 6 karaktera")
+    throw new Error("Лозинка мора имати најмање 6 карактера")
   }
 
   const hashed = await bcrypt.hash(password, 12)
@@ -136,15 +136,15 @@ export async function resetUserPassword(id: string, formData: FormData) {
 export async function setUserActive(id: string, active: boolean) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   if (session.user.id === id && !active) {
-    throw new Error("Ne mozete sebi ukloniti pristup")
+    throw new Error("Не можете себи уклонити приступ")
   }
 
   const target = await db.user.findUnique({ where: { id } })
-  if (!target) throw new Error("Korisnik ne postoji")
+  if (!target) throw new Error("Корисник не постоји")
 
   await db.user.update({ where: { id }, data: { active } })
 

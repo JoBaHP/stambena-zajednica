@@ -12,7 +12,7 @@ import { formatArea, tallyPoll } from "@/lib/glasanje"
 export async function createPoll(formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const title = formData.get("title") as string
@@ -27,7 +27,7 @@ export async function createPoll(formData: FormData) {
       : 50
 
   if (!title || options.filter(Boolean).length < 2) {
-    throw new Error("Unesite naslov i bar dve opcije")
+    throw new Error("Унесите наслов и бар две опције")
   }
 
   const created = await db.poll.create({
@@ -54,15 +54,15 @@ export async function createPoll(formData: FormData) {
 
 export async function castVote(pollId: string, optionId: string) {
   const session = await auth()
-  if (!session) throw new Error("Niste prijavljeni")
+  if (!session) throw new Error("Нисте пријављени")
 
   const poll = await db.poll.findUnique({ where: { id: pollId } })
   if (!poll || poll.status !== "ACTIVE") {
-    throw new Error("Glasanje nije aktivno")
+    throw new Error("Гласање није активно")
   }
 
   if (poll.endsAt && poll.endsAt < new Date()) {
-    throw new Error("Glasanje je isteklo")
+    throw new Error("Гласање је истекло")
   }
 
   const existingVote = await db.vote.findUnique({
@@ -70,7 +70,7 @@ export async function castVote(pollId: string, optionId: string) {
   })
 
   if (existingVote) {
-    throw new Error("Vec ste glasali")
+    throw new Error("Већ сте гласали")
   }
 
   await db.vote.create({
@@ -87,7 +87,7 @@ export async function castVote(pollId: string, optionId: string) {
 export async function closePoll(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   await db.poll.update({
@@ -104,7 +104,7 @@ export async function closePoll(id: string) {
 export async function activatePoll(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   await db.poll.update({
@@ -144,12 +144,12 @@ export async function exportPollResults(pollId: string) {
 async function exportPollResultsImpl(pollId: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const archiveRoot = process.env.GDRIVE_ARCHIVE_FOLDER_ID
   if (!archiveRoot) {
-    throw new Error("GDRIVE_ARCHIVE_FOLDER_ID nije postavljen")
+    throw new Error("GDRIVE_ARCHIVE_FOLDER_ID није постављен")
   }
 
   const poll = await db.poll.findUnique({
@@ -160,7 +160,7 @@ async function exportPollResultsImpl(pollId: string) {
       },
     },
   })
-  if (!poll) throw new Error("Glasanje ne postoji")
+  if (!poll) throw new Error("Гласање не постоји")
 
   const votes = await db.vote.findMany({
     where: { pollId },
@@ -210,14 +210,14 @@ async function exportPollResultsImpl(pollId: string) {
     `# Eksportovano: ${exportedAt.toISOString()}`,
     `# Ukupno glasova: ${totalVotes}`,
     `# Potrebna vecina: ${poll.requiredShare}% ukupnog udela`,
-    `# Kvorum: ${tally.weighted ? `${tally.quorumPct.toFixed(1)}% (${formatArea(tally.votedArea)} od ${formatArea(tally.totalArea)})` : "nije racunat — kvadrature nisu unete"}`,
+    `# Kvorum: ${tally.weighted ? `${tally.quorumPct.toFixed(1)}% (${formatArea(tally.votedArea)} od ${formatArea(tally.totalArea)})` : "није рачунат — квадратуре нису унете"}`,
     "",
-    "Sumarno",
-    "Opcija,Glasovi,Procenat glasova,Udeo u kvadraturi,Odluka doneta",
+    "Сумарно",
+    "Опција,Гласови,Проценат гласова,Удео у квадратури,Одлука донета",
     ...summaryRows,
     "",
-    "Detaljno",
-    "Stanar,Stan,Email,Opcija,Vreme glasanja",
+    "Детаљно",
+    "Станар,Стан,Емаил,Опција,Време гласања",
     ...detailRows,
   ]
 

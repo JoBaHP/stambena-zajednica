@@ -8,9 +8,9 @@ import { Plus, ShieldCheck, ShieldX, ShieldAlert, Calendar } from "lucide-react"
 import Link from "next/link"
 
 const resultConfig = {
-  PASSED: { label: "Proslo", icon: ShieldCheck, color: "text-green-600", badge: "default" as const },
-  FAILED: { label: "Nije proslo", icon: ShieldX, color: "text-red-600", badge: "destructive" as const },
-  CONDITIONAL: { label: "Uslovno", icon: ShieldAlert, color: "text-amber-600", badge: "secondary" as const },
+  PASSED: { label: "Прошло", icon: ShieldCheck, color: "text-green-600", badge: "default" as const },
+  FAILED: { label: "Није прошло", icon: ShieldX, color: "text-red-600", badge: "destructive" as const },
+  CONDITIONAL: { label: "Условно", icon: ShieldAlert, color: "text-amber-600", badge: "secondary" as const },
 }
 
 export default async function InspekcijaPage() {
@@ -33,19 +33,19 @@ export default async function InspekcijaPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">PP Inspekcije</h1>
-          <p className="text-sm text-muted-foreground mt-1">Evidencija protivpozarnih inspekcija</p>
+          <h1 className="text-2xl font-semibold">ПП инспекције</h1>
+          <p className="text-sm text-muted-foreground mt-1">Евиденција противпожарних инспекција</p>
         </div>
         <Button render={<Link href="/dashboard/inspekcije/nova" />}>
           <Plus className="w-4 h-4 mr-2" />
-          Nova inspekcija
+          Нова инспекција
         </Button>
       </div>
 
       {upcoming.length > 0 && (
         <Card className="border-amber-200 bg-amber-50/50">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-amber-700">Predstojeci rokovi (30 dana)</CardTitle>
+            <CardTitle className="text-sm text-amber-700">Предстојећи рокови (30 дана)</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -65,13 +65,13 @@ export default async function InspekcijaPage() {
       {inspections.length === 0 ? (
         <Card>
           <CardContent className="text-center py-12">
-            <p className="text-muted-foreground">Nema evidentiranih inspekcija</p>
+            <p className="text-muted-foreground">Нема евидентираних инспекција</p>
             <Button
               className="mt-4"
               variant="outline"
               render={<Link href="/dashboard/inspekcije/nova" />}
             >
-              Dodaj prvu inspekciju
+              Додај прву инспекцију
             </Button>
           </CardContent>
         </Card>

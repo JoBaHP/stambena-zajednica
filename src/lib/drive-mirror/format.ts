@@ -45,11 +45,11 @@ export function formatDateTime(value: Date | string | null | undefined): string 
 }
 
 export function formatRSD(value: unknown): string {
-  return `${Number(value ?? 0).toLocaleString("sr-RS", { minimumFractionDigits: 2 })} RSD`
+  return `${Number(value ?? 0).toLocaleString("sr-RS", { minimumFractionDigits: 2 })} РСД`
 }
 
 export function yesNo(value: boolean): string {
-  return value ? "da" : "ne"
+  return value ? "да" : "не"
 }
 
 /** Godina po beogradskoj zoni — odredjuje folder u koji zapis ide. */
@@ -109,19 +109,19 @@ export function buildDocument(opts: {
   lines: string[]
 }): { content: string; hashSource: string } {
   const body = [
-    `Pasterova 16 — ${opts.title}`,
+    `Пастерова 16 — ${opts.title}`,
     "",
     ...opts.lines,
     "",
     "---",
-    `Zapis: ${opts.entity} / ${opts.entityId}`,
+    `Запис: ${opts.entity} / ${opts.entityId}`,
   ]
   // BOM: bez njega Notepad na Windowsu razbije cirilicu.
   const content =
     "﻿" +
     [
       ...body,
-      `Generisano: ${formatDateTime(new Date())} (aplikacija Pasterova 16)`,
+      `Генерисано: ${formatDateTime(new Date())} (апликација Пастерова 16)`,
     ].join("\n") +
     "\n"
 

@@ -24,9 +24,9 @@ export default async function PodesavanjaPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Podesavanja</h1>
+        <h1 className="text-2xl font-semibold">Подешавања</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Upravljanje vasim nalogom
+          Управљање вашим налогом
         </p>
       </div>
 

@@ -34,7 +34,7 @@ export function AccessRequestActions({
         if (result) setApproved(result)
         setMode("idle")
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : "Greska")
+        toast.error(err instanceof Error ? err.message : "Грешка")
       }
     })
   }
@@ -43,10 +43,10 @@ export function AccessRequestActions({
     startTransition(async () => {
       try {
         await rejectAccessRequest(id, formData)
-        toast.success("Zahtev odbijen. Korisnik je obavesten emailom.")
+        toast.success("Захтев одбијен. Корисник је обавештен емаилом.")
         setMode("idle")
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : "Greska")
+        toast.error(err instanceof Error ? err.message : "Грешка")
       }
     })
   }
@@ -56,7 +56,7 @@ export function AccessRequestActions({
       <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3 space-y-2">
         <div className="flex items-center gap-1.5 text-green-700 text-sm font-medium">
           <CheckCircle2 className="w-4 h-4" />
-          Odobreno — podaci za prijavu
+          Одобрено — подаци за пријаву
         </div>
         <div className="text-xs space-y-1 font-mono bg-white rounded border px-3 py-2">
           <div>Email: <span className="font-semibold">{approved.email}</span></div>
@@ -66,7 +66,7 @@ export function AccessRequestActions({
               type="button"
               onClick={() => {
                 navigator.clipboard.writeText(approved.password)
-                toast.success("Lozinka kopirana")
+                toast.success("Лозинка копирана")
               }}
               className="text-muted-foreground hover:text-foreground"
             >
@@ -75,7 +75,7 @@ export function AccessRequestActions({
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
-          Email je poslat na {approved.email}. Ako ne stigne, saopsti lozinku direktno.
+          Емаил је послат на {approved.email}. Ако не стигне, саопшти лозинку директно.
         </p>
       </div>
     )
@@ -85,7 +85,7 @@ export function AccessRequestActions({
     return (
       <form action={handleApprove} className="space-y-3 mt-3">
         <div className="space-y-1.5">
-          <Label htmlFor={`password-${id}`}>Pocetna lozinka</Label>
+          <Label htmlFor={`password-${id}`}>Почетна лозинка</Label>
           <Input
             id={`password-${id}`}
             name="password"
@@ -95,12 +95,12 @@ export function AccessRequestActions({
             minLength={6}
           />
           <p className="text-xs text-muted-foreground">
-            Lozinka ce biti poslata korisniku emailom.
+            Лозинка ће бити послата кориснику емаилом.
           </p>
         </div>
         <div className="flex gap-2">
           <Button type="submit" disabled={pending}>
-            {pending ? "Odobravanje..." : "Potvrdi odobrenje"}
+            {pending ? "Одобравање..." : "Потврди одобрење"}
           </Button>
           <Button
             type="button"
@@ -108,7 +108,7 @@ export function AccessRequestActions({
             onClick={() => setMode("idle")}
             disabled={pending}
           >
-            Otkazi
+            Откажи
           </Button>
         </div>
       </form>
@@ -119,17 +119,17 @@ export function AccessRequestActions({
     return (
       <form action={handleReject} className="space-y-3 mt-3">
         <div className="space-y-1.5">
-          <Label htmlFor={`note-${id}`}>Razlog odbijanja (opciono)</Label>
+          <Label htmlFor={`note-${id}`}>Разлог одбијања (опционо)</Label>
           <Textarea
             id={`note-${id}`}
             name="note"
             rows={2}
-            placeholder="Bice ukljuceno u email obavestenje."
+            placeholder="Биће укључено у емаил обавештење."
           />
         </div>
         <div className="flex gap-2">
           <Button type="submit" variant="destructive" disabled={pending}>
-            {pending ? "Odbijanje..." : "Potvrdi odbijanje"}
+            {pending ? "Одбијање..." : "Потврди одбијање"}
           </Button>
           <Button
             type="button"
@@ -137,7 +137,7 @@ export function AccessRequestActions({
             onClick={() => setMode("idle")}
             disabled={pending}
           >
-            Otkazi
+            Откажи
           </Button>
         </div>
       </form>
@@ -146,9 +146,9 @@ export function AccessRequestActions({
 
   return (
     <div className="flex gap-2 mt-3">
-      <Button onClick={() => setMode("approve")}>Odobri</Button>
+      <Button onClick={() => setMode("approve")}>Одобри</Button>
       <Button variant="outline" onClick={() => setMode("reject")}>
-        Odbij
+        Одбиј
       </Button>
     </div>
   )

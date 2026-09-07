@@ -37,7 +37,7 @@ function fail(msg: string): never {
 
 export async function uploadDocument(formData: FormData) {
   const session = await auth()
-  if (!session || session.user.role !== "MANAGER") fail("Nemate dozvolu")
+  if (!session || session.user.role !== "MANAGER") fail("Немате дозволу")
 
   const title = formData.get("title") as string
   const description = formData.get("description") as string
@@ -46,16 +46,16 @@ export async function uploadDocument(formData: FormData) {
   const file = formData.get("file") as File | null
 
   if (!title || !category || !file || file.size === 0)
-    fail("Popunite obavezna polja i izaberite fajl")
+    fail("Попуните обавезна поља и изаберите фајл")
 
   const year = Number.parseInt(yearRaw, 10)
   if (!Number.isInteger(year) || year < 2000 || year > 2100)
-    fail("Unesite validnu godinu")
+    fail("Унесите исправну годину")
 
-  if (file.size > MAX_FILE_SIZE) fail("Fajl je veci od 4MB")
+  if (file.size > MAX_FILE_SIZE) fail("Фајл је већи од 4MB")
 
   if (!ALLOWED_MIME_TYPES.includes(file.type))
-    fail(`Tip fajla nije podrzan (${file.type})`)
+    fail(`Тип фајла није подржан (${file.type})`)
 
   try {
     const buffer = Buffer.from(await file.arrayBuffer())
@@ -94,7 +94,7 @@ export async function uploadDocument(formData: FormData) {
       errors: gErr?.errors,
       stack: err instanceof Error ? err.stack : undefined,
     })
-    fail("Otpremanje nije uspelo. Pokusajte ponovo.")
+    fail("Отпремање није успело. Покушајте поново.")
   }
 
   scheduleDataMirror("ARCHIVE")
@@ -106,11 +106,11 @@ export async function uploadDocument(formData: FormData) {
 export async function deleteDocument(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const doc = await db.archiveDocument.findUnique({ where: { id } })
-  if (!doc) throw new Error("Dokument ne postoji")
+  if (!doc) throw new Error("Документ не постоји")
 
   try {
     await deleteFile(doc.fileId)

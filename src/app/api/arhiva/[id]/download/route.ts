@@ -11,20 +11,20 @@ export async function GET(
 ) {
   const session = await auth()
   if (!session) {
-    return NextResponse.json({ error: "Niste prijavljeni" }, { status: 401 })
+    return NextResponse.json({ error: "Нисте пријављени" }, { status: 401 })
   }
 
   const { id } = await params
   const doc = await db.archiveDocument.findUnique({ where: { id } })
   if (!doc) {
-    return NextResponse.json({ error: "Dokument ne postoji" }, { status: 404 })
+    return NextResponse.json({ error: "Документ не постоји" }, { status: 404 })
   }
 
   if (
     session.user.role !== "MANAGER" &&
     !RESIDENT_VISIBLE.includes(doc.category)
   ) {
-    return NextResponse.json({ error: "Nemate dozvolu" }, { status: 403 })
+    return NextResponse.json({ error: "Немате дозволу" }, { status: 403 })
   }
 
   try {
@@ -39,7 +39,7 @@ export async function GET(
   } catch (err) {
     console.error("[arhiva download]", err)
     return NextResponse.json(
-      { error: "Greska pri preuzimanju" },
+      { error: "Грешка при преузимању" },
       { status: 500 },
     )
   }

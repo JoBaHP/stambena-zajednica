@@ -15,10 +15,10 @@ import { ConfirmDelete } from "@/components/confirm-delete"
 import Link from "next/link"
 
 const statusConfig = {
-  PLANNED: { label: "Planirano", variant: "outline" as const },
-  IN_PROGRESS: { label: "U toku", variant: "default" as const },
-  COMPLETED: { label: "Zavrseno", variant: "secondary" as const },
-  CANCELLED: { label: "Otkazano", variant: "destructive" as const },
+  PLANNED: { label: "Планирано", variant: "outline" as const },
+  IN_PROGRESS: { label: "У току", variant: "default" as const },
+  COMPLETED: { label: "Завршено", variant: "secondary" as const },
+  CANCELLED: { label: "Отказано", variant: "destructive" as const },
 }
 
 export default async function InvesticijaDetaljPage({
@@ -66,33 +66,33 @@ export default async function InvesticijaDetaljPage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Finansijski pregled</CardTitle>
+          <CardTitle className="text-base">Финансијски преглед</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex justify-between">
-            <span className="text-sm text-muted-foreground">Budzet</span>
+            <span className="text-sm text-muted-foreground">Буџет</span>
             <span className="text-sm font-bold">
-              {Number(investment.budget).toLocaleString("sr-RS", { minimumFractionDigits: 2 })} RSD
+              {Number(investment.budget).toLocaleString("sr-RS", { minimumFractionDigits: 2 })} РСД
             </span>
           </div>
 
           <div className="flex justify-between">
-            <span className="text-sm text-muted-foreground">Potroseno</span>
+            <span className="text-sm text-muted-foreground">Потрошено</span>
             <span className="text-sm font-bold text-amber-600">
-              {Number(investment.spent).toLocaleString("sr-RS", { minimumFractionDigits: 2 })} RSD
+              {Number(investment.spent).toLocaleString("sr-RS", { minimumFractionDigits: 2 })} РСД
             </span>
           </div>
 
           <div className="flex justify-between">
-            <span className="text-sm text-muted-foreground">Preostalo</span>
+            <span className="text-sm text-muted-foreground">Преостало</span>
             <span className="text-sm font-bold text-green-600">
-              {(Number(investment.budget) - Number(investment.spent)).toLocaleString("sr-RS", { minimumFractionDigits: 2 })} RSD
+              {(Number(investment.budget) - Number(investment.spent)).toLocaleString("sr-RS", { minimumFractionDigits: 2 })} РСД
             </span>
           </div>
 
           <div className="space-y-1.5 pt-2">
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Napredak</span>
+              <span>Напредак</span>
               <span>{progress.toFixed(0)}%</span>
             </div>
             <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
@@ -109,13 +109,13 @@ export default async function InvesticijaDetaljPage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Detalji</CardTitle>
+          <CardTitle className="text-base">Детаљи</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {investment.startDate && (
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" /> Pocetak
+                <Calendar className="w-4 h-4" /> Почетак
               </span>
               <span className="text-sm">
                 {new Date(investment.startDate).toLocaleDateString("sr-RS")}
@@ -126,7 +126,7 @@ export default async function InvesticijaDetaljPage({
           {investment.endDate && (
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" /> Zavrsetak
+                <Calendar className="w-4 h-4" /> Завршетак
               </span>
               <span className="text-sm">
                 {new Date(investment.endDate).toLocaleDateString("sr-RS")}
@@ -144,12 +144,12 @@ export default async function InvesticijaDetaljPage({
       {(investment.status === "IN_PROGRESS" || investment.status === "PLANNED") && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Azuriraj</CardTitle>
+            <CardTitle className="text-base">Ажурирај</CardTitle>
           </CardHeader>
           <CardContent>
             <form action={updateWithId} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="spent">Potroseno (RSD)</Label>
+                <Label htmlFor="spent">Потрошено (РСД)</Label>
                 <Input
                   id="spent"
                   name="spent"
@@ -161,20 +161,20 @@ export default async function InvesticijaDetaljPage({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status">Статус</Label>
                 <select
                   id="status"
                   name="status"
                   defaultValue={investment.status}
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 >
-                  <option value="PLANNED">Planirano</option>
-                  <option value="IN_PROGRESS">U toku</option>
-                  <option value="COMPLETED">Zavrseno</option>
-                  <option value="CANCELLED">Otkazano</option>
+                  <option value="PLANNED">Планирано</option>
+                  <option value="IN_PROGRESS">У току</option>
+                  <option value="COMPLETED">Завршено</option>
+                  <option value="CANCELLED">Отказано</option>
                 </select>
               </div>
-              <SubmitButton>Sacuvaj izmene</SubmitButton>
+              <SubmitButton>Сачувај измене</SubmitButton>
             </form>
           </CardContent>
         </Card>
@@ -185,7 +185,7 @@ export default async function InvesticijaDetaljPage({
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
             <Gavel className="w-4 h-4" />
-            Tender — ponude kompanija
+            Тендер — понуде компанија
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -206,7 +206,7 @@ export default async function InvesticijaDetaljPage({
                   </div>
                 </div>
                 <Badge variant={investment.tender.status === "OPEN" ? "default" : "secondary"}>
-                  {investment.tender.status === "OPEN" ? "Aktivno" : "Zatvoreno"}
+                  {investment.tender.status === "OPEN" ? "Активно" : "Затворено"}
                 </Badge>
               </div>
               <Button
@@ -214,17 +214,17 @@ export default async function InvesticijaDetaljPage({
                 size="sm"
                 render={<Link href={`/dashboard/tenderi/${investment.tender.id}`} />}
               >
-                Upravljaj tenderom
+                Управљај тендером
                 <ChevronRight className="w-3.5 h-3.5 ml-1.5" />
               </Button>
             </div>
           ) : (
             <form action={createTenderForInvestment} className="space-y-3">
               <p className="text-sm text-muted-foreground">
-                Kreirajte tender da biste dodali ponude kompanija i omogućili glasanje stanarima.
+                Креирајте тендер да бисте додали понуде компанија и омогућили гласање станарима.
               </p>
               <div className="space-y-1.5">
-                <Label htmlFor="tender-title">Naziv tendera</Label>
+                <Label htmlFor="tender-title">Назив тендера</Label>
                 <Input
                   id="tender-title"
                   name="title"
@@ -233,17 +233,17 @@ export default async function InvesticijaDetaljPage({
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="tender-desc">Opis (opciono)</Label>
+                <Label htmlFor="tender-desc">Опис (опционо)</Label>
                 <Textarea
                   id="tender-desc"
                   name="description"
                   rows={2}
-                  placeholder="Šta se traži, kriterijumi izbora..."
+                  placeholder="Шта се тражи, критеријуми избора..."
                 />
               </div>
               <SubmitButton size="sm">
                 <Gavel className="w-3.5 h-3.5 mr-1.5" />
-                Kreiraj tender
+                Креирај тендер
               </SubmitButton>
             </form>
           )}
@@ -252,11 +252,11 @@ export default async function InvesticijaDetaljPage({
 
       <div className="flex gap-3">
         <Button variant="outline" className="flex-1" render={<Link href="/dashboard/investicije" />}>
-          Nazad
+          Назад
         </Button>
         <Button className="flex-1" render={<Link href={`/dashboard/investicije/${investment.id}/uredi`} />}>
           <Pencil className="w-4 h-4 mr-2" />
-          Izmeni
+          Измени
         </Button>
         <ConfirmDelete action={deleteWithId} />
       </div>

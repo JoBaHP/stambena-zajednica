@@ -2,98 +2,98 @@
 // dokumenti na Drive-u citaju identicno kao aplikacija.
 
 export const roleLabels: Record<string, string> = {
-  MANAGER: "Upravnik",
-  RESIDENT: "Stanar",
+  MANAGER: "Управник",
+  RESIDENT: "Станар",
 }
 
 export const transactionTypeLabels: Record<string, string> = {
-  INCOME: "Uplata",
-  EXPENSE: "Rashod",
+  INCOME: "Уплата",
+  EXPENSE: "Расход",
 }
 
 export const categoryTypeLabels: Record<string, string> = {
-  INCOME: "Prihod",
-  EXPENSE: "Rashod",
+  INCOME: "Приход",
+  EXPENSE: "Расход",
 }
 
 export const inspectionResultLabels: Record<string, string> = {
-  PASSED: "Proslo",
-  FAILED: "Nije proslo",
-  CONDITIONAL: "Uslovno",
+  PASSED: "Прошло",
+  FAILED: "Није прошло",
+  CONDITIONAL: "Условно",
 }
 
 export const investmentStatusLabels: Record<string, string> = {
-  PLANNED: "Planirano",
-  IN_PROGRESS: "U toku",
-  COMPLETED: "Zavrseno",
-  CANCELLED: "Otkazano",
+  PLANNED: "Планирано",
+  IN_PROGRESS: "У току",
+  COMPLETED: "Завршено",
+  CANCELLED: "Отказано",
 }
 
 export const requestCategoryLabels: Record<string, string> = {
-  PLUMBING: "Vodovod",
-  ELECTRICAL: "Elektrika",
-  ELEVATOR: "Lift",
-  HEATING: "Grejanje",
-  CLEANING: "Ciscenje",
-  STRUCTURAL: "Gradjevinski",
-  OTHER: "Ostalo",
+  PLUMBING: "Водовод",
+  ELECTRICAL: "Електрика",
+  ELEVATOR: "Лифт",
+  HEATING: "Грејање",
+  CLEANING: "Чишћење",
+  STRUCTURAL: "Грађевински",
+  OTHER: "Остало",
 }
 
 export const requestStatusLabels: Record<string, string> = {
-  SUBMITTED: "Prijavljeno",
-  IN_PROGRESS: "U toku",
-  RESOLVED: "Reseno",
-  REJECTED: "Odbijeno",
+  SUBMITTED: "Пријављено",
+  IN_PROGRESS: "У току",
+  RESOLVED: "Решено",
+  REJECTED: "Одбијено",
 }
 
 export const requestPriorityLabels: Record<string, string> = {
-  LOW: "Nizak",
-  NORMAL: "Normalan",
-  HIGH: "Visok",
-  URGENT: "Hitno",
+  LOW: "Низак",
+  NORMAL: "Нормалан",
+  HIGH: "Висок",
+  URGENT: "Хитно",
 }
 
 export const taskCategoryLabels: Record<string, string> = {
-  INSPECTION: "Inspekcija",
-  MAINTENANCE: "Odrzavanje",
-  PAYMENT: "Placanje",
-  MEETING: "Sastanak",
-  CONTRACT: "Ugovor",
-  OTHER: "Ostalo",
+  INSPECTION: "Инспекција",
+  MAINTENANCE: "Одржавање",
+  PAYMENT: "Плаћање",
+  MEETING: "Састанак",
+  CONTRACT: "Уговор",
+  OTHER: "Остало",
 }
 
 export const taskStatusLabels: Record<string, string> = {
-  PENDING: "Na cekanju",
-  COMPLETED: "Zavrseno",
+  PENDING: "На чекању",
+  COMPLETED: "Завршено",
 }
 
 export const taskRecurrenceLabels: Record<string, string> = {
-  NONE: "Bez ponavljanja",
-  MONTHLY: "Mesecno",
-  QUARTERLY: "Kvartalno",
-  YEARLY: "Godisnje",
+  NONE: "Без понављања",
+  MONTHLY: "Месечно",
+  QUARTERLY: "Квартално",
+  YEARLY: "Годишње",
 }
 
 export const contactCategoryLabels: Record<string, string> = {
-  EMERGENCY: "Hitne sluzbe",
-  MANAGEMENT: "Uprava",
-  MAINTENANCE: "Odrzavanje",
+  EMERGENCY: "Хитне службе",
+  MANAGEMENT: "Управа",
+  MAINTENANCE: "Одржавање",
 }
 
 export const priorityLabels: Record<string, string> = {
-  NORMAL: "Normalno",
-  URGENT: "Hitno",
+  NORMAL: "Нормално",
+  URGENT: "Хитно",
 }
 
 export const pollStatusLabels: Record<string, string> = {
-  DRAFT: "Priprema",
-  ACTIVE: "U toku",
-  CLOSED: "Zatvoreno",
+  DRAFT: "Припрема",
+  ACTIVE: "У току",
+  CLOSED: "Затворено",
 }
 
 export const tenderStatusLabels: Record<string, string> = {
-  OPEN: "Otvoren",
-  CLOSED: "Zatvoren",
+  OPEN: "Отворен",
+  CLOSED: "Затворен",
 }
 
 export function label(map: Record<string, string>, key: string | null | undefined): string {

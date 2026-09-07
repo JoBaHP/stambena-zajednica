@@ -22,7 +22,7 @@ export function PasswordForm() {
     if (result?.error) {
       toast.error(result.error)
     } else {
-      toast.success("Lozinka je uspesno promenjena")
+      toast.success("Лозинка је успешно промењена")
       form.reset()
     }
 
@@ -32,13 +32,13 @@ export function PasswordForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Promena lozinke</CardTitle>
-        <CardDescription>Unesite trenutnu i novu lozinku</CardDescription>
+        <CardTitle className="text-base">Промена лозинке</CardTitle>
+        <CardDescription>Унесите тренутну и нову лозинку</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="currentPassword">Trenutna lozinka</Label>
+            <Label htmlFor="currentPassword">Тренутна лозинка</Label>
             <PasswordInput
               id="currentPassword"
               name="currentPassword"
@@ -46,7 +46,7 @@ export function PasswordForm() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="newPassword">Nova lozinka</Label>
+            <Label htmlFor="newPassword">Нова лозинка</Label>
             <PasswordInput
               id="newPassword"
               name="newPassword"
@@ -55,7 +55,7 @@ export function PasswordForm() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Potvrdite novu lozinku</Label>
+            <Label htmlFor="confirmPassword">Потврдите нову лозинку</Label>
             <PasswordInput
               id="confirmPassword"
               name="confirmPassword"
@@ -64,7 +64,7 @@ export function PasswordForm() {
             />
           </div>
           <Button type="submit" disabled={loading}>
-            {loading ? "Menjam..." : "Promeni lozinku"}
+            {loading ? "Мењам..." : "Промени лозинку"}
           </Button>
         </form>
       </CardContent>

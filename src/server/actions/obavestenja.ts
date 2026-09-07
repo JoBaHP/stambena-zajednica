@@ -11,11 +11,11 @@ import Groq from "groq-sdk"
 
 export async function generateAnnouncementText(title: string, priority: string): Promise<string> {
   const session = await auth()
-  if (!session || session.user.role !== "MANAGER") throw new Error("Nemate dozvolu")
-  if (!title.trim()) throw new Error("Unesite naslov pre generisanja teksta")
+  if (!session || session.user.role !== "MANAGER") throw new Error("Немате дозволу")
+  if (!title.trim()) throw new Error("Унесите наслов пре генерисања текста")
 
   const apiKey = process.env.GROQ_API_KEY
-  if (!apiKey) throw new Error("GROQ_API_KEY nije postavljen")
+  if (!apiKey) throw new Error("GROQ_API_KEY није постављен")
 
   const client = new Groq({ apiKey })
   const isUrgent = priority === "URGENT"
@@ -45,7 +45,7 @@ export async function generateAnnouncementText(title: string, priority: string):
 export async function createAnnouncement(formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const title = formData.get("title") as string
@@ -55,7 +55,7 @@ export async function createAnnouncement(formData: FormData) {
   const expiresAt = formData.get("expiresAt") as string
 
   if (!title || !body) {
-    throw new Error("Popunite obavezna polja")
+    throw new Error("Попуните обавезна поља")
   }
 
   const created = await db.announcement.create({
@@ -71,11 +71,11 @@ export async function createAnnouncement(formData: FormData) {
 
   scheduleMirror("ANNOUNCEMENT", created.id)
 
-  const subjectPrefix = priority === "URGENT" ? "HITNO: " : ""
+  const subjectPrefix = priority === "URGENT" ? "ХИТНО: " : ""
   await notifyAllResidents({
-    subject: `[Pasterova 16] ${subjectPrefix}${title}`,
-    body: `${title}\n\n${body}\n\nVidi: ${process.env.NEXTAUTH_URL ?? ""}/dashboard/obavestenja`,
-    smsBody: `Pasterova 16${priority === "URGENT" ? " HITNO" : ""}: ${title}. Vidi obavestenja u aplikaciji.`,
+    subject: `[Пастерова 16] ${subjectPrefix}${title}`,
+    body: `${title}\n\n${body}\n\nВиди: ${process.env.NEXTAUTH_URL ?? ""}/dashboard/obavestenja`,
+    smsBody: `Пастерова 16${priority === "URGENT" ? " ХИТНО" : ""}: ${title}. Види обавештења у апликацији.`,
   })
 
   revalidatePath("/dashboard")
@@ -86,7 +86,7 @@ export async function createAnnouncement(formData: FormData) {
 export async function updateAnnouncement(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const title = formData.get("title") as string
@@ -116,7 +116,7 @@ export async function updateAnnouncement(id: string, formData: FormData) {
 export async function deleteAnnouncement(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   await db.announcement.delete({ where: { id } })

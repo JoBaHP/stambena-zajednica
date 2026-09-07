@@ -8,10 +8,10 @@ import { Plus, User, Pencil, Activity, Clock } from "lucide-react"
 import Link from "next/link"
 
 function formatLastSeen(date: Date | null): string {
-  if (!date) return "Nikad"
+  if (!date) return "Никад"
   const diff = Date.now() - date.getTime()
   const minutes = Math.floor(diff / 60_000)
-  if (minutes < 1) return "Upravo sada"
+  if (minutes < 1) return "Управо сада"
   if (minutes < 60) return `Pre ${minutes} min`
   const hours = Math.floor(minutes / 60)
   if (hours < 24) return `Pre ${hours} h`
@@ -71,7 +71,7 @@ export default async function StanariPage() {
       <div className="flex items-center gap-2 shrink-0">
         {!u.active && (
           <Badge variant="destructive" className="text-xs">
-            Pristup uklonjen
+            Приступ уклоњен
           </Badge>
         )}
         {u.unit && (
@@ -92,14 +92,14 @@ export default async function StanariPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Stanari</h1>
+          <h1 className="text-2xl font-semibold">Станари</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Korisnici aplikacije
+            Корисници апликације
           </p>
         </div>
         <Button render={<Link href="/dashboard/stanari/novi" />}>
           <Plus className="w-4 h-4 mr-2" />
-          Dodaj stanara
+          Додај станара
         </Button>
       </div>
 
@@ -123,12 +123,12 @@ export default async function StanariPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Stanari ({stanari.length})</CardTitle>
+          <CardTitle className="text-base">Станари ({stanari.length})</CardTitle>
         </CardHeader>
         <CardContent>
           {stanari.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-4">
-              Nema registrovanih stanara
+              Нема регистрованих станара
             </p>
           ) : (
             <div className="space-y-2">{stanari.map(renderRow)}</div>

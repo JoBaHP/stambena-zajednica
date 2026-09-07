@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Pasterova 16 — Stambena Zajednica",
-    short_name: "Pasterova 16",
+    name: "Пастерова 16 — Стамбена заједница",
+    short_name: "Пастерова 16",
     description:
-      "Portal stambene zajednice Pasterova 16: finansije, obavestenja, glasanja, zahtevi, kalendar i digitalna arhiva.",
+      "Портал стамбене заједнице Пастерова 16: финансије, обавештења, гласања, захтеви, календар и дигитална архива.",
     start_url: "/dashboard",
     scope: "/",
     display: "standalone",

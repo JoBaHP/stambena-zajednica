@@ -22,19 +22,19 @@ import { completeTask, reopenTask, deleteTask } from "@/server/actions/kalendar"
 import { ConfirmDelete } from "@/components/confirm-delete"
 
 const categoryConfig = {
-  INSPECTION: { label: "Inspekcija", icon: ShieldCheck, color: "text-blue-600" },
-  MAINTENANCE: { label: "Odrzavanje", icon: HardHat, color: "text-amber-600" },
-  PAYMENT: { label: "Placanje", icon: Wallet, color: "text-emerald-600" },
-  MEETING: { label: "Sastanak", icon: Users, color: "text-purple-600" },
-  CONTRACT: { label: "Ugovor", icon: FileText, color: "text-slate-600" },
-  OTHER: { label: "Ostalo", icon: Circle, color: "text-slate-500" },
+  INSPECTION: { label: "Инспекција", icon: ShieldCheck, color: "text-blue-600" },
+  MAINTENANCE: { label: "Одржавање", icon: HardHat, color: "text-amber-600" },
+  PAYMENT: { label: "Плаћање", icon: Wallet, color: "text-emerald-600" },
+  MEETING: { label: "Састанак", icon: Users, color: "text-purple-600" },
+  CONTRACT: { label: "Уговор", icon: FileText, color: "text-slate-600" },
+  OTHER: { label: "Остало", icon: Circle, color: "text-slate-500" },
 }
 
 const recurrenceLabels: Record<string, string> = {
   NONE: "",
-  MONTHLY: "Mesecno",
-  QUARTERLY: "Kvartalno",
-  YEARLY: "Godisnje",
+  MONTHLY: "Месечно",
+  QUARTERLY: "Квартално",
+  YEARLY: "Годишње",
 }
 
 function startOfDay(d: Date) {
@@ -87,15 +87,15 @@ export default async function KalendarPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Kalendar obaveza</h1>
+          <h1 className="text-2xl font-semibold">Календар обавеза</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Pregled obaveza, rokova i zakazanih aktivnosti
+            Преглед обавеза, рокова и заказаних активности
           </p>
         </div>
         {isManager && (
           <Button render={<Link href="/dashboard/kalendar/novi" />}>
             <Plus className="w-4 h-4 mr-2" />
-            Nova obaveza
+            Нова обавеза
           </Button>
         )}
       </div>
@@ -104,14 +104,14 @@ export default async function KalendarPage() {
         <Card>
           <CardContent className="text-center py-12">
             <CalendarClock className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
-            <p className="text-muted-foreground">Nema unetih obaveza</p>
+            <p className="text-muted-foreground">Нема унетих обавеза</p>
             {isManager && (
               <Button
                 className="mt-4"
                 variant="outline"
                 render={<Link href="/dashboard/kalendar/novi" />}
               >
-                Dodaj prvu obavezu
+                Додај прву обавезу
               </Button>
             )}
           </CardContent>
@@ -134,12 +134,12 @@ export default async function KalendarPage() {
             today={today}
             isManager={isManager}
             tone="upcoming"
-            emptyText="Nema predstojecih obaveza"
+            emptyText="Нема предстојећих обавеза"
           />
 
           {completed.length > 0 && (
             <TaskSection
-              title="Zavrseno"
+              title="Завршено"
               tasks={completed}
               today={today}
               isManager={isManager}
@@ -196,7 +196,7 @@ function TaskSection({
       <CardContent>
         {tasks.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            {emptyText ?? "Nema obaveza"}
+            {emptyText ?? "Нема обавеза"}
           </p>
         ) : (
           <div className="space-y-2">
@@ -237,11 +237,11 @@ function TaskRow({
         ? `Zavrseno ${formatDate(task.completedAt)}`
         : formatDate(task.dueDate)
       : diff === 0
-        ? "Danas"
+        ? "Данас"
         : diff === 1
-          ? "Sutra"
+          ? "Сутра"
           : diff === -1
-            ? "Juce"
+            ? "Јуче"
             : diff > 1
               ? `Za ${diff} dana · ${formatDate(task.dueDate)}`
               : `Pre ${Math.abs(diff)} dana · ${formatDate(task.dueDate)}`
@@ -288,7 +288,7 @@ function TaskRow({
         <div className="flex items-center gap-1 shrink-0">
           {tone === "completed" ? (
             <form action={reopenTask.bind(null, task.id)}>
-              <Button variant="ghost" size="sm" type="submit" title="Vrati u obaveze">
+              <Button variant="ghost" size="sm" type="submit" title="Врати у обавезе">
                 <RotateCcw className="w-4 h-4" />
               </Button>
             </form>
@@ -298,7 +298,7 @@ function TaskRow({
                 variant="ghost"
                 size="sm"
                 type="submit"
-                title="Oznaci zavrseno"
+                title="Означи завршено"
               >
                 <CheckCircle2 className="w-4 h-4 text-green-600" />
               </Button>
@@ -308,14 +308,14 @@ function TaskRow({
             variant="ghost"
             size="sm"
             render={<Link href={`/dashboard/kalendar/${task.id}/uredi`} />}
-            title="Uredi"
+            title="Уреди"
           >
             <Pencil className="w-3.5 h-3.5" />
           </Button>
           <ConfirmDelete
             action={deleteTask.bind(null, task.id)}
             label=""
-            confirmLabel="Obrisi?"
+            confirmLabel="Обриши?"
           />
         </div>
       )}

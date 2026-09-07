@@ -11,7 +11,7 @@ import { revalidatePath } from "next/cache"
 export async function syncPendingMirrors(limit = 20): Promise<SyncSummary> {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const summary = await syncPending(limit)

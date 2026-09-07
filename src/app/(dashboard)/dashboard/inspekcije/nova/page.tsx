@@ -18,25 +18,25 @@ export default async function NovaInspekcija() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Nova inspekcija</h1>
-        <p className="text-sm text-muted-foreground mt-1">Evidentiraj PP inspekciju</p>
+        <h1 className="text-2xl font-semibold">Нова инспекција</h1>
+        <p className="text-sm text-muted-foreground mt-1">Евидентирај ПП инспекцију</p>
       </div>
 
       <Card>
         <CardContent className="pt-6">
           <form action={createInspection} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="title">Naziv</Label>
+              <Label htmlFor="title">Назив</Label>
               <Input
                 id="title"
                 name="title"
-                placeholder="npr. Godisnja PP inspekcija"
+                placeholder="нпр. Годишња ПП инспекција"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="inspectionDate">Datum inspekcije</Label>
+              <Label htmlFor="inspectionDate">Датум инспекције</Label>
               <Input
                 id="inspectionDate"
                 name="inspectionDate"
@@ -47,38 +47,38 @@ export default async function NovaInspekcija() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="result">Rezultat</Label>
+              <Label htmlFor="result">Резултат</Label>
               <select
                 id="result"
                 name="result"
                 required
                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
-                <option value="PASSED">Proslo</option>
-                <option value="FAILED">Nije proslo</option>
-                <option value="CONDITIONAL">Uslovno</option>
+                <option value="PASSED">Прошло</option>
+                <option value="FAILED">Није прошло</option>
+                <option value="CONDITIONAL">Условно</option>
               </select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="nextDueDate">Sledeca inspekcija</Label>
+              <Label htmlFor="nextDueDate">Следећа инспекција</Label>
               <Input id="nextDueDate" name="nextDueDate" type="date" />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="inspector">Inspektor</Label>
-              <Input id="inspector" name="inspector" placeholder="Ime inspektora" />
+              <Label htmlFor="inspector">Инспектор</Label>
+              <Input id="inspector" name="inspector" placeholder="Име инспектора" />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="notes">Napomena</Label>
-              <Textarea id="notes" name="notes" placeholder="Opciono" rows={3} />
+              <Label htmlFor="notes">Напомена</Label>
+              <Textarea id="notes" name="notes" placeholder="Опционо" rows={3} />
             </div>
 
             <div className="flex gap-3 pt-2">
-              <SubmitButton className="flex-1">Sacuvaj</SubmitButton>
+              <SubmitButton className="flex-1">Сачувај</SubmitButton>
               <Button type="button" variant="outline" render={<Link href="/dashboard/inspekcije" />}>
-                Otkazi
+                Откажи
               </Button>
             </div>
           </form>

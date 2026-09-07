@@ -64,7 +64,7 @@ async function attachPhotos(requestId: string, title: string, photos: File[]) {
 
 export async function createRequest(formData: FormData) {
   const session = await auth()
-  if (!session) throw new Error("Niste prijavljeni")
+  if (!session) throw new Error("Нисте пријављени")
 
   const title = formData.get("title") as string
   const description = formData.get("description") as string
@@ -73,7 +73,7 @@ export async function createRequest(formData: FormData) {
   const location = formData.get("location") as string
 
   if (!title || !description || !category) {
-    throw new Error("Popunite obavezna polja")
+    throw new Error("Попуните обавезна поља")
   }
 
   const photos = formData
@@ -81,16 +81,16 @@ export async function createRequest(formData: FormData) {
     .filter((p): p is File => p instanceof File && p.size > 0)
 
   if (photos.length > MAX_PHOTOS) {
-    throw new Error(`Najvise ${MAX_PHOTOS} fotografije po zahtevu`)
+    throw new Error(`Највише ${MAX_PHOTOS} фотографије по захтеву`)
   }
   if (photos.some((p) => !PHOTO_TYPES.includes(p.type))) {
-    throw new Error("Dozvoljene su samo slike (JPG, PNG, WebP)")
+    throw new Error("Дозвољене су само слике (JPG, PNG, WebP)")
   }
   if (photos.some((p) => p.size > MAX_PHOTO_BYTES)) {
-    throw new Error("Fotografija je prevelika")
+    throw new Error("Фотографија је превелика")
   }
   if (photos.reduce((sum, p) => sum + p.size, 0) > MAX_TOTAL_BYTES) {
-    throw new Error("Fotografije su zajedno prevelike — posaljite ih manje")
+    throw new Error("Фотографије су заједно превелике — пошаљите их мање")
   }
 
   const created = await db.maintenanceRequest.create({
@@ -116,9 +116,9 @@ export async function createRequest(formData: FormData) {
 
   const isUrgent = created.priority === "URGENT"
   await notifyManagers({
-    subject: `[Pasterova 16] ${isUrgent ? "HITAN " : ""}Novi zahtev: ${title}`,
-    body: `Stanar ${session.user.name ?? ""} je prijavio novi zahtev za intervenciju.\n\nNaslov: ${title}\nKategorija: ${category}\nPrioritet: ${created.priority}\n\n${description}\n\nVidi: ${process.env.APP_URL ?? ""}/dashboard/zahtevi/${created.id}`,
-    smsBody: `Pasterova 16: ${isUrgent ? "HITAN " : ""}novi zahtev "${title}" od ${session.user.name ?? "stanara"}.`,
+    subject: `[Пастерова 16] ${isUrgent ? "ХИТАН " : ""}Нови захтев: ${title}`,
+    body: `Станар ${session.user.name ?? ""} је пријавио нови захтев за интервенцију.\n\nНаслов: ${title}\nКатегорија: ${category}\nПриоритет: ${created.priority}\n\n${description}\n\nВиди: ${process.env.APP_URL ?? ""}/dashboard/zahtevi/${created.id}`,
+    smsBody: `Пастерова 16: ${isUrgent ? "ХИТАН " : ""}нови захтев „${title}" од ${session.user.name ?? "станара"}.`,
   })
 
   revalidatePath("/dashboard")
@@ -129,7 +129,7 @@ export async function createRequest(formData: FormData) {
 export async function updateRequestStatus(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const status = formData.get("status") as string
@@ -147,16 +147,16 @@ export async function updateRequestStatus(id: string, formData: FormData) {
   scheduleMirror("REQUEST", id)
 
   const statusLabels: Record<string, string> = {
-    SUBMITTED: "Prijavljeno",
-    IN_PROGRESS: "U toku",
-    RESOLVED: "Reseno",
-    REJECTED: "Odbijeno",
+    SUBMITTED: "Пријављено",
+    IN_PROGRESS: "У току",
+    RESOLVED: "Решено",
+    REJECTED: "Одбијено",
   }
 
   await notifyUsers([updated.reporterId], {
-    subject: `[Pasterova 16] Status zahteva: ${updated.title}`,
-    body: `Status vaseg zahteva "${updated.title}" je promenjen na: ${statusLabels[updated.status]}.\n\n${resolution ? `Komentar upravnika:\n${resolution}\n\n` : ""}Vidi: ${process.env.APP_URL ?? ""}/dashboard/zahtevi/${updated.id}`,
-    smsBody: `Pasterova 16: vas zahtev "${updated.title}" je sada ${statusLabels[updated.status]}.`,
+    subject: `[Пастерова 16] Статус захтева: ${updated.title}`,
+    body: `Статус вашег захтева „${updated.title}" је промењен на: ${statusLabels[updated.status]}.\n\n${resolution ? `Коментар управника:\n${resolution}\n\n` : ""}Види: ${process.env.APP_URL ?? ""}/dashboard/zahtevi/${updated.id}`,
+    smsBody: `Пастерова 16: ваш захтев „${updated.title}" је сада ${statusLabels[updated.status]}.`,
   })
 
   revalidatePath("/dashboard/zahtevi")
@@ -167,7 +167,7 @@ export async function updateRequestStatus(id: string, formData: FormData) {
 export async function applyTriage(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const request = await db.maintenanceRequest.findUnique({
@@ -175,7 +175,7 @@ export async function applyTriage(id: string) {
     select: { aiTriage: true },
   })
   const triage = readTriage(request?.aiTriage)
-  if (!triage) throw new Error("Nema predloga za primenu")
+  if (!triage) throw new Error("Нема предлога за примену")
 
   await db.maintenanceRequest.update({
     where: { id },
@@ -197,10 +197,10 @@ export async function applyTriage(id: string) {
 
 export async function addComment(requestId: string, formData: FormData) {
   const session = await auth()
-  if (!session) throw new Error("Niste prijavljeni")
+  if (!session) throw new Error("Нисте пријављени")
 
   const body = formData.get("body") as string
-  if (!body) throw new Error("Komentar ne moze biti prazan")
+  if (!body) throw new Error("Коментар не може бити празан")
 
   await db.requestComment.create({
     data: {
@@ -217,13 +217,13 @@ export async function addComment(requestId: string, formData: FormData) {
 
 export async function deleteRequest(id: string) {
   const session = await auth()
-  if (!session) throw new Error("Niste prijavljeni")
+  if (!session) throw new Error("Нисте пријављени")
 
   const request = await db.maintenanceRequest.findUnique({ where: { id } })
-  if (!request) throw new Error("Zahtev ne postoji")
+  if (!request) throw new Error("Захтев не постоји")
 
   if (session.user.role !== "MANAGER" && request.reporterId !== session.user.id) {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   await db.maintenanceRequest.delete({ where: { id } })

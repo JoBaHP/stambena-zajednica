@@ -42,7 +42,7 @@ export default async function GlasanjePage() {
                 }
                 className="shrink-0 text-xs"
               >
-                {poll.status === "ACTIVE" ? "Aktivno" : poll.status === "CLOSED" ? "Zatvoreno" : "Nacrt"}
+                {poll.status === "ACTIVE" ? "Активно" : poll.status === "CLOSED" ? "Затворено" : "Нацрт"}
               </Badge>
             </div>
           </CardHeader>
@@ -64,7 +64,7 @@ export default async function GlasanjePage() {
               {poll.status === "CLOSED" && (
                 <span className="flex items-center gap-1 text-green-600">
                   <CheckCircle className="w-3.5 h-3.5" />
-                  Odluka donesena
+                  Одлука донесена
                 </span>
               )}
             </div>
@@ -78,13 +78,13 @@ export default async function GlasanjePage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Glasanje</h1>
-          <p className="text-sm text-muted-foreground mt-1">Odluke skupstine stambene zajednice</p>
+          <h1 className="text-2xl font-semibold">Гласање</h1>
+          <p className="text-sm text-muted-foreground mt-1">Одлуке скупштине стамбене заједнице</p>
         </div>
         {isManager && (
           <Button render={<Link href="/dashboard/glasanje/novo" />}>
             <Plus className="w-4 h-4 mr-2" />
-            Novo glasanje
+            Ново гласање
           </Button>
         )}
       </div>
@@ -92,14 +92,14 @@ export default async function GlasanjePage() {
       {polls.length === 0 ? (
         <Card>
           <CardContent className="text-center py-12">
-            <p className="text-muted-foreground">Nema glasanja</p>
+            <p className="text-muted-foreground">Нема гласања</p>
             {isManager && (
               <Button
                 className="mt-4"
                 variant="outline"
                 render={<Link href="/dashboard/glasanje/novo" />}
               >
-                Kreiraj prvo glasanje
+                Креирај прво гласање
               </Button>
             )}
           </CardContent>
@@ -108,7 +108,7 @@ export default async function GlasanjePage() {
         <div className="space-y-6">
           {activePolls.length > 0 && (
             <section>
-              <h2 className="text-sm font-medium text-muted-foreground mb-3">Aktivna glasanja</h2>
+              <h2 className="text-sm font-medium text-muted-foreground mb-3">Активна гласања</h2>
               <div className="space-y-3">
                 {activePolls.map((p) => <PollCard key={p.id} poll={p} />)}
               </div>
@@ -117,7 +117,7 @@ export default async function GlasanjePage() {
 
           {isManager && draftPolls.length > 0 && (
             <section>
-              <h2 className="text-sm font-medium text-muted-foreground mb-3">Nacrti</h2>
+              <h2 className="text-sm font-medium text-muted-foreground mb-3">Нацрти</h2>
               <div className="space-y-3">
                 {draftPolls.map((p) => <PollCard key={p.id} poll={p} />)}
               </div>
@@ -126,7 +126,7 @@ export default async function GlasanjePage() {
 
           {closedPolls.length > 0 && (
             <section>
-              <h2 className="text-sm font-medium text-muted-foreground mb-3">Arhiva odluka</h2>
+              <h2 className="text-sm font-medium text-muted-foreground mb-3">Архива одлука</h2>
               <div className="space-y-3">
                 {closedPolls.map((p) => <PollCard key={p.id} poll={p} />)}
               </div>

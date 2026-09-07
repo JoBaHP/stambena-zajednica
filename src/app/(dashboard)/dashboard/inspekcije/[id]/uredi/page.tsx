@@ -28,15 +28,15 @@ export default async function UrediInspekcijaPage({
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Izmeni inspekciju</h1>
-        <p className="text-sm text-muted-foreground mt-1">Azuriraj podatke PP inspekcije</p>
+        <h1 className="text-2xl font-semibold">Измени инспекцију</h1>
+        <p className="text-sm text-muted-foreground mt-1">Ажурирај податке ПП инспекције</p>
       </div>
 
       <Card>
         <CardContent className="pt-6">
           <form action={updateWithId} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="title">Naziv</Label>
+              <Label htmlFor="title">Назив</Label>
               <Input
                 id="title"
                 name="title"
@@ -46,7 +46,7 @@ export default async function UrediInspekcijaPage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="inspectionDate">Datum inspekcije</Label>
+              <Label htmlFor="inspectionDate">Датум инспекције</Label>
               <Input
                 id="inspectionDate"
                 name="inspectionDate"
@@ -57,7 +57,7 @@ export default async function UrediInspekcijaPage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="result">Rezultat</Label>
+              <Label htmlFor="result">Резултат</Label>
               <select
                 id="result"
                 name="result"
@@ -65,14 +65,14 @@ export default async function UrediInspekcijaPage({
                 defaultValue={inspection.result}
                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
-                <option value="PASSED">Proslo</option>
-                <option value="FAILED">Nije proslo</option>
-                <option value="CONDITIONAL">Uslovno</option>
+                <option value="PASSED">Прошло</option>
+                <option value="FAILED">Није прошло</option>
+                <option value="CONDITIONAL">Условно</option>
               </select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="nextDueDate">Sledeca inspekcija</Label>
+              <Label htmlFor="nextDueDate">Следећа инспекција</Label>
               <Input
                 id="nextDueDate"
                 name="nextDueDate"
@@ -86,7 +86,7 @@ export default async function UrediInspekcijaPage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="inspector">Inspektor</Label>
+              <Label htmlFor="inspector">Инспектор</Label>
               <Input
                 id="inspector"
                 name="inspector"
@@ -95,7 +95,7 @@ export default async function UrediInspekcijaPage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="notes">Napomena</Label>
+              <Label htmlFor="notes">Напомена</Label>
               <Textarea
                 id="notes"
                 name="notes"
@@ -105,9 +105,9 @@ export default async function UrediInspekcijaPage({
             </div>
 
             <div className="flex gap-3 pt-2">
-              <SubmitButton className="flex-1">Sacuvaj izmene</SubmitButton>
+              <SubmitButton className="flex-1">Сачувај измене</SubmitButton>
               <Button type="button" variant="outline" render={<Link href="/dashboard/inspekcije" />}>
-                Otkazi
+                Откажи
               </Button>
             </div>
           </form>

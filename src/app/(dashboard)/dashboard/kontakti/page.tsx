@@ -8,9 +8,9 @@ import { deleteContact } from "@/server/actions/kontakti"
 import { ConfirmDelete } from "@/components/confirm-delete"
 
 const categoryConfig = {
-  EMERGENCY: { label: "Hitne sluzbe", icon: Siren, color: "text-red-600" },
-  MANAGEMENT: { label: "Upravnik", icon: Building2, color: "text-blue-600" },
-  MAINTENANCE: { label: "Odrzavanje", icon: Wrench, color: "text-amber-600" },
+  EMERGENCY: { label: "Хитне службе", icon: Siren, color: "text-red-600" },
+  MANAGEMENT: { label: "Управник", icon: Building2, color: "text-blue-600" },
+  MAINTENANCE: { label: "Одржавање", icon: Wrench, color: "text-amber-600" },
 }
 
 const categoryOrder: Array<"EMERGENCY" | "MANAGEMENT" | "MAINTENANCE"> = [
@@ -37,13 +37,13 @@ export default async function KontaktiPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Korisni kontakti</h1>
-          <p className="text-sm text-muted-foreground mt-1">Hitne sluzbe, upravnik i odrzavanje zgrade</p>
+          <h1 className="text-2xl font-semibold">Корисни контакти</h1>
+          <p className="text-sm text-muted-foreground mt-1">Хитне службе, управник и одржавање зграде</p>
         </div>
         {isManager && (
           <Button render={<Link href="/dashboard/kontakti/novi" />}>
             <Plus className="w-4 h-4 mr-2" />
-            Dodaj kontakt
+            Додај контакт
           </Button>
         )}
       </div>
@@ -51,14 +51,14 @@ export default async function KontaktiPage() {
       {contacts.length === 0 ? (
         <Card>
           <CardContent className="text-center py-12">
-            <p className="text-muted-foreground">Nema kontakata</p>
+            <p className="text-muted-foreground">Нема контаката</p>
             {isManager && (
               <Button
                 className="mt-4"
                 variant="outline"
                 render={<Link href="/dashboard/kontakti/novi" />}
               >
-                Dodaj prvi kontakt
+                Додај први контакт
               </Button>
             )}
           </CardContent>
@@ -109,7 +109,7 @@ export default async function KontaktiPage() {
                               <ConfirmDelete
                                 action={deleteContact.bind(null, contact.id)}
                                 label=""
-                                confirmLabel="Obrisi?"
+                                confirmLabel="Обриши?"
                               />
                             </div>
                           )}

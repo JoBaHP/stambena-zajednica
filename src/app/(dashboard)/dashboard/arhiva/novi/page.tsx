@@ -23,9 +23,9 @@ export default async function NoviDokumentPage({
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Novi dokument</h1>
+        <h1 className="text-2xl font-semibold">Нови документ</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Otpremi PDF, sliku ili Word/Excel dokument (max 4MB)
+          Отпреми PDF, слику или Word/Excel документ (макс 4MB)
         </p>
       </div>
 
@@ -39,45 +39,45 @@ export default async function NoviDokumentPage({
         <CardContent className="pt-6">
           <form action={uploadDocument} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="title">Naziv</Label>
+              <Label htmlFor="title">Назив</Label>
               <Input
                 id="title"
                 name="title"
-                placeholder="npr. Zapisnik sa skupstine 15.04.2026."
+                placeholder="нпр. Записник са скупштине 15.04.2026."
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Napomena (opciono)</Label>
+              <Label htmlFor="description">Напомена (опционо)</Label>
               <Textarea
                 id="description"
                 name="description"
                 rows={2}
-                placeholder="Kratak opis dokumenta..."
+                placeholder="Кратак опис документа..."
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="category">Kategorija</Label>
+                <Label htmlFor="category">Категорија</Label>
                 <select
                   id="category"
                   name="category"
                   required
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 >
-                  <option value="MINUTES">Zapisnik</option>
-                  <option value="CONTRACT">Ugovor</option>
-                  <option value="INVOICE">Racun</option>
-                  <option value="REPORT">Izvestaj</option>
-                  <option value="REGULATION">Pravilnik</option>
-                  <option value="OTHER">Ostalo</option>
+                  <option value="MINUTES">Записник</option>
+                  <option value="CONTRACT">Уговор</option>
+                  <option value="INVOICE">Рачун</option>
+                  <option value="REPORT">Извештај</option>
+                  <option value="REGULATION">Правилник</option>
+                  <option value="OTHER">Остало</option>
                 </select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="year">Godina</Label>
+                <Label htmlFor="year">Година</Label>
                 <Input
                   id="year"
                   name="year"
@@ -91,7 +91,7 @@ export default async function NoviDokumentPage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="file">Fajl</Label>
+              <Label htmlFor="file">Фајл</Label>
               <Input
                 id="file"
                 name="file"
@@ -100,8 +100,8 @@ export default async function NoviDokumentPage({
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Podrzano: PDF, slike (JPG/PNG/WebP), Word, Excel · max 4MB.{" "}
-                Ako je fajl veci, kompresuj ga na{" "}
+                Подржано: PDF, слике (JPG/PNG/WebP), Word, Excel · макс 4MB.{" "}
+                Ако је фајл већи, компресуј га на{" "}
                 <a
                   href="https://www.ilovepdf.com/compress_pdf"
                   target="_blank"
@@ -113,20 +113,20 @@ export default async function NoviDokumentPage({
                 pre uploada.
               </p>
               <p className="text-xs text-muted-foreground">
-                <strong>Za racune:</strong> imenuj fajl sa prefiksom meseca (JAN, FEB, MAR, APR, MAJ, JUN, JUL, AVG, SEP, OKT, NOV, DEC) — npr. <code>MAR_2_Izrada Kljuceva.pdf</code>.
+                <strong>За рачуне:</strong> imenuj fajl sa prefiksom meseca (JAN, FEB, MAR, APR, MAJ, JUN, JUL, AVG, SEP, OKT, NOV, DEC) — npr. <code>MAR_2_Izrada Kljuceva.pdf</code>.
               </p>
             </div>
 
             <div className="flex gap-3 pt-2">
               <SubmitButton className="flex-1">
-                Otpremi
+                Отпреми
               </SubmitButton>
               <Button
                 type="button"
                 variant="outline"
                 render={<Link href="/dashboard/arhiva" />}
               >
-                Otkazi
+                Откажи
               </Button>
             </div>
           </form>

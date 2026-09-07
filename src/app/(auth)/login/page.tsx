@@ -37,16 +37,16 @@ export default function LoginPage() {
     const id = setTimeout(() => {
       if (odjava === "pristup") {
         toast.error(
-          "Pristup tvom nalogu je uklonjen. Obrati se upravniku.",
+          "Приступ твом налогу је уклоњен. Обрати се управнику.",
           { duration: 8000 },
         )
       } else if (error === "AccessDenied" || error === "Callback") {
         toast.error(
-          "Tvoj Google nalog nije registrovan u sistemu. Obrati se upravniku.",
+          "Твој Google налог није регистрован у систему. Обрати се управнику.",
           { duration: 6000 },
         )
       } else {
-        toast.error(`Prijava nije uspela (${error}). Pokusaj ponovo.`, {
+        toast.error(`Пријава није успела (${error}). Покушај поново.`, {
           duration: 6000,
         })
       }
@@ -79,7 +79,7 @@ export default function LoginPage() {
     })
 
     if (result?.error) {
-      toast.error("Pogresni podaci za prijavu")
+      toast.error("Погрешни подаци за пријаву")
       setLoading(false)
       return
     }
@@ -100,19 +100,19 @@ export default function LoginPage() {
           <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-linear-to-br from-primary to-indigo-700 shadow-lg mb-4">
             <Building2 className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight">Pasterova 16</h1>
-          <p className="text-sm text-muted-foreground mt-1">Stambena Zajednica</p>
+          <h1 className="text-2xl font-semibold tracking-tight">Пастерова 16</h1>
+          <p className="text-sm text-muted-foreground mt-1">Стамбена заједница</p>
         </div>
 
         <Card className="shadow-sm">
           <CardHeader className="pb-4">
-            <CardTitle className="text-lg">Prijava</CardTitle>
-            <CardDescription>Unesite vas email i lozinku</CardDescription>
+            <CardTitle className="text-lg">Пријава</CardTitle>
+            <CardDescription>Унесите ваш емаил и лозинку</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Емаил</Label>
                 <Input
                   id="email"
                   name="email"
@@ -123,7 +123,7 @@ export default function LoginPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="password">Lozinka</Label>
+                <Label htmlFor="password">Лозинка</Label>
                 <PasswordInput
                   id="password"
                   name="password"
@@ -133,7 +133,7 @@ export default function LoginPage() {
                 />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Prijavljivanje..." : "Prijavi se"}
+                {loading ? "Пријављивање..." : "Пријави се"}
               </Button>
             </form>
 
@@ -142,7 +142,7 @@ export default function LoginPage() {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">ili</span>
+                <span className="bg-card px-2 text-muted-foreground">или</span>
               </div>
             </div>
 
@@ -154,11 +154,10 @@ export default function LoginPage() {
               disabled={googleLoading}
             >
               <GoogleIcon />
-              {googleLoading ? "Preusmeravanje..." : "Prijavi se sa Google nalogom"}
+              {googleLoading ? "Преусмеравање..." : "Пријави се са Google налогом"}
             </Button>
             <p className="text-xs text-muted-foreground text-center mt-3">
-              Google login radi samo ako tvoj Google email odgovara onom koji je
-              upravnik uneo u sistem.
+              Google пријава ради само ако твој Google емаил одговара оном који је управник унео у систем.
             </p>
           </CardContent>
         </Card>
@@ -169,7 +168,7 @@ export default function LoginPage() {
             href="/login/zatrazi-pristup"
             className="text-primary font-medium underline underline-offset-4 hover:no-underline"
           >
-            Zatrazi pristup
+            Затражи приступ
           </Link>
         </p>
 

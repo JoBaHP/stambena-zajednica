@@ -51,25 +51,25 @@ export function DriveSyncCard({ status }: DriveSyncCardProps) {
         }
 
         setProgress(
-          `Upisano ${synced}, preostalo ${result.remaining}${failed ? `, greske ${failed}` : ""}`,
+          `Уписано ${synced}, преостало ${result.remaining}${failed ? `, грешке ${failed}` : ""}`,
         )
 
         if (result.remaining === 0) break
       }
 
       if (failed > 0) {
-        toast.error(`Sinhronizacija zavrsena sa ${failed} greska/greske`)
+        toast.error(`Синхронизација завршена са ${failed} грешака`)
       } else {
         toast.success(
           synced > 0
-            ? `Sinhronizovano ${synced} zapisa na Drive`
-            : "Sve je vec sinhronizovano",
+            ? `Синхронизовано ${synced} записа на Drive`
+            : "Све је већ синхронизовано",
         )
       }
       router.refresh()
     } catch (err) {
       toast.error(
-        err instanceof Error ? err.message : "Sinhronizacija nije uspela",
+        err instanceof Error ? err.message : "Синхронизација није успела",
       )
     } finally {
       setRunning(false)
@@ -79,30 +79,26 @@ export function DriveSyncCard({ status }: DriveSyncCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Sinhronizacija sa Drive-om</CardTitle>
+        <CardTitle className="text-base">Синхронизација са Drive-ом</CardTitle>
         <CardDescription>
-          Svaki zapis iz aplikacije dobija citljiv dokument u arhivi na Google
-          Drive-u, plus JSON snimak u folderu <code>_Podaci</code> iz kog se
-          podaci mogu vratiti u aplikaciju. Upis ide automatski pri kreiranju,
-          izmeni i brisanju.
+          Сваки запис из апликације добија читљив документ у архиви на Google Drive-у, плус JSON снимак у фолдеру <code>_Podaci</code> из ког се подаци могу вратити у апликацију. Упис иде аутоматски при креирању, измени и брисању.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {!status.enabled && (
           <p className="text-sm text-amber-700">
-            Drive nije konfigurisan — proveri GDRIVE_* env varijable. Podaci se
-            cuvaju samo u bazi.
+            Drive није конфигурисан — провери GDRIVE_* env варијабле. Подаци се чувају само у бази.
           </p>
         )}
 
         <div className="grid grid-cols-3 gap-3 text-center">
           <div className="rounded-lg border p-3">
             <div className="text-xl font-semibold">{status.synced}</div>
-            <div className="text-xs text-muted-foreground">na Drive-u</div>
+            <div className="text-xs text-muted-foreground">на Drive-у</div>
           </div>
           <div className="rounded-lg border p-3">
             <div className="text-xl font-semibold">{status.pending}</div>
-            <div className="text-xs text-muted-foreground">na cekanju</div>
+            <div className="text-xs text-muted-foreground">на чекању</div>
           </div>
           <div className="rounded-lg border p-3">
             <div
@@ -127,12 +123,12 @@ export function DriveSyncCard({ status }: DriveSyncCardProps) {
 
         {status.errors.length > 0 && (
           <div className="space-y-2">
-            <p className="text-sm font-medium">Zapisi koji nisu upisani</p>
+            <p className="text-sm font-medium">Записи који нису уписани</p>
             <ul className="space-y-1 text-xs text-muted-foreground">
               {status.errors.map((e) => (
                 <li key={`${e.entity}/${e.entityId}`} className="wrap-break-word">
                   <span className="font-mono">{e.entity}</span> — {e.message}
-                  {e.attempts > 1 ? ` (${e.attempts} pokusaja)` : ""}
+                  {e.attempts > 1 ? ` (${e.attempts} покушаја)` : ""}
                 </li>
               ))}
             </ul>
@@ -149,7 +145,7 @@ export function DriveSyncCard({ status }: DriveSyncCardProps) {
             <RefreshCw
               className={running ? "w-4 h-4 mr-2 animate-spin" : "w-4 h-4 mr-2"}
             />
-            {running ? "Sinhronizujem..." : "Sinhronizuj sada"}
+            {running ? "Синхронизујем..." : "Синхронизуј сада"}
           </Button>
           {progress && (
             <span className="text-xs text-muted-foreground">{progress}</span>

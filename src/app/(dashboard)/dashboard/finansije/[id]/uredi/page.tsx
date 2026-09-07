@@ -23,8 +23,8 @@ export default async function UrediTransakcijuPage({
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Izmeni stavku</h1>
-        <p className="text-sm text-muted-foreground mt-1">Azuriraj podatke transakcije</p>
+        <h1 className="text-2xl font-semibold">Измени ставку</h1>
+        <p className="text-sm text-muted-foreground mt-1">Ажурирај податке трансакције</p>
       </div>
       <TransactionForm
         categories={categories}

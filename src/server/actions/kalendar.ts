@@ -35,7 +35,7 @@ function nextDueDate(date: Date, recurrence: TaskRecurrence): Date | null {
 export async function createTask(formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const title = formData.get("title") as string
@@ -45,7 +45,7 @@ export async function createTask(formData: FormData) {
   const recurrence = formData.get("recurrence") as string
 
   if (!title || !dueDate || !category) {
-    throw new Error("Popunite obavezna polja")
+    throw new Error("Попуните обавезна поља")
   }
 
   const created = await db.task.create({
@@ -69,7 +69,7 @@ export async function createTask(formData: FormData) {
 export async function updateTask(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const title = formData.get("title") as string
@@ -99,11 +99,11 @@ export async function updateTask(id: string, formData: FormData) {
 export async function completeTask(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const task = await db.task.findUnique({ where: { id } })
-  if (!task) throw new Error("Obaveza ne postoji")
+  if (!task) throw new Error("Обавеза не постоји")
 
   await db.task.update({
     where: { id },
@@ -139,7 +139,7 @@ export async function completeTask(id: string) {
 export async function reopenTask(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   await db.task.update({
@@ -159,7 +159,7 @@ export async function reopenTask(id: string) {
 export async function deleteTask(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   await db.task.delete({ where: { id } })

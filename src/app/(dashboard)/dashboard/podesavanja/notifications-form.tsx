@@ -37,7 +37,7 @@ export function NotificationsForm({ defaults }: NotificationsFormProps) {
     if (result?.error) {
       toast.error(result.error)
     } else {
-      toast.success("Podesavanja sacuvana")
+      toast.success("Подешавања сачувана")
     }
 
     setLoading(false)
@@ -46,9 +46,9 @@ export function NotificationsForm({ defaults }: NotificationsFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Notifikacije</CardTitle>
+        <CardTitle className="text-base">Нотификације</CardTitle>
         <CardDescription>
-          Izaberi kako zelis da primas vazna obavestenja
+          Изабери како желиш да примаш важна обавештења
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -63,10 +63,10 @@ export function NotificationsForm({ defaults }: NotificationsFormProps) {
             />
             <div>
               <Label htmlFor="notifyEmail" className="font-normal">
-                Email notifikacije
+                Емаил нотификације
               </Label>
               <p className="text-xs text-muted-foreground">
-                Salju se na: {defaults.email}
+                Шаљу се на: {defaults.email}
               </p>
             </div>
           </div>
@@ -81,16 +81,16 @@ export function NotificationsForm({ defaults }: NotificationsFormProps) {
             />
             <div>
               <Label htmlFor="notifySms" className="font-normal">
-                SMS notifikacije
+                СМС нотификације
               </Label>
               <p className="text-xs text-muted-foreground">
-                Samo za hitne stvari (urgentna obavestenja, kriticni zahtevi)
+                Само за хитне ствари (хитна обавештења, критични захтеви)
               </p>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Broj telefona</Label>
+            <Label htmlFor="phone">Број телефона</Label>
             <Input
               id="phone"
               name="phone"
@@ -99,12 +99,12 @@ export function NotificationsForm({ defaults }: NotificationsFormProps) {
               placeholder="+381 60 123 4567"
             />
             <p className="text-xs text-muted-foreground">
-              Format sa pozivnim brojem (npr. +381...)
+              Формат са позивним бројем (нпр. +381...)
             </p>
           </div>
 
           <Button type="submit" disabled={loading}>
-            {loading ? "Cuvam..." : "Sacuvaj"}
+            {loading ? "Чувам..." : "Сачувај"}
           </Button>
         </form>
       </CardContent>

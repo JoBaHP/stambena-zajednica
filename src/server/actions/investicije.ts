@@ -9,7 +9,7 @@ import { redirect } from "next/navigation"
 export async function createInvestment(formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const title = formData.get("title") as string
@@ -20,7 +20,7 @@ export async function createInvestment(formData: FormData) {
   const endDate = formData.get("endDate") as string
 
   if (!title || !budget) {
-    throw new Error("Popunite obavezna polja")
+    throw new Error("Попуните обавезна поља")
   }
 
   const created = await db.investment.create({
@@ -44,7 +44,7 @@ export async function createInvestment(formData: FormData) {
 export async function updateInvestment(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const title = formData.get("title") as string
@@ -78,7 +78,7 @@ export async function updateInvestment(id: string, formData: FormData) {
 export async function updateInvestmentSpent(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const spent = parseFloat(formData.get("spent") as string)
@@ -101,7 +101,7 @@ export async function updateInvestmentSpent(id: string, formData: FormData) {
 export async function deleteInvestment(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   await db.investment.delete({ where: { id } })

@@ -54,16 +54,16 @@ export function TransactionFilters({ categories }: TransactionFiltersProps) {
         onChange={(e) => updateFilter("tip", e.target.value)}
         className="h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
       >
-        <option value="">Svi tipovi</option>
-        <option value="INCOME">Prihodi</option>
-        <option value="EXPENSE">Rashodi</option>
+        <option value="">Сви типови</option>
+        <option value="INCOME">Приходи</option>
+        <option value="EXPENSE">Расходи</option>
       </select>
       <select
         value={kategorija}
         onChange={(e) => updateFilter("kategorija", e.target.value)}
         className="h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
       >
-        <option value="">Sve kategorije</option>
+        <option value="">Све категорије</option>
         {categories.map((c) => (
           <option key={c.id} value={c.id}>
             {c.name}
@@ -75,7 +75,7 @@ export function TransactionFilters({ categories }: TransactionFiltersProps) {
           onClick={clearFilters}
           className="text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          Resetuj filtere
+          Ресетуј филтере
         </button>
       )}
     </div>

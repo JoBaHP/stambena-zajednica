@@ -67,12 +67,12 @@ export default async function FinansijePage({
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Finansije</h1>
-          <p className="text-sm text-muted-foreground mt-1">Evidencija prihoda i rashoda zajednickog racuna</p>
+          <h1 className="text-2xl font-semibold">Финансије</h1>
+          <p className="text-sm text-muted-foreground mt-1">Евиденција прихода и расхода заједничког рачуна</p>
         </div>
         <Button render={<Link href="/dashboard/finansije/nova" />}>
           <Plus className="w-4 h-4 mr-2" />
-          Nova stavka
+          Нова ставка
         </Button>
       </div>
 
@@ -81,31 +81,31 @@ export default async function FinansijePage({
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Ukupni prihodi</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Укупни приходи</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-green-600">
-              +{totalIncome.toLocaleString("sr-RS", { minimumFractionDigits: 2 })} RSD
+              +{totalIncome.toLocaleString("sr-RS", { minimumFractionDigits: 2 })} РСД
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Ukupni rashodi</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Укупни расходи</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-red-600">
-              -{totalExpense.toLocaleString("sr-RS", { minimumFractionDigits: 2 })} RSD
+              -{totalExpense.toLocaleString("sr-RS", { minimumFractionDigits: 2 })} РСД
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Stanje</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Стање</CardTitle>
           </CardHeader>
           <CardContent>
             <p className={`text-2xl font-bold ${balance >= 0 ? "text-green-600" : "text-red-600"}`}>
-              {balance.toLocaleString("sr-RS", { minimumFractionDigits: 2 })} RSD
+              {balance.toLocaleString("sr-RS", { minimumFractionDigits: 2 })} РСД
             </p>
           </CardContent>
         </Card>
@@ -121,7 +121,7 @@ export default async function FinansijePage({
         <CardContent>
           {transactions.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">Nema transakcija za izabrane filtere</p>
+              <p className="text-muted-foreground">Нема трансакција за изабране филтере</p>
             </div>
           ) : (
             <div className="space-y-1">
@@ -160,7 +160,7 @@ export default async function FinansijePage({
                     }`}
                   >
                     {t.type === "INCOME" ? "+" : "-"}
-                    {Number(t.amount).toLocaleString("sr-RS", { minimumFractionDigits: 2 })} RSD
+                    {Number(t.amount).toLocaleString("sr-RS", { minimumFractionDigits: 2 })} РСД
                   </span>
                 </Link>
               ))}

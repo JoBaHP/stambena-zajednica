@@ -31,36 +31,36 @@ export default function NovoGlasanjePage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Novo glasanje</h1>
-        <p className="text-sm text-muted-foreground mt-1">Kreiraj anketu za stanare</p>
+        <h1 className="text-2xl font-semibold">Ново гласање</h1>
+        <p className="text-sm text-muted-foreground mt-1">Креирај анкету за станаре</p>
       </div>
 
       <Card>
         <CardContent className="pt-6">
           <form action={createPoll} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="title">Pitanje / Naslov</Label>
+              <Label htmlFor="title">Питање / Наслов</Label>
               <Input
                 id="title"
                 name="title"
-                placeholder="npr. Da li ste za renoviranje ulaza?"
+                placeholder="нпр. Да ли сте за реновирање улаза?"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Opis (opciono)</Label>
+              <Label htmlFor="description">Опис (опционо)</Label>
               <Textarea
                 id="description"
                 name="description"
-                placeholder="Dodatne informacije o glasanju..."
+                placeholder="Додатне информације о гласању..."
                 rows={3}
               />
             </div>
 
             {/* Opcije */}
             <div className="space-y-3">
-              <Label>Opcije za glasanje</Label>
+              <Label>Опције за гласање</Label>
               {options.map((opt, i) => (
                 <div key={i} className="flex gap-2">
                   <Input
@@ -83,46 +83,46 @@ export default function NovoGlasanjePage() {
                 </div>
               ))}
               <Button type="button" variant="outline" size="sm" onClick={addOption}>
-                <Plus className="w-4 h-4 mr-1" /> Dodaj opciju
+                <Plus className="w-4 h-4 mr-1" /> Додај опцију
               </Button>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="endsAt">Glasanje traje do (opciono)</Label>
+              <Label htmlFor="endsAt">Гласање траје до (опционо)</Label>
               <Input id="endsAt" name="endsAt" type="date" />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="requiredShare">Potrebna vecina</Label>
+              <Label htmlFor="requiredShare">Потребна већина</Label>
               <select
                 id="requiredShare"
                 name="requiredShare"
                 defaultValue="50"
                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
-                <option value="50">Obicna vecina — preko 50% udela</option>
-                <option value="66">Dvotrecinska vecina — preko 66% udela</option>
+                <option value="50">Обична већина — преко 50% удела</option>
+                <option value="66">Двотрећинска већина — преко 66% удела</option>
               </select>
               <p className="text-xs text-muted-foreground">
-                Racuna se prema kvadraturi stanova, ne prema broju glasova.
+                Рачуна се према квадратури станова, не према броју гласова.
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label>Objavi odmah?</Label>
+              <Label>Објави одмах?</Label>
               <select
                 name="status"
                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
-                <option value="DRAFT">Sacuvaj kao nacrt</option>
-                <option value="ACTIVE">Objavi odmah (aktivno)</option>
+                <option value="DRAFT">Сачувај као нацрт</option>
+                <option value="ACTIVE">Објави одмах (активно)</option>
               </select>
             </div>
 
             <div className="flex gap-3 pt-2">
-              <Button type="submit" className="flex-1">Kreiraj</Button>
+              <Button type="submit" className="flex-1">Креирај</Button>
               <Button type="button" variant="outline" render={<Link href="/dashboard/glasanje" />}>
-                Otkazi
+                Откажи
               </Button>
             </div>
           </form>

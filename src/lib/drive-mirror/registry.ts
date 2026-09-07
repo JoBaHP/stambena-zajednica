@@ -110,17 +110,17 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
         folderPath: ["Obavestenja", String(yearOf(rec.publishedAt))],
         fileName: docName(rec.title, rec.id, "obavestenje"),
         ...buildDocument({
-          title: "Obavestenje",
+          title: "Обавештење",
           entity: "ANNOUNCEMENT",
           entityId: rec.id,
           lines: [
-            field("Naslov", rec.title),
-            field("Prioritet", label(priorityLabels, rec.priority)),
-            field("Zakaceno", yesNo(rec.isPinned)),
-            field("Objavljeno", formatDateTime(rec.publishedAt)),
-            field("Istice", rec.expiresAt ? formatDate(rec.expiresAt) : "bez roka"),
-            field("Autor", rec.author.name),
-            ...section("Tekst", paragraph(rec.body)),
+            field("Наслов", rec.title),
+            field("Приоритет", label(priorityLabels, rec.priority)),
+            field("Закачено", yesNo(rec.isPinned)),
+            field("Објављено", formatDateTime(rec.publishedAt)),
+            field("Истиче", rec.expiresAt ? formatDate(rec.expiresAt) : "без рока"),
+            field("Аутор", rec.author.name),
+            ...section("Текст", paragraph(rec.body)),
           ],
         }),
       }
@@ -155,19 +155,19 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
         ],
         fileName: docName(rec.description, rec.id, "transakcija"),
         ...buildDocument({
-          title: "Finansijska transakcija",
+          title: "Финансијска трансакција",
           entity: "TRANSACTION",
           entityId: rec.id,
           lines: [
-            field("Opis", rec.description),
-            field("Vrsta", label(transactionTypeLabels, rec.type)),
-            field("Iznos", formatRSD(rec.amount)),
-            field("Datum", formatDate(rec.date)),
-            field("Kategorija", rec.category?.name ?? "bez kategorije"),
-            field("Referenca", rec.referenceNum),
-            field("Evidentirao", rec.createdBy.name),
-            field("Kreirano", formatDateTime(rec.createdAt)),
-            ...section("Napomena", paragraph(rec.notes)),
+            field("Опис", rec.description),
+            field("Врста", label(transactionTypeLabels, rec.type)),
+            field("Износ", formatRSD(rec.amount)),
+            field("Датум", formatDate(rec.date)),
+            field("Категорија", rec.category?.name ?? "без категорије"),
+            field("Референца", rec.referenceNum),
+            field("Евидентирао", rec.createdBy.name),
+            field("Креирано", formatDateTime(rec.createdAt)),
+            ...section("Напомена", paragraph(rec.notes)),
           ],
         }),
       }
@@ -202,20 +202,20 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
         folderPath: ["Zahtevi", String(yearOf(rec.createdAt))],
         fileName: docName(rec.title, rec.id, "zahtev"),
         ...buildDocument({
-          title: "Zahtev za intervenciju",
+          title: "Захтев за интервенцију",
           entity: "REQUEST",
           entityId: rec.id,
           lines: [
-            field("Naslov", rec.title),
-            field("Kategorija", label(requestCategoryLabels, rec.category)),
-            field("Status", label(requestStatusLabels, rec.status)),
-            field("Prioritet", label(requestPriorityLabels, rec.priority)),
-            field("Lokacija", rec.location),
-            field("Prijavio", person(rec.reporter)),
-            field("Prijavljeno", formatDateTime(rec.createdAt)),
-            field("Reseno", rec.resolvedAt ? formatDateTime(rec.resolvedAt) : "—"),
-            ...section("Opis", paragraph(rec.description)),
-            ...section("Resenje", paragraph(rec.resolution)),
+            field("Наслов", rec.title),
+            field("Категорија", label(requestCategoryLabels, rec.category)),
+            field("Статус", label(requestStatusLabels, rec.status)),
+            field("Приоритет", label(requestPriorityLabels, rec.priority)),
+            field("Локација", rec.location),
+            field("Пријавио", person(rec.reporter)),
+            field("Пријављено", formatDateTime(rec.createdAt)),
+            field("Решено", rec.resolvedAt ? formatDateTime(rec.resolvedAt) : "—"),
+            ...section("Опис", paragraph(rec.description)),
+            ...section("Решење", paragraph(rec.resolution)),
             ...section(
               "Fotografije",
               rec.photos.map((p) => p.name),
@@ -252,22 +252,22 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
         folderPath: ["Kalendar", String(yearOf(rec.dueDate))],
         fileName: docName(rec.title, rec.id, "obaveza"),
         ...buildDocument({
-          title: "Obaveza iz kalendara",
+          title: "Обавеза из календара",
           entity: "TASK",
           entityId: rec.id,
           lines: [
-            field("Naslov", rec.title),
-            field("Kategorija", label(taskCategoryLabels, rec.category)),
-            field("Status", label(taskStatusLabels, rec.status)),
-            field("Rok", formatDate(rec.dueDate)),
-            field("Ponavljanje", label(taskRecurrenceLabels, rec.recurrence)),
+            field("Наслов", rec.title),
+            field("Категорија", label(taskCategoryLabels, rec.category)),
+            field("Статус", label(taskStatusLabels, rec.status)),
+            field("Рок", formatDate(rec.dueDate)),
+            field("Понављање", label(taskRecurrenceLabels, rec.recurrence)),
             field(
               "Zavrseno",
               rec.completedAt ? formatDateTime(rec.completedAt) : "—",
             ),
-            field("Kreirao", rec.createdBy.name),
-            field("Kreirano", formatDateTime(rec.createdAt)),
-            ...section("Opis", paragraph(rec.description)),
+            field("Креирао", rec.createdBy.name),
+            field("Креирано", formatDateTime(rec.createdAt)),
+            ...section("Опис", paragraph(rec.description)),
           ],
         }),
       }
@@ -292,20 +292,20 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
         folderPath: ["Inspekcije", String(yearOf(rec.inspectionDate))],
         fileName: docName(rec.title, rec.id, "inspekcija"),
         ...buildDocument({
-          title: "PP inspekcija",
+          title: "ПП инспекција",
           entity: "INSPECTION",
           entityId: rec.id,
           lines: [
-            field("Naslov", rec.title),
-            field("Datum pregleda", formatDate(rec.inspectionDate)),
-            field("Rezultat", label(inspectionResultLabels, rec.result)),
+            field("Наслов", rec.title),
+            field("Датум прегледа", formatDate(rec.inspectionDate)),
+            field("Резултат", label(inspectionResultLabels, rec.result)),
             field(
               "Sledeci rok",
               rec.nextDueDate ? formatDate(rec.nextDueDate) : "—",
             ),
-            field("Kontrolor", rec.inspector),
-            field("Evidentirano", formatDateTime(rec.createdAt)),
-            ...section("Napomena", paragraph(rec.notes)),
+            field("Контролор", rec.inspector),
+            field("Евидентирано", formatDateTime(rec.createdAt)),
+            ...section("Напомена", paragraph(rec.notes)),
           ],
         }),
       }
@@ -337,25 +337,25 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
         folderPath: ["Investicije", String(yearOf(rec.startDate ?? rec.createdAt))],
         fileName: docName(rec.title, rec.id, "investicija"),
         ...buildDocument({
-          title: "Investicija",
+          title: "Инвестиција",
           entity: "INVESTMENT",
           entityId: rec.id,
           lines: [
-            field("Naslov", rec.title),
-            field("Status", label(investmentStatusLabels, rec.status)),
-            field("Budzet", formatRSD(rec.budget)),
-            field("Potroseno", formatRSD(rec.spent)),
-            field("Preostalo", formatRSD(remaining)),
-            field("Pocetak", rec.startDate ? formatDate(rec.startDate) : "—"),
-            field("Zavrsetak", rec.endDate ? formatDate(rec.endDate) : "—"),
-            field("Kreirano", formatDateTime(rec.createdAt)),
-            ...section("Opis", paragraph(rec.description)),
+            field("Наслов", rec.title),
+            field("Статус", label(investmentStatusLabels, rec.status)),
+            field("Буџет", formatRSD(rec.budget)),
+            field("Потрошено", formatRSD(rec.spent)),
+            field("Преостало", formatRSD(remaining)),
+            field("Почетак", rec.startDate ? formatDate(rec.startDate) : "—"),
+            field("Завршетак", rec.endDate ? formatDate(rec.endDate) : "—"),
+            field("Креирано", formatDateTime(rec.createdAt)),
+            ...section("Опис", paragraph(rec.description)),
             ...section(
               "Tender",
               rec.tender
                 ? [
-                    field("Naslov", rec.tender.title),
-                    field("Status", label(tenderStatusLabels, rec.tender.status)),
+                    field("Наслов", rec.tender.title),
+                    field("Статус", label(tenderStatusLabels, rec.tender.status)),
                     field(
                       "Zatvoren",
                       rec.tender.closedAt
@@ -403,32 +403,32 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
         folderPath: ["Glasanja", String(yearOf(rec.createdAt))],
         fileName: docName(rec.title, rec.id, "glasanje"),
         ...buildDocument({
-          title: "Glasanje",
+          title: "Гласање",
           entity: "POLL",
           entityId: rec.id,
           lines: [
-            field("Naslov", rec.title),
-            field("Status", label(pollStatusLabels, rec.status)),
-            field("Pokrenuto", rec.startsAt ? formatDateTime(rec.startsAt) : "—"),
-            field("Istice", rec.endsAt ? formatDateTime(rec.endsAt) : "—"),
-            field("Kreirao", rec.createdBy.name),
-            field("Ukupno glasova", total),
-            field("Potrebna vecina", `${rec.requiredShare}% ukupnog udela`),
+            field("Наслов", rec.title),
+            field("Статус", label(pollStatusLabels, rec.status)),
+            field("Покренуто", rec.startsAt ? formatDateTime(rec.startsAt) : "—"),
+            field("Истиче", rec.endsAt ? formatDateTime(rec.endsAt) : "—"),
+            field("Креирао", rec.createdBy.name),
+            field("Укупно гласова", total),
+            field("Потребна већина", `${rec.requiredShare}% укупног удела`),
             field(
               "Kvorum",
               tally.weighted
                 ? `${tally.quorumPct.toFixed(1)}% (${formatArea(tally.votedArea)} od ${formatArea(tally.totalArea)})`
-                : "nije racunat — kvadrature nisu unete",
+                : "није рачунат — квадратуре нису унете",
             ),
-            ...section("Opis", paragraph(rec.description)),
+            ...section("Опис", paragraph(rec.description)),
             ...section(
               "Rezultat",
               rec.options.map((o) => {
                 const count = o._count.votes
                 const pct = total > 0 ? ((count / total) * 100).toFixed(1) : "0.0"
                 const share = tally.options.find((t) => t.id === o.id)
-                if (!tally.weighted) return `${o.text}: ${count} (${pct}% glasova)`
-                return `${o.text}: ${share?.sharePct.toFixed(1) ?? "0.0"}% udela, ${count} ${count === 1 ? "glas" : "glasova"}${share?.passes ? "  ← odluka doneta" : ""}`
+                if (!tally.weighted) return `${o.text}: ${count} (${pct}% гласова)`
+                return `${o.text}: ${share?.sharePct.toFixed(1) ?? "0.0"}% удела, ${count} ${count === 1 ? "глас" : "гласова"}${share?.passes ? "  ← одлука донета" : ""}`
               }),
             ),
             ...section(
@@ -475,12 +475,12 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
       const winner = rec.offers.find((o) => o.id === rec.selectedId)
 
       const offerLines = rec.offers.flatMap((o) => [
-        `${o.company}${o.id === rec.selectedId ? "  ← izabrana" : ""}`,
-        `  Cena:     ${o.price !== null ? formatRSD(o.price) : "nije navedena"}`,
-        `  Glasova:  ${o._count.votes}`,
-        `  Fajl:     ${o.fileName ?? "—"}`,
+        `${o.company}${o.id === rec.selectedId ? "  ← изабрана" : ""}`,
+        `  Цена:     ${o.price !== null ? formatRSD(o.price) : "nije navedena"}`,
+        `  Гласова:  ${o._count.votes}`,
+        `  Фајл:     ${o.fileName ?? "—"}`,
         ...(o.description ? [`  Napomena: ${o.description}`] : []),
-        ...(o.aiSummary ? [`  Sazetak:  ${o.aiSummary.replace(/\n/g, " ")}`] : []),
+        ...(o.aiSummary ? [`  Сажетак:  ${o.aiSummary.replace(/\n/g, " ")}`] : []),
         "",
       ])
 
@@ -489,26 +489,26 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
         folderPath: ["Tenderi", rec.title],
         fileName: "_Tender.txt",
         ...buildDocument({
-          title: "Tender",
+          title: "Тендер",
           entity: "TENDER",
           entityId: rec.id,
           lines: [
-            field("Naslov", rec.title),
-            field("Investicija", rec.investment.title),
-            field("Status", label(tenderStatusLabels, rec.status)),
-            field("Broj ponuda", rec.offers.length),
-            field("Izabrana ponuda", winner?.company ?? "—"),
-            field("Zatvoren", rec.closedAt ? formatDateTime(rec.closedAt) : "—"),
-            field("Kreirano", formatDateTime(rec.createdAt)),
-            ...section("Opis", paragraph(rec.description)),
-            ...section("Ponude", offerLines),
+            field("Наслов", rec.title),
+            field("Инвестиција", rec.investment.title),
+            field("Статус", label(tenderStatusLabels, rec.status)),
+            field("Број понуда", rec.offers.length),
+            field("Изабрана понуда", winner?.company ?? "—"),
+            field("Затворен", rec.closedAt ? formatDateTime(rec.closedAt) : "—"),
+            field("Креирано", formatDateTime(rec.createdAt)),
+            ...section("Опис", paragraph(rec.description)),
+            ...section("Понуде", offerLines),
             ...section(
               "Glasovi",
               rec.votes.map(
                 (v) => `${person(v.user)} → ${v.offer.company}`,
               ),
             ),
-            ...section("AI poredjenje", paragraph(rec.aiComparison)),
+            ...section("АИ поређење", paragraph(rec.aiComparison)),
           ],
         }),
       }
@@ -542,10 +542,10 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
         folderPath: ["Kontakti"],
         fileName: "Kontakti.txt",
         ...buildDocument({
-          title: "Registar kontakata",
+          title: "Регистар контаката",
           entity: "CONTACT",
           entityId: REGISTRY_ID,
-          lines: [field("Ukupno", rows.length), ...lines],
+          lines: [field("Укупно", rows.length), ...lines],
         }),
       }
     },
@@ -596,13 +596,13 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
 
       const lines = rows.flatMap((u) => [
         `${u.name}${u.unit ? ` — stan ${u.unit}` : ""}`,
-        `  Email:     ${u.email}`,
-        `  Telefon:   ${u.phone ?? "—"}`,
-        `  Kvadratura:${u.area ? ` ${formatArea(Number(u.area))}` : " nije uneta"}`,
-        `  Uloga:     ${label(roleLabels, u.role)}`,
-        `  Pristup:   ${u.active ? "aktivan" : "onemogucen"}`,
-        `  Prijava:   ${u.lastLoginAt ? formatDateTime(u.lastLoginAt) : "nikad"}`,
-        `  Dodat:     ${formatDate(u.createdAt)}`,
+        `  Емаил:     ${u.email}`,
+        `  Телефон:   ${u.phone ?? "—"}`,
+        `  Квадратура:${u.area ? ` ${formatArea(Number(u.area))}` : " nije uneta"}`,
+        `  Улога:     ${label(roleLabels, u.role)}`,
+        `  Приступ:   ${u.active ? "активан" : "онемогућен"}`,
+        `  Пријава:   ${u.lastLoginAt ? formatDateTime(u.lastLoginAt) : "никад"}`,
+        `  Додат:     ${formatDate(u.createdAt)}`,
         "",
       ])
 
@@ -610,13 +610,13 @@ const MIRROR_DEFS: Record<MirrorEntity, MirrorDef> = {
         folderPath: ["Stanari"],
         fileName: "Stanari.txt",
         ...buildDocument({
-          title: "Registar stanara",
+          title: "Регистар станара",
           entity: "RESIDENT",
           entityId: REGISTRY_ID,
           lines: [
-            field("Ukupno", rows.length),
-            field("Aktivnih", rows.filter((u) => u.active).length),
-            ...section("Spisak", lines),
+            field("Укупно", rows.length),
+            field("Активних", rows.filter((u) => u.active).length),
+            ...section("Списак", lines),
           ],
         }),
       }

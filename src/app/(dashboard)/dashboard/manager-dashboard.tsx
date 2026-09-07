@@ -120,22 +120,22 @@ export async function ManagerDashboard({ name }: { name: string }) {
   const attention: { title: string; detail: string; href: string }[] = []
   if (pendingAccess > 0) {
     attention.push({
-      title: `${pendingAccess} ${pendingAccess === 1 ? "zahtev" : "zahteva"} za pristup`,
-      detail: "Čekaju odobrenje",
+      title: `${pendingAccess} ${pendingAccess === 1 ? "захтев" : "захтева"} за приступ`,
+      detail: "Чекају одобрење",
       href: "/dashboard/zahtevi-za-pristup",
     })
   }
   if (missingArea > 0) {
     attention.push({
-      title: `Kvadratura: ${missingArea} ${missingArea === 1 ? "stan" : "stanova"}`,
-      detail: "Glasanje se još računa po broju glasova",
+      title: `Квадратура: ${missingArea} ${missingArea === 1 ? "стан" : "станова"}`,
+      detail: "Гласање се још рачуна по броју гласова",
       href: "/dashboard/stanari",
     })
   }
   if (urgentRequests > 0) {
     attention.push({
-      title: `${urgentRequests} ${urgentRequests === 1 ? "hitan zahtev" : "hitna zahteva"}`,
-      detail: "Prijavljeni kvarovi najvišeg prioriteta",
+      title: `${urgentRequests} ${urgentRequests === 1 ? "хитан захтев" : "хитна захтева"}`,
+      detail: "Пријављени кварови највишег приоритета",
       href: "/dashboard/zahtevi",
     })
   }
@@ -143,8 +143,8 @@ export async function ManagerDashboard({ name }: { name: string }) {
     attention.push({
       title:
         daysToInspection < 0
-          ? "PP pregled je istekao"
-          : `PP pregled za ${daysToInspection} dana`,
+          ? "ПП преглед је истекао"
+          : `ПП преглед за ${daysToInspection} дана`,
       detail: nextInspection?.title ?? "",
       href: "/dashboard/inspekcije",
     })
@@ -164,7 +164,7 @@ export async function ManagerDashboard({ name }: { name: string }) {
             })}
           </p>
           <h1 className="text-2xl sm:text-[27px] font-bold tracking-tight mt-0.5">
-            Zdravo, {name.split(" ")[0]}
+            Здраво, {name.split(" ")[0]}
           </h1>
         </div>
         <Link
@@ -172,7 +172,7 @@ export async function ManagerDashboard({ name }: { name: string }) {
           className="inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
         >
           <Megaphone className="w-4 h-4" />
-          Novo obavestenje
+          Ново обавештење
         </Link>
       </div>
 
@@ -180,7 +180,7 @@ export async function ManagerDashboard({ name }: { name: string }) {
         <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4 sm:p-5 space-y-3">
           <div className="flex items-center gap-2.5">
             <AlertTriangle className="w-4 h-4 text-amber-600" />
-            <h2 className="text-sm font-bold">Traži tvoju pažnju</h2>
+            <h2 className="text-sm font-bold">Тражи твоју пажњу</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {attention.map((a) => (
@@ -199,17 +199,17 @@ export async function ManagerDashboard({ name }: { name: string }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
-          label="Stanje računa"
+          label="Стање рачуна"
           value={rsd(balance)}
-          unit="RSD"
+          unit="РСД"
           icon={ArrowLeftRight}
           module="finansije"
           href="/dashboard/finansije"
-          hint={`${rsd(Number(monthIncome._sum.amount ?? 0))} RSD uplata ovog meseca`}
+          hint={`${rsd(Number(monthIncome._sum.amount ?? 0))} РСД уплата овог месеца`}
         />
 
         <StatCard
-          label="Otvoreni zahtevi"
+          label="Отворени захтеви"
           value={openRequests}
           icon={Wrench}
           module="zahtevi"
@@ -217,16 +217,16 @@ export async function ManagerDashboard({ name }: { name: string }) {
           hint={
             urgentRequests > 0 ? (
               <span className="text-red-700 font-semibold">
-                {urgentRequests} {urgentRequests === 1 ? "hitan" : "hitna"}
+                {urgentRequests} {urgentRequests === 1 ? "хитан" : "хитна"}
               </span>
             ) : (
-              "Nema hitnih"
+              "Нема хитних"
             )
           }
         />
 
         <StatCard
-          label="Aktivno glasanje"
+          label="Активно гласање"
           value={
             activePoll
               ? quorumPct !== null
@@ -240,11 +240,11 @@ export async function ManagerDashboard({ name }: { name: string }) {
           icon={Vote}
           module="glasanje"
           href={activePoll ? `/dashboard/glasanje/${activePoll.id}` : "/dashboard/glasanje"}
-          hint={activePoll ? activePoll.title : "Nema aktivnog glasanja"}
+          hint={activePoll ? activePoll.title : "Нема активног гласања"}
         />
 
         <StatCard
-          label="Investicije u toku"
+          label="Инвестиције у току"
           value={investments.length}
           icon={HardHat}
           module="investicije"
@@ -262,7 +262,7 @@ export async function ManagerDashboard({ name }: { name: string }) {
                 />
               </div>
               <p className="text-xs text-muted-foreground truncate">
-                {investment.title} · {investmentPct.toFixed(0)}% budžeta
+                {investment.title} · {investmentPct.toFixed(0)}% буџета
               </p>
             </div>
           )}
@@ -272,18 +272,18 @@ export async function ManagerDashboard({ name }: { name: string }) {
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-5">
         <div className="rounded-xl border bg-card card-lift overflow-hidden">
           <SectionTitle
-            title="Poslednja obaveštenja"
+            title="Последња обавештења"
             icon={Megaphone}
             module="obavestenja"
             action={
               <Link href="/dashboard/obavestenja" className="text-sm text-muted-foreground hover:text-foreground">
-                Sva
+                Сва
               </Link>
             }
           />
           {announcements.length === 0 ? (
             <p className="px-5 py-8 text-sm text-muted-foreground text-center">
-              Još nema objavljenih obaveštenja.
+              Још нема објављених обавештења.
             </p>
           ) : (
             <ul className="divide-y">
@@ -299,7 +299,7 @@ export async function ManagerDashboard({ name }: { name: string }) {
                       <span className="flex items-center gap-2 flex-wrap">
                         {a.priority === "URGENT" && (
                           <span className="text-[10px] font-bold uppercase tracking-wide text-red-700 bg-red-50 px-1.5 rounded">
-                            Hitno
+                            Хитно
                           </span>
                         )}
                         {a.isPinned && <Pin className="w-3 h-3 text-muted-foreground" />}
@@ -317,10 +317,10 @@ export async function ManagerDashboard({ name }: { name: string }) {
         </div>
 
         <div className="rounded-xl border bg-card card-lift overflow-hidden">
-          <SectionTitle title="Predstoji" icon={CalendarClock} module="kalendar" />
+          <SectionTitle title="Предстоји" icon={CalendarClock} module="kalendar" />
           {upcomingTasks.length === 0 ? (
             <p className="px-5 py-8 text-sm text-muted-foreground text-center">
-              Nema zakazanih obaveza.
+              Нема заказаних обавеза.
             </p>
           ) : (
             <ul className="divide-y">
@@ -340,7 +340,7 @@ export async function ManagerDashboard({ name }: { name: string }) {
                       <span className="min-w-0 flex-1">
                         <span className="block text-sm font-semibold truncate">{t.title}</span>
                         <span className="block text-xs text-muted-foreground">
-                          {t.recurrence !== "NONE" ? "ponavlja se" : "jednokratno"}
+                          {t.recurrence !== "NONE" ? "понавља се" : "једнократно"}
                         </span>
                       </span>
                     </Link>

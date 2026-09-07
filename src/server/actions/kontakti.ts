@@ -9,7 +9,7 @@ import { redirect } from "next/navigation"
 export async function createContact(formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const name = formData.get("name") as string
@@ -18,7 +18,7 @@ export async function createContact(formData: FormData) {
   const note = formData.get("note") as string
 
   if (!name || !phone || !category) {
-    throw new Error("Popunite obavezna polja")
+    throw new Error("Попуните обавезна поља")
   }
 
   await db.contact.create({
@@ -39,7 +39,7 @@ export async function createContact(formData: FormData) {
 export async function updateContact(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const name = formData.get("name") as string
@@ -66,7 +66,7 @@ export async function updateContact(id: string, formData: FormData) {
 export async function deleteContact(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   await db.contact.delete({ where: { id } })

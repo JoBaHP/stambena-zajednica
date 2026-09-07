@@ -15,40 +15,40 @@ export default async function NoviStanarPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Novi stanar</h1>
-        <p className="text-sm text-muted-foreground mt-1">Dodaj korisnika aplikacije</p>
+        <h1 className="text-2xl font-semibold">Нови станар</h1>
+        <p className="text-sm text-muted-foreground mt-1">Додај корисника апликације</p>
       </div>
 
       <Card>
         <CardContent className="pt-6">
           <form action={createResident} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="name">Ime i prezime</Label>
-              <Input id="name" name="name" placeholder="Petar Petrovic" required />
+              <Label htmlFor="name">Име и презиме</Label>
+              <Input id="name" name="name" placeholder="Петар Петровић" required />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Емаил</Label>
               <Input id="email" name="email" type="email" placeholder="petar@email.com" required />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Lozinka</Label>
-              <Input id="password" name="password" type="text" placeholder="Pocetna lozinka" required />
-              <p className="text-xs text-muted-foreground">Stanar moze da promeni lozinku nakon prve prijave</p>
+              <Label htmlFor="password">Лозинка</Label>
+              <Input id="password" name="password" type="text" placeholder="Почетна лозинка" required />
+              <p className="text-xs text-muted-foreground">Станар може да промени лозинку након прве пријаве</p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="unit">Broj stana</Label>
-                <Input id="unit" name="unit" placeholder="npr. 12" />
+                <Label htmlFor="unit">Број стана</Label>
+                <Input id="unit" name="unit" placeholder="нпр. 12" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Telefon</Label>
-                <Input id="phone" name="phone" placeholder="Opciono" />
+                <Label htmlFor="phone">Телефон</Label>
+                <Input id="phone" name="phone" placeholder="Опционо" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="area">Kvadratura (m²)</Label>
+                <Label htmlFor="area">Квадратура (m²)</Label>
                 <Input
                   id="area"
                   name="area"
@@ -56,16 +56,16 @@ export default async function NoviStanarPage() {
                   step="0.01"
                   min="0"
                   inputMode="decimal"
-                  placeholder="npr. 54.30"
+                  placeholder="нпр. 54.30"
                 />
-                <p className="text-xs text-muted-foreground">Za vlasnicki udeo pri glasanju.</p>
+                <p className="text-xs text-muted-foreground">За власнички удео при гласању.</p>
               </div>
             </div>
 
             <div className="flex gap-3 pt-2">
-              <SubmitButton className="flex-1">Dodaj stanara</SubmitButton>
+              <SubmitButton className="flex-1">Додај станара</SubmitButton>
               <Button type="button" variant="outline" render={<Link href="/dashboard/stanari" />}>
-                Otkazi
+                Откажи
               </Button>
             </div>
           </form>

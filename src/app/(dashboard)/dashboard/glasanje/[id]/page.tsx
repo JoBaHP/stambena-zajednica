@@ -57,14 +57,14 @@ export default async function GlasanjeDetaljPage({
             poll.status === "ACTIVE" ? "default" : poll.status === "CLOSED" ? "secondary" : "outline"
           }
         >
-          {poll.status === "ACTIVE" ? "Aktivno" : poll.status === "CLOSED" ? "Zatvoreno" : "Nacrt"}
+          {poll.status === "ACTIVE" ? "Активно" : poll.status === "CLOSED" ? "Затворено" : "Нацрт"}
         </Badge>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle className="text-base">
-            {canVote ? "Izaberite opciju" : showResults ? "Rezultati" : "Glasanje nije aktivno"}
+            {canVote ? "Изаберите опцију" : showResults ? "Резултати" : "Гласање није активно"}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -97,7 +97,7 @@ export default async function GlasanjeDetaljPage({
               <div key={option.id} className="space-y-1.5">
                 <div className="flex justify-between text-sm">
                   <span className={`font-medium ${isUserChoice ? "text-primary" : ""}`}>
-                    {option.text} {isUserChoice && "(vas glas)"}
+                    {option.text} {isUserChoice && "(ваш глас)"}
                   </span>
                   <span className="text-muted-foreground tabular-nums">
                     {tally.weighted
@@ -115,7 +115,7 @@ export default async function GlasanjeDetaljPage({
                 </div>
                 {result?.passes && (
                   <p className="text-xs text-green-700">
-                    Presla prag od {tally.requiredShare}% — odluka je doneta
+                    Прешла праг од {tally.requiredShare}% — одлука је донета
                   </p>
                 )}
               </div>
@@ -128,14 +128,14 @@ export default async function GlasanjeDetaljPage({
                 <span className="font-medium text-foreground">
                   Kvorum: {tally.quorumPct.toFixed(1)}%
                 </span>{" "}
-                ({formatArea(tally.votedArea)} od {formatArea(tally.totalArea)}) ·{" "}
-                {tally.quorumMet ? "kvorum je ispunjen" : "potrebno je preko 50%"}
+                ({formatArea(tally.votedArea)} од {formatArea(tally.totalArea)}) ·{" "}
+                {tally.quorumMet ? "кворум је испуњен" : "потребно је преко 50%"}
               </p>
               <p>
-                Glasalo {totalVotes} od {tally.ownersTotal} vlasnika · prag za
-                odluku {tally.requiredShare}% ukupnog udela
+                Гласало {totalVotes} од {tally.ownersTotal} власника · праг за
+                одлуку {tally.requiredShare}% укупног удела
                 {poll.endsAt &&
-                  ` · Istice: ${new Date(poll.endsAt).toLocaleDateString("sr-RS")}`}
+                  ` · Истиче: ${new Date(poll.endsAt).toLocaleDateString("sr-RS")}`}
               </p>
             </div>
           ) : (
@@ -143,17 +143,17 @@ export default async function GlasanjeDetaljPage({
               <p>
                 Ukupno glasova: {totalVotes}
                 {poll.endsAt &&
-                  ` · Istice: ${new Date(poll.endsAt).toLocaleDateString("sr-RS")}`}
+                  ` · Истиче: ${new Date(poll.endsAt).toLocaleDateString("sr-RS")}`}
               </p>
               {isManager && tally.ownersMissingArea > 0 && (
                 <p className="text-amber-700">
-                  Racuna se broj glasova, ne vlasnicki udeo — {tally.ownersMissingArea}{" "}
-                  {tally.ownersMissingArea === 1 ? "stan nema" : "stanova nema"} unetu
-                  kvadraturu.{" "}
+                  Рачуна се број гласова, не власнички удео — {tally.ownersMissingArea}{" "}
+                  {tally.ownersMissingArea === 1 ? "стан нема" : "станова нема"} унету
+                  квадратуру.{" "}
                   <Link href="/dashboard/stanari" className="underline">
-                    Unesi kvadrature
+                    Унеси квадратуре
                   </Link>{" "}
-                  da bi se odluka racunala po udelu.
+                  да би се одлука рачунала по уделу.
                 </p>
               )}
             </div>
@@ -163,16 +163,16 @@ export default async function GlasanjeDetaljPage({
 
       <div className="flex gap-3">
         <Button variant="outline" render={<Link href="/dashboard/glasanje" />}>
-          Nazad
+          Назад
         </Button>
         {isManager && poll.status === "DRAFT" && (
           <form action={activatePoll.bind(null, poll.id)}>
-            <Button type="submit">Aktiviraj glasanje</Button>
+            <Button type="submit">Активирај гласање</Button>
           </form>
         )}
         {isManager && poll.status === "ACTIVE" && (
           <form action={closePoll.bind(null, poll.id)}>
-            <Button type="submit" variant="destructive">Zatvori glasanje</Button>
+            <Button type="submit" variant="destructive">Затвори гласање</Button>
           </form>
         )}
         {isManager && poll.status !== "DRAFT" && (

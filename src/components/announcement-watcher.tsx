@@ -52,12 +52,12 @@ export function AnnouncementWatcher() {
           const isUrgent = data.latest.priority === "URGENT"
           const showToast = isUrgent ? toast.error : toast.info
           showToast(
-            isUrgent ? `Hitno: ${data.latest.title}` : `Novo obavestenje: ${data.latest.title}`,
+            isUrgent ? `Хитно: ${data.latest.title}` : `Ново обавештење: ${data.latest.title}`,
             {
-              description: "Klikni za detalje",
+              description: "Кликни за детаље",
               duration: isUrgent ? 15_000 : 8_000,
               action: {
-                label: "Otvori",
+                label: "Отвори",
                 onClick: () => router.push("/dashboard/obavestenja"),
               },
             },

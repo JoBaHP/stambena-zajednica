@@ -36,7 +36,7 @@ export default async function NovaPonudaPage({
   return (
     <div className="max-w-lg space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Nova ponuda</h1>
+        <h1 className="text-2xl font-semibold">Нова понуда</h1>
         <p className="text-sm text-muted-foreground mt-1">{tender.title}</p>
       </div>
 
@@ -49,39 +49,39 @@ export default async function NovaPonudaPage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Podaci o ponudi</CardTitle>
+          <CardTitle className="text-base">Подаци о понуди</CardTitle>
         </CardHeader>
         <CardContent>
           <form action={action} encType="multipart/form-data" className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="company">Naziv kompanije *</Label>
+              <Label htmlFor="company">Назив компаније *</Label>
               <Input id="company" name="company" required placeholder="npr. Securitas d.o.o." />
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="price">Cena (RSD)</Label>
+              <Label htmlFor="price">Цена (РСД)</Label>
               <Input
                 id="price"
                 name="price"
                 type="number"
                 step="0.01"
                 min="0"
-                placeholder="npr. 150000"
+                placeholder="нпр. 150000"
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="description">Napomena</Label>
+              <Label htmlFor="description">Напомена</Label>
               <Textarea
                 id="description"
                 name="description"
                 rows={3}
-                placeholder="Kratak opis ponude, uslovi, rokovi..."
+                placeholder="Кратак опис понуде, услови, рокови..."
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="file">Dokument ponude</Label>
+              <Label htmlFor="file">Документ понуде</Label>
               <Input
                 id="file"
                 name="file"
@@ -89,18 +89,18 @@ export default async function NovaPonudaPage({
                 accept=".pdf,.docx,.doc,.xlsx,.xls,.xml,.csv"
               />
               <p className="text-xs text-muted-foreground">
-                PDF, Word, Excel, XML — maks 4MB. AI će automatski napraviti sažetak.
+                PDF, Word, Excel, XML — макс 4MB. АИ ће аутоматски направити сажетак.
               </p>
             </div>
 
             <div className="flex gap-2 pt-2">
-              <SubmitButton>Dodaj ponudu</SubmitButton>
+              <SubmitButton>Додај понуду</SubmitButton>
               <Button
                 type="button"
                 variant="outline"
                 render={<Link href={`/dashboard/tenderi/${id}`} />}
               >
-                Otkazi
+                Откажи
               </Button>
             </div>
           </form>

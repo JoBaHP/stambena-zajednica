@@ -10,9 +10,9 @@ import { ConfirmDelete } from "@/components/confirm-delete"
 import Link from "next/link"
 
 const resultConfig = {
-  PASSED: { label: "Proslo", icon: ShieldCheck, color: "text-green-600", badge: "default" as const },
-  FAILED: { label: "Nije proslo", icon: ShieldX, color: "text-red-600", badge: "destructive" as const },
-  CONDITIONAL: { label: "Uslovno", icon: ShieldAlert, color: "text-amber-600", badge: "secondary" as const },
+  PASSED: { label: "Прошло", icon: ShieldCheck, color: "text-green-600", badge: "default" as const },
+  FAILED: { label: "Није прошло", icon: ShieldX, color: "text-red-600", badge: "destructive" as const },
+  CONDITIONAL: { label: "Условно", icon: ShieldAlert, color: "text-amber-600", badge: "secondary" as const },
 }
 
 export default async function InspekcijaDetal({
@@ -43,7 +43,7 @@ export default async function InspekcijaDetal({
           <Icon className={`w-8 h-8 mt-0.5 ${config.color}`} />
           <div>
             <h1 className="text-2xl font-semibold">{inspection.title}</h1>
-            <p className="text-sm text-muted-foreground mt-1">PP Inspekcija</p>
+            <p className="text-sm text-muted-foreground mt-1">ПП инспекција</p>
           </div>
         </div>
         <Badge variant={config.badge}>{config.label}</Badge>
@@ -51,12 +51,12 @@ export default async function InspekcijaDetal({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Detalji inspekcije</CardTitle>
+          <CardTitle className="text-base">Детаљи инспекције</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex justify-between">
             <span className="text-sm text-muted-foreground flex items-center gap-1.5">
-              <Calendar className="w-4 h-4" /> Datum inspekcije
+              <Calendar className="w-4 h-4" /> Датум инспекције
             </span>
             <span className="text-sm font-medium">
               {new Date(inspection.inspectionDate).toLocaleDateString("sr-RS")}
@@ -66,7 +66,7 @@ export default async function InspekcijaDetal({
           {inspection.nextDueDate && (
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" /> Sledeca inspekcija
+                <Calendar className="w-4 h-4" /> Следећа инспекција
               </span>
               <span className="text-sm font-medium">
                 {new Date(inspection.nextDueDate).toLocaleDateString("sr-RS")}
@@ -75,14 +75,14 @@ export default async function InspekcijaDetal({
           )}
 
           <div className="flex justify-between">
-            <span className="text-sm text-muted-foreground">Rezultat</span>
+            <span className="text-sm text-muted-foreground">Резултат</span>
             <Badge variant={config.badge}>{config.label}</Badge>
           </div>
 
           {inspection.inspector && (
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground flex items-center gap-1.5">
-                <User className="w-4 h-4" /> Inspektor
+                <User className="w-4 h-4" /> Инспектор
               </span>
               <span className="text-sm">{inspection.inspector}</span>
             </div>
@@ -90,7 +90,7 @@ export default async function InspekcijaDetal({
 
           {inspection.notes && (
             <div className="pt-2 border-t">
-              <span className="text-sm text-muted-foreground">Napomena</span>
+              <span className="text-sm text-muted-foreground">Напомена</span>
               <p className="text-sm mt-1 whitespace-pre-wrap">{inspection.notes}</p>
             </div>
           )}
@@ -103,11 +103,11 @@ export default async function InspekcijaDetal({
 
       <div className="flex gap-3">
         <Button variant="outline" className="flex-1" render={<Link href="/dashboard/inspekcije" />}>
-          Nazad
+          Назад
         </Button>
         <Button className="flex-1" render={<Link href={`/dashboard/inspekcije/${inspection.id}/uredi`} />}>
           <Pencil className="w-4 h-4 mr-2" />
-          Izmeni
+          Измени
         </Button>
         <ConfirmDelete action={deleteWithId} />
       </div>

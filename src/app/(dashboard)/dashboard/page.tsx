@@ -10,8 +10,8 @@ export default async function DashboardPage() {
   // Upravnik i stanar gledaju razlicite stvari: upravniku treba spisak onoga
   // sto trazi njegovu akciju, stanaru obavestenja i glasanje koje ga ceka.
   return session.user.role === "MANAGER" ? (
-    <ManagerDashboard name={session.user.name ?? "upravniče"} />
+    <ManagerDashboard name={session.user.name ?? "управниче"} />
   ) : (
-    <ResidentDashboard userId={session.user.id} name={session.user.name ?? "komšija"} />
+    <ResidentDashboard userId={session.user.id} name={session.user.name ?? "комшија"} />
   )
 }

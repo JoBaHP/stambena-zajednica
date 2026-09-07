@@ -23,20 +23,20 @@ import {
 import { ConfirmDelete } from "@/components/confirm-delete"
 
 const categoryLabels: Record<string, string> = {
-  PLUMBING: "Vodovod",
-  ELECTRICAL: "Elektrika",
-  ELEVATOR: "Lift",
-  HEATING: "Grejanje",
-  CLEANING: "Ciscenje",
-  STRUCTURAL: "Gradjevinski",
-  OTHER: "Ostalo",
+  PLUMBING: "Водовод",
+  ELECTRICAL: "Електрика",
+  ELEVATOR: "Лифт",
+  HEATING: "Грејање",
+  CLEANING: "Чишћење",
+  STRUCTURAL: "Грађевински",
+  OTHER: "Остало",
 }
 
 const statusLabels: Record<string, string> = {
-  SUBMITTED: "Prijavljeno",
-  IN_PROGRESS: "U toku",
-  RESOLVED: "Reseno",
-  REJECTED: "Odbijeno",
+  SUBMITTED: "Пријављено",
+  IN_PROGRESS: "У току",
+  RESOLVED: "Решено",
+  REJECTED: "Одбијено",
 }
 
 const statusStyles: Record<string, string> = {
@@ -47,10 +47,10 @@ const statusStyles: Record<string, string> = {
 }
 
 const priorityLabels: Record<string, string> = {
-  LOW: "Nizak",
-  NORMAL: "Normalan",
-  HIGH: "Visok",
-  URGENT: "Hitno",
+  LOW: "Низак",
+  NORMAL: "Нормалан",
+  HIGH: "Висок",
+  URGENT: "Хитно",
 }
 
 export default async function ZahtevDetaljiPage({
@@ -95,7 +95,7 @@ export default async function ZahtevDetaljiPage({
           className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-2"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
-          Svi zahtevi
+          Сви захтеви
         </Link>
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div className="min-w-0 flex-1">
@@ -137,12 +137,12 @@ export default async function ZahtevDetaljiPage({
                   href={`/api/zahtevi/${photo.id}/download`}
                   target="_blank"
                   rel="noreferrer"
-                  title={`Otvori fotografiju ${i + 1}`}
+                  title={`Отвори фотографију ${i + 1}`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={`/api/zahtevi/${photo.id}/download`}
-                    alt={`Fotografija ${i + 1} uz zahtev`}
+                    alt={`Фотографија ${i + 1} уз захтев`}
                     className="w-24 h-24 object-cover rounded-lg border hover:opacity-90"
                   />
                 </a>
@@ -154,7 +154,7 @@ export default async function ZahtevDetaljiPage({
               Prijavio: {request.reporter.name}
               {request.reporter.unit && ` (stan ${request.reporter.unit})`}
             </p>
-            {request.location && <p>Lokacija: {request.location}</p>}
+            {request.location && <p>Локација: {request.location}</p>}
             <p>
               Prijavljeno:{" "}
               {new Date(request.createdAt).toLocaleString("sr-RS", {
@@ -175,7 +175,7 @@ export default async function ZahtevDetaljiPage({
           {request.resolution && (
             <div className="pt-3 border-t">
               <p className="text-xs font-medium text-muted-foreground mb-1">
-                Resenje
+                Решење
               </p>
               <p className="text-sm whitespace-pre-wrap">{request.resolution}</p>
             </div>
@@ -188,11 +188,10 @@ export default async function ZahtevDetaljiPage({
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
               <Sparkles className="w-4 h-4" />
-              Predlog razvrstavanja
+              Предлог разврставања
             </CardTitle>
             <p className="text-xs text-muted-foreground pt-1">
-              Predlog na osnovu opisa. Odluka je vasa — zapis se ne menja dok ga
-              ne prihvatite.
+              Предлог на основу описа. Одлука је ваша — запис се не мења док га не прихватите.
             </p>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -223,7 +222,7 @@ export default async function ZahtevDetaljiPage({
                 triage.priority !== request.priority) && (
                 <form action={applyTriage.bind(null, request.id)}>
                   <SubmitButton size="sm" variant="outline">
-                    Prihvati kategoriju i prioritet
+                    Прихвати категорију и приоритет
                   </SubmitButton>
                 </form>
               )}
@@ -234,7 +233,7 @@ export default async function ZahtevDetaljiPage({
       {isManager && (
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base">Azuriraj status</CardTitle>
+            <CardTitle className="text-base">Ажурирај статус</CardTitle>
           </CardHeader>
           <CardContent>
             <form
@@ -242,30 +241,30 @@ export default async function ZahtevDetaljiPage({
               className="space-y-4"
             >
               <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status">Статус</Label>
                 <select
                   id="status"
                   name="status"
                   defaultValue={request.status}
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 >
-                  <option value="SUBMITTED">Prijavljeno</option>
-                  <option value="IN_PROGRESS">U toku</option>
-                  <option value="RESOLVED">Reseno</option>
-                  <option value="REJECTED">Odbijeno</option>
+                  <option value="SUBMITTED">Пријављено</option>
+                  <option value="IN_PROGRESS">У току</option>
+                  <option value="RESOLVED">Решено</option>
+                  <option value="REJECTED">Одбијено</option>
                 </select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="resolution">Resenje / komentar (opciono)</Label>
+                <Label htmlFor="resolution">Решење / коментар (опционо)</Label>
                 <Textarea
                   id="resolution"
                   name="resolution"
                   defaultValue={request.resolution ?? ""}
                   rows={3}
-                  placeholder="Opis resenja ili razlog odbijanja"
+                  placeholder="Опис решења или разлог одбијања"
                 />
               </div>
-              <SubmitButton>Sacuvaj</SubmitButton>
+              <SubmitButton>Сачувај</SubmitButton>
             </form>
           </CardContent>
         </Card>
@@ -280,7 +279,7 @@ export default async function ZahtevDetaljiPage({
         </CardHeader>
         <CardContent className="space-y-4">
           {request.comments.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Jos uvek nema komentara</p>
+            <p className="text-sm text-muted-foreground">Још увек нема коментара</p>
           ) : (
             <div className="space-y-3">
               {request.comments.map((c) => (
@@ -291,7 +290,7 @@ export default async function ZahtevDetaljiPage({
                     </span>
                     {c.author.role === "MANAGER" && (
                       <Badge variant="outline" className="text-xs">
-                        Upravnik
+                        Управник
                       </Badge>
                     )}
                     <span>
@@ -311,16 +310,16 @@ export default async function ZahtevDetaljiPage({
             action={addComment.bind(null, request.id)}
             className="space-y-3 pt-3 border-t"
           >
-            <Label htmlFor="body">Dodaj komentar</Label>
+            <Label htmlFor="body">Додај коментар</Label>
             <Textarea
               id="body"
               name="body"
               rows={3}
-              placeholder="Napisi komentar..."
+              placeholder="Напиши коментар..."
               required
             />
             <SubmitButton size="sm">
-              Posalji
+              Пошаљи
             </SubmitButton>
           </form>
         </CardContent>
@@ -330,7 +329,7 @@ export default async function ZahtevDetaljiPage({
         <div className="flex justify-end">
           <ConfirmDelete
             action={deleteRequest.bind(null, request.id)}
-            label="Obrisi zahtev"
+            label="Обриши захтев"
           />
         </div>
       )}

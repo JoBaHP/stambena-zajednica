@@ -26,15 +26,15 @@ export default async function UrediKontaktPage({
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Izmeni kontakt</h1>
-        <p className="text-sm text-muted-foreground mt-1">Azuriraj podatke kontakta</p>
+        <h1 className="text-2xl font-semibold">Измени контакт</h1>
+        <p className="text-sm text-muted-foreground mt-1">Ажурирај податке контакта</p>
       </div>
 
       <Card>
         <CardContent className="pt-6">
           <form action={updateWithId} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="name">Naziv</Label>
+              <Label htmlFor="name">Назив</Label>
               <Input
                 id="name"
                 name="name"
@@ -44,7 +44,7 @@ export default async function UrediKontaktPage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Telefon</Label>
+              <Label htmlFor="phone">Телефон</Label>
               <Input
                 id="phone"
                 name="phone"
@@ -55,7 +55,7 @@ export default async function UrediKontaktPage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="category">Kategorija</Label>
+              <Label htmlFor="category">Категорија</Label>
               <select
                 id="category"
                 name="category"
@@ -63,14 +63,14 @@ export default async function UrediKontaktPage({
                 defaultValue={contact.category}
                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
-                <option value="EMERGENCY">Hitne sluzbe</option>
-                <option value="MANAGEMENT">Upravnik</option>
-                <option value="MAINTENANCE">Odrzavanje</option>
+                <option value="EMERGENCY">Хитне службе</option>
+                <option value="MANAGEMENT">Управник</option>
+                <option value="MAINTENANCE">Одржавање</option>
               </select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="note">Napomena</Label>
+              <Label htmlFor="note">Напомена</Label>
               <Input
                 id="note"
                 name="note"
@@ -79,9 +79,9 @@ export default async function UrediKontaktPage({
             </div>
 
             <div className="flex gap-3 pt-2">
-              <Button type="submit" className="flex-1">Sacuvaj izmene</Button>
+              <Button type="submit" className="flex-1">Сачувај измене</Button>
               <Button type="button" variant="outline" render={<Link href="/dashboard/kontakti" />}>
-                Otkazi
+                Откажи
               </Button>
             </div>
           </form>

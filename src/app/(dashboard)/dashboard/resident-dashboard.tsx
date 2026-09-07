@@ -87,7 +87,7 @@ export async function ResidentDashboard({
           })}
         </p>
         <h1 className="text-2xl sm:text-[27px] font-bold tracking-tight mt-0.5">
-          Dobar dan, {name.split(" ")[0]}
+          Добар дан, {name.split(" ")[0]}
         </h1>
         {me?.unit && (
           <p className="text-sm text-muted-foreground">
@@ -120,7 +120,7 @@ export async function ResidentDashboard({
             <div className="flex items-center gap-2 flex-wrap">
               {lead.priority === "URGENT" && (
                 <span className="text-[10px] font-bold uppercase tracking-wide text-red-700 bg-red-100 px-1.5 rounded">
-                  Hitno
+                  Хитно
                 </span>
               )}
               <span className="text-xs text-muted-foreground">
@@ -135,7 +135,7 @@ export async function ResidentDashboard({
               href="/dashboard/obavestenja"
               className="inline-block text-sm font-semibold text-primary mt-2"
             >
-              Sva obaveštenja
+              Сва обавештења
             </Link>
           </div>
         </div>
@@ -154,45 +154,45 @@ export async function ResidentDashboard({
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-base font-bold truncate">
-              Niste glasali: {activePoll.title}
+              Нисте гласали: {activePoll.title}
             </span>
             <span className="block text-sm text-muted-foreground">
               {activePoll.endsAt
-                ? `Ističe ${new Date(activePoll.endsAt).toLocaleDateString("sr-RS")}`
-                : "Glasanje je otvoreno"}
+                ? `Истиче ${new Date(activePoll.endsAt).toLocaleDateString("sr-RS")}`
+                : "Гласање је отворено"}
             </span>
           </span>
           <span className="shrink-0 inline-flex items-center h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-semibold">
-            Glasaj
+            Гласај
           </span>
         </Link>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard
-          label="Stanje računa zajednice"
+          label="Стање рачуна заједнице"
           value={rsd(balance)}
-          unit="RSD"
+          unit="РСД"
           icon={ArrowLeftRight}
           module="finansije"
           href="/dashboard/finansije"
-          hint="Vidi na šta je potrošeno"
+          hint="Види на шта је потрошено"
         />
 
         <StatCard
-          label="Vaš vlasnički udeo"
+          label="Ваш власнички удео"
           value={sharePct !== null ? `${sharePct.toFixed(1).replace(".", ",")}%` : "—"}
           icon={Building2}
           module="stanari"
           hint={
             sharePct !== null
-              ? `${myArea.toLocaleString("sr-RS")} m² od ukupno ${totalArea.toLocaleString("sr-RS")} m²`
-              : "Kvadratura još nije uneta"
+              ? `${myArea.toLocaleString("sr-RS")} m² од укупно ${totalArea.toLocaleString("sr-RS")} m²`
+              : "Квадратура још није унета"
           }
         />
 
         <StatCard
-          label="Vaš zahtev"
+          label="Ваш захтев"
           value={
             myRequest ? (
               <span className="text-base font-bold leading-snug line-clamp-2">
@@ -208,7 +208,7 @@ export async function ResidentDashboard({
           hint={
             myRequest
               ? `${enumLabel(requestStatusLabels, myRequest.status)} · od ${new Date(myRequest.createdAt).toLocaleDateString("sr-RS")}`
-              : "Nemate otvorenih zahteva"
+              : "Немате отворених захтева"
           }
         />
       </div>
@@ -216,12 +216,12 @@ export async function ResidentDashboard({
       {rest.length > 0 && (
         <div className="rounded-xl border bg-card card-lift overflow-hidden">
           <SectionTitle
-            title="Ranija obaveštenja"
+            title="Ранија обавештења"
             icon={Megaphone}
             module="obavestenja"
             action={
               <Link href="/dashboard/obavestenja" className="text-sm text-muted-foreground hover:text-foreground">
-                Sva
+                Сва
               </Link>
             }
           />

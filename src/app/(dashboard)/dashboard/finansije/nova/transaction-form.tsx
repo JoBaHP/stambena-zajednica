@@ -49,7 +49,7 @@ export function TransactionForm({ categories, defaultValues }: TransactionFormPr
         <form action={action} className="space-y-5">
           {/* Tip: prihod ili rashod */}
           <div className="space-y-2">
-            <Label>Tip</Label>
+            <Label>Тип</Label>
             <div className="flex gap-2">
               <button
                 type="button"
@@ -60,7 +60,7 @@ export function TransactionForm({ categories, defaultValues }: TransactionFormPr
                     : "bg-background border-border text-muted-foreground hover:bg-accent"
                 }`}
               >
-                Rashod
+                Расход
               </button>
               <button
                 type="button"
@@ -71,7 +71,7 @@ export function TransactionForm({ categories, defaultValues }: TransactionFormPr
                     : "bg-background border-border text-muted-foreground hover:bg-accent"
                 }`}
               >
-                Prihod
+                Приход
               </button>
             </div>
             <input type="hidden" name="type" value={type} />
@@ -79,7 +79,7 @@ export function TransactionForm({ categories, defaultValues }: TransactionFormPr
 
           {/* Iznos */}
           <div className="space-y-2">
-            <Label htmlFor="amount">Iznos (RSD)</Label>
+            <Label htmlFor="amount">Износ (РСД)</Label>
             <Input
               id="amount"
               name="amount"
@@ -94,11 +94,11 @@ export function TransactionForm({ categories, defaultValues }: TransactionFormPr
 
           {/* Opis */}
           <div className="space-y-2">
-            <Label htmlFor="description">Opis</Label>
+            <Label htmlFor="description">Опис</Label>
             <Input
               id="description"
               name="description"
-              placeholder="npr. Servis lifta - april 2026"
+              placeholder="нпр. Сервис лифта — април 2026"
               required
               defaultValue={defaultValues?.description}
             />
@@ -106,7 +106,7 @@ export function TransactionForm({ categories, defaultValues }: TransactionFormPr
 
           {/* Datum */}
           <div className="space-y-2">
-            <Label htmlFor="date">Datum</Label>
+            <Label htmlFor="date">Датум</Label>
             <Input
               id="date"
               name="date"
@@ -118,14 +118,14 @@ export function TransactionForm({ categories, defaultValues }: TransactionFormPr
 
           {/* Kategorija */}
           <div className="space-y-2">
-            <Label htmlFor="categoryId">Kategorija</Label>
+            <Label htmlFor="categoryId">Категорија</Label>
             <select
               id="categoryId"
               name="categoryId"
               className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               defaultValue={defaultValues?.categoryId ?? ""}
             >
-              <option value="">Bez kategorije</option>
+              <option value="">Без категорије</option>
               {filteredCategories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
@@ -136,22 +136,22 @@ export function TransactionForm({ categories, defaultValues }: TransactionFormPr
 
           {/* Broj racuna/naloga */}
           <div className="space-y-2">
-            <Label htmlFor="referenceNum">Broj racuna / naloga</Label>
+            <Label htmlFor="referenceNum">Број рачуна / налога</Label>
             <Input
               id="referenceNum"
               name="referenceNum"
-              placeholder="Opciono"
+              placeholder="Опционо"
               defaultValue={defaultValues?.referenceNum}
             />
           </div>
 
           {/* Napomena */}
           <div className="space-y-2">
-            <Label htmlFor="notes">Napomena</Label>
+            <Label htmlFor="notes">Напомена</Label>
             <Textarea
               id="notes"
               name="notes"
-              placeholder="Opciono"
+              placeholder="Опционо"
               rows={3}
               defaultValue={defaultValues?.notes}
             />
@@ -160,10 +160,10 @@ export function TransactionForm({ categories, defaultValues }: TransactionFormPr
           {/* Dugmad */}
           <div className="flex gap-3 pt-2">
             <SubmitButton className="flex-1">
-              {isEdit ? "Sacuvaj izmene" : "Sacuvaj"}
+              {isEdit ? "Сачувај измене" : "Сачувај"}
             </SubmitButton>
             <Button type="button" variant="outline" render={<Link href="/dashboard/finansije" />}>
-              Otkazi
+              Откажи
             </Button>
           </div>
         </form>

@@ -16,9 +16,9 @@ export default async function NovaObavezaPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Nova obaveza</h1>
+        <h1 className="text-2xl font-semibold">Нова обавеза</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Dodajte rok ili zakazanu aktivnost u kalendar
+          Додајте рок или заказану активност у календар
         </p>
       </div>
 
@@ -26,77 +26,77 @@ export default async function NovaObavezaPage() {
         <CardContent className="pt-6">
           <form action={createTask} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="title">Naslov</Label>
+              <Label htmlFor="title">Наслов</Label>
               <Input
                 id="title"
                 name="title"
-                placeholder="npr. PP inspekcija lifta"
+                placeholder="нпр. ПП инспекција лифта"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Napomena (opciono)</Label>
+              <Label htmlFor="description">Напомена (опционо)</Label>
               <Textarea
                 id="description"
                 name="description"
-                placeholder="Detalji, kontakti, broj ugovora..."
+                placeholder="Детаљи, контакти, број уговора..."
                 rows={3}
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="dueDate">Datum</Label>
+                <Label htmlFor="dueDate">Датум</Label>
                 <Input id="dueDate" name="dueDate" type="date" required />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="category">Kategorija</Label>
+                <Label htmlFor="category">Категорија</Label>
                 <select
                   id="category"
                   name="category"
                   required
                   className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 >
-                  <option value="INSPECTION">Inspekcija</option>
-                  <option value="MAINTENANCE">Odrzavanje</option>
-                  <option value="PAYMENT">Placanje</option>
-                  <option value="MEETING">Sastanak</option>
-                  <option value="CONTRACT">Ugovor</option>
-                  <option value="OTHER">Ostalo</option>
+                  <option value="INSPECTION">Инспекција</option>
+                  <option value="MAINTENANCE">Одржавање</option>
+                  <option value="PAYMENT">Плаћање</option>
+                  <option value="MEETING">Састанак</option>
+                  <option value="CONTRACT">Уговор</option>
+                  <option value="OTHER">Остало</option>
                 </select>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="recurrence">Ponavljanje</Label>
+              <Label htmlFor="recurrence">Понављање</Label>
               <select
                 id="recurrence"
                 name="recurrence"
                 defaultValue="NONE"
                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
-                <option value="NONE">Bez ponavljanja</option>
-                <option value="MONTHLY">Mesecno</option>
-                <option value="QUARTERLY">Kvartalno</option>
-                <option value="YEARLY">Godisnje</option>
+                <option value="NONE">Без понављања</option>
+                <option value="MONTHLY">Месечно</option>
+                <option value="QUARTERLY">Квартално</option>
+                <option value="YEARLY">Годишње</option>
               </select>
               <p className="text-xs text-muted-foreground">
-                Kada oznacis obavezu kao zavrsenu, automatski ce se kreirati nova za sledeci period.
+                Када означиш обавезу као завршену, аутоматски ће се креирати нова за следећи период.
               </p>
             </div>
 
             <div className="flex gap-3 pt-2">
               <SubmitButton className="flex-1">
-                Sacuvaj
+                Сачувај
               </SubmitButton>
               <Button
                 type="button"
                 variant="outline"
                 render={<Link href="/dashboard/kalendar" />}
               >
-                Otkazi
+                Откажи
               </Button>
             </div>
           </form>

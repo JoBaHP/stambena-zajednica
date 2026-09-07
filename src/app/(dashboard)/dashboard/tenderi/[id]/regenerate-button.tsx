@@ -15,9 +15,9 @@ export function RegenerateButton({ offerId }: { offerId: string }) {
       try {
         await regenerateSummary(offerId)
         router.refresh()
-        toast.success("Sažetak generisan")
+        toast.success("Сажетак генерисан")
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : "Greška pri generisanju sažetka")
+        toast.error(err instanceof Error ? err.message : "Грешка при генерисању сажетка")
       }
     })
   }
@@ -30,7 +30,7 @@ export function RegenerateButton({ offerId }: { offerId: string }) {
       className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-indigo-600 transition-colors disabled:opacity-50"
     >
       <Sparkles className={`w-3.5 h-3.5 ${pending ? "animate-pulse" : ""}`} />
-      {pending ? "Generišem..." : "Generiši AI sažetak"}
+      {pending ? "Генеришем..." : "Генериши АИ сажетак"}
     </button>
   )
 }

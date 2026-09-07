@@ -17,17 +17,17 @@ export async function createAccessRequest(formData: FormData) {
   const message = (formData.get("message") as string)?.trim() || null
 
   if (!name || !email) {
-    return { error: "Ime i email su obavezni" }
+    return { error: "Име и емаил су обавезни" }
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { error: "Email format nije validan" }
+    return { error: "Формат емаила није исправан" }
   }
 
   const existingUser = await db.user.findUnique({ where: { email } })
   if (existingUser) {
     return {
       error:
-        "Vec postoji nalog sa ovim email-om. Probaj prijavu ili reset lozinke.",
+        "Већ постоји налог са овим емаилом. Пробај пријаву или ресет лозинке.",
     }
   }
 
@@ -37,7 +37,7 @@ export async function createAccessRequest(formData: FormData) {
   if (existingPending) {
     return {
       error:
-        "Vec postoji zahtev za ovaj email koji ceka odobrenje upravnika.",
+        "Већ постоји захтев за овај емаил који чека одобрење управника.",
     }
   }
 
@@ -58,12 +58,12 @@ export async function createAccessRequest(formData: FormData) {
   const phoneNote = phone ? `\nTelefon: ${phone}` : ""
   const messageNote = message ? `\nPoruka: ${message}` : ""
   const occupantNote = unitOccupant
-    ? `\n\nUPOZORENJE: Stan ${unit} vec ima aktivnog korisnika: ${unitOccupant.name} (${unitOccupant.email}). Proveri pre odobrenja.`
+    ? `\n\nУПОЗОРЕЊЕ: Стан ${unit} већ има активног корисника: ${unitOccupant.name} (${unitOccupant.email}). Провери пре одобрења.`
     : ""
 
   await notifyManagers({
-    subject: "Novi zahtev za pristup",
-    body: `${name} (${email}) je zatrazio pristup portalu.${unitNote}${phoneNote}${messageNote}${occupantNote}\n\nPregledaj zahtev: ${APP_URL}/dashboard/zahtevi-za-pristup`,
+    subject: "Нови захтев за приступ",
+    body: `${name} (${email}) је затражио приступ порталу.${unitNote}${phoneNote}${messageNote}${occupantNote}\n\nПрегледај захтев: ${APP_URL}/dashboard/zahtevi-za-pristup`,
   })
 
   return {
@@ -76,24 +76,24 @@ export async function createAccessRequest(formData: FormData) {
 export async function approveAccessRequest(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const req = await db.accessRequest.findUnique({ where: { id } })
-  if (!req) throw new Error("Zahtev ne postoji")
+  if (!req) throw new Error("Захтев не постоји")
   if (req.status !== "PENDING") {
-    throw new Error("Zahtev je vec obradjen")
+    throw new Error("Захтев је већ обрађен")
   }
 
   const password = (formData.get("password") as string)?.trim()
   if (!password || password.length < 6) {
-    throw new Error("Lozinka mora imati najmanje 6 karaktera")
+    throw new Error("Лозинка мора имати најмање 6 карактера")
   }
 
   const existing = await db.user.findUnique({ where: { email: req.email } })
   if (existing) {
     throw new Error(
-      "Korisnik sa ovim email-om vec postoji u sistemu. Odbij zahtev.",
+      "Корисник са овим емаилом већ постоји у систему. Одбиј захтев.",
     )
   }
 
@@ -122,8 +122,8 @@ export async function approveAccessRequest(id: string, formData: FormData) {
 
   await sendDirectEmail(
     req.email,
-    "Pristup odobren — Pasterova 16",
-    `Postovani ${req.name},\n\nVas zahtev za pristup portalu je odobren.\n\nPodaci za prijavu:\nEmail: ${req.email}\nLozinka: ${password}\n\nPrijavi se: ${APP_URL}/login\n\nPreporucujemo da promenis lozinku nakon prve prijave (Podesavanja → Lozinka).`,
+    "Приступ одобрен — Пастерова 16",
+    `Поштовани ${req.name},\n\nВаш захтев за приступ порталу је одобрен.\n\nПодаци за пријаву:\nЕмаил: ${req.email}\nЛозинка: ${password}\n\nПријави се: ${APP_URL}/login\n\nПрепоручујемо да промениш лозинку након прве пријаве (Подешавања → Лозинка).`,
   )
 
   revalidatePath("/dashboard/zahtevi-za-pristup")
@@ -134,13 +134,13 @@ export async function approveAccessRequest(id: string, formData: FormData) {
 export async function rejectAccessRequest(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const req = await db.accessRequest.findUnique({ where: { id } })
-  if (!req) throw new Error("Zahtev ne postoji")
+  if (!req) throw new Error("Захтев не постоји")
   if (req.status !== "PENDING") {
-    throw new Error("Zahtev je vec obradjen")
+    throw new Error("Захтев је већ обрађен")
   }
 
   const note = (formData.get("note") as string)?.trim() || null
@@ -155,11 +155,11 @@ export async function rejectAccessRequest(id: string, formData: FormData) {
     },
   })
 
-  const noteLine = note ? `\n\nNapomena upravnika: ${note}` : ""
+  const noteLine = note ? `\n\nНапомена управника: ${note}` : ""
   await sendDirectEmail(
     req.email,
-    "Zahtev za pristup odbijen — Pasterova 16",
-    `Postovani ${req.name},\n\nVas zahtev za pristup portalu je odbijen.${noteLine}\n\nAko mislite da je doslo do greske, kontaktirajte upravnika.`,
+    "Захтев за приступ одбијен — Пастерова 16",
+    `Поштовани ${req.name},\n\nВаш захтев за приступ порталу је одбијен.${noteLine}\n\nАко мислите да је дошло до грешке, контактирајте управника.`,
   )
 
   revalidatePath("/dashboard/zahtevi-za-pristup")

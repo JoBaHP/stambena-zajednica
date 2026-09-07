@@ -68,7 +68,7 @@ export function RequestForm() {
       const next: Photo[] = []
       for (const file of picked.slice(0, room)) {
         if (!file.type.startsWith("image/")) {
-          toast.error(`${file.name} nije slika`)
+          toast.error(`${file.name} није слика`)
           continue
         }
         const shrunk = await shrink(file)
@@ -76,10 +76,10 @@ export function RequestForm() {
       }
       setPhotos((prev) => [...prev, ...next])
       if (picked.length > room) {
-        toast.info(`Dodato je prvih ${room} — ogranicenje je ${MAX_PHOTOS}`)
+        toast.info(`Додато је првих ${room} — ограничење је ${MAX_PHOTOS}`)
       }
     } catch {
-      toast.error("Nije uspelo ucitavanje fotografije")
+      toast.error("Није успело учитавање фотографије")
     } finally {
       setProcessing(false)
     }
@@ -104,7 +104,7 @@ export function RequestForm() {
       } catch (err) {
         // redirect() iz akcije stize kao izuzetak koji Next sam obradi.
         if (err && typeof err === "object" && "digest" in err) throw err
-        toast.error(err instanceof Error ? err.message : "Slanje nije uspelo")
+        toast.error(err instanceof Error ? err.message : "Слање није успело")
       }
     })
   }
@@ -116,63 +116,63 @@ export function RequestForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="space-y-2">
-        <Label htmlFor="title">Naslov</Label>
-        <Input id="title" name="title" required placeholder="npr. Curi voda u podrumu" />
+        <Label htmlFor="title">Наслов</Label>
+        <Input id="title" name="title" required placeholder="нпр. Цури вода у подруму" />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description">Opis</Label>
+        <Label htmlFor="description">Опис</Label>
         <Textarea
           id="description"
           name="description"
           required
           rows={4}
-          placeholder="Opisite problem sto detaljnije"
+          placeholder="Опишите проблем што детаљније"
         />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="category">Kategorija</Label>
+          <Label htmlFor="category">Категорија</Label>
           <select
             id="category"
             name="category"
             required
             className="flex h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1 text-sm shadow-xs"
           >
-            <option value="PLUMBING">Vodovod</option>
-            <option value="ELECTRICAL">Elektrika</option>
-            <option value="ELEVATOR">Lift</option>
-            <option value="HEATING">Grejanje</option>
-            <option value="CLEANING">Ciscenje</option>
-            <option value="STRUCTURAL">Gradjevinski</option>
-            <option value="OTHER">Ostalo</option>
+            <option value="PLUMBING">Водовод</option>
+            <option value="ELECTRICAL">Електрика</option>
+            <option value="ELEVATOR">Лифт</option>
+            <option value="HEATING">Грејање</option>
+            <option value="CLEANING">Чишћење</option>
+            <option value="STRUCTURAL">Грађевински</option>
+            <option value="OTHER">Остало</option>
           </select>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="priority">Prioritet</Label>
+          <Label htmlFor="priority">Приоритет</Label>
           <select
             id="priority"
             name="priority"
             defaultValue="NORMAL"
             className="flex h-9 w-full rounded-lg border border-input bg-transparent px-3 py-1 text-sm shadow-xs"
           >
-            <option value="LOW">Nizak</option>
-            <option value="NORMAL">Normalan</option>
-            <option value="HIGH">Visok</option>
-            <option value="URGENT">Hitno</option>
+            <option value="LOW">Низак</option>
+            <option value="NORMAL">Нормалан</option>
+            <option value="HIGH">Висок</option>
+            <option value="URGENT">Хитно</option>
           </select>
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="location">Lokacija</Label>
-        <Input id="location" name="location" placeholder="npr. podrum, 3. sprat, ulaz" />
+        <Label htmlFor="location">Локација</Label>
+        <Input id="location" name="location" placeholder="нпр. подрум, 3. спрат, улаз" />
       </div>
 
       <div className="space-y-2">
-        <Label>Fotografije</Label>
+        <Label>Фотографије</Label>
         <input
           ref={fileRef}
           type="file"
@@ -195,7 +195,7 @@ export function RequestForm() {
               <button
                 type="button"
                 onClick={() => removePhoto(i)}
-                aria-label={`Ukloni fotografiju ${i + 1}`}
+                aria-label={`Уклони фотографију ${i + 1}`}
                 className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center"
               >
                 <X className="w-3 h-3" />
@@ -212,23 +212,23 @@ export function RequestForm() {
               className="w-20 h-20 flex-col gap-1"
             >
               <Camera className="w-5 h-5" />
-              <span className="text-xs">{processing ? "..." : "Dodaj"}</span>
+              <span className="text-xs">{processing ? "..." : "Додај"}</span>
             </Button>
           )}
         </div>
         <p className="text-xs text-muted-foreground">
-          Do {MAX_PHOTOS} fotografije. Na telefonu se otvara kamera; slike se
-          automatski smanjuju pre slanja
-          {photos.length > 0 ? ` (trenutno ${totalKb} KB)` : ""}.
+          До {MAX_PHOTOS} фотографије. На телефону се отвара камера; слике се
+          аутоматски смањују пре слања
+          {photos.length > 0 ? ` (тренутно ${totalKb} KB)` : ""}.
         </p>
       </div>
 
       <div className="flex gap-2 pt-2">
         <Button type="submit" className="flex-1" disabled={pending || processing}>
-          {pending ? "Saljem..." : "Posalji zahtev"}
+          {pending ? "Шаљем..." : "Пошаљи захтев"}
         </Button>
         <Button type="button" variant="outline" render={<Link href="/dashboard/zahtevi" />}>
-          Otkazi
+          Откажи
         </Button>
       </div>
     </form>

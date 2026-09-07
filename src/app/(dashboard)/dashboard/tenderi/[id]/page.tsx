@@ -63,7 +63,7 @@ export default async function TenderDetaljPage({
               href="/dashboard/investicije"
               className="hover:text-foreground transition-colors"
             >
-              Investicije
+              Инвестиције
             </Link>
             <span>/</span>
             <Link
@@ -83,7 +83,7 @@ export default async function TenderDetaljPage({
           )}
         </div>
         <Badge variant={tender.status === "OPEN" ? "default" : "secondary"}>
-          {tender.status === "OPEN" ? "Aktivno" : "Zatvoreno"}
+          {tender.status === "OPEN" ? "Активно" : "Затворено"}
         </Badge>
       </div>
 
@@ -139,8 +139,8 @@ export default async function TenderDetaljPage({
       {tender.status === "OPEN" && !isManager && (
         <p className="text-sm text-muted-foreground">
           {myVote
-            ? `Glasali ste za: ${tender.offers.find((o) => o.id === myVote.offerId)?.company}. Kliknite na drugu ponudu da promenite glas.`
-            : "Pregledajte ponude i glasajte za najpovoljniju."}
+            ? `Гласали сте за: ${tender.offers.find((o) => o.id === myVote.offerId)?.company}. Кликните на другу понуду да промените глас.`
+            : "Прегледајте понуде и гласајте за најповољнију."}
         </p>
       )}
 
@@ -148,7 +148,7 @@ export default async function TenderDetaljPage({
         <Card>
           <CardContent className="py-10 text-center text-muted-foreground">
             <Building2 className="w-8 h-8 mx-auto mb-2 opacity-30" />
-            <p className="text-sm">Nema ponuda. Dodajte prvu ponudu.</p>
+            <p className="text-sm">Нема понуда. Додајте прву понуду.</p>
           </CardContent>
         </Card>
       ) : (
@@ -182,7 +182,7 @@ export default async function TenderDetaljPage({
       {isManager && (
         <div className="space-y-3 pt-2 border-t">
           <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
-            Upravljanje tenderom
+            Управљање тендером
           </p>
 
           {tender.status === "OPEN" && (
@@ -194,13 +194,13 @@ export default async function TenderDetaljPage({
                 }
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Dodaj ponudu
+                Додај понуду
               </Button>
 
               {tender.offers.length > 0 && (
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">
-                    Zatvori glasanje i proglasi pobednika:
+                    Затвори гласање и прогласи победника:
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {tender.offers.map((offer) => (
@@ -221,7 +221,7 @@ export default async function TenderDetaljPage({
             <form action={reopenTender.bind(null, tender.id)}>
               <SubmitButton variant="outline" size="sm">
                 <RotateCcw className="w-4 h-4 mr-2" />
-                Ponovo otvori glasanje
+                Поново отвори гласање
               </SubmitButton>
             </form>
           )}

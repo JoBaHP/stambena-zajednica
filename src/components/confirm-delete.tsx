@@ -13,8 +13,8 @@ interface ConfirmDeleteProps {
 
 export function ConfirmDelete({
   action,
-  label = "Obrisi",
-  confirmLabel = "Potvrdi brisanje",
+  label = "Обриши",
+  confirmLabel = "Потврди брисање",
   className,
 }: ConfirmDeleteProps) {
   const [confirming, setConfirming] = useState(false)
@@ -29,7 +29,7 @@ export function ConfirmDelete({
           </Button>
         </form>
         <Button variant="outline" onClick={() => setConfirming(false)}>
-          Otkazi
+          Откажи
         </Button>
       </div>
     )

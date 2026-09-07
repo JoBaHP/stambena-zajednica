@@ -24,13 +24,13 @@ export default async function ObavestenjaPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Obavestenja</h1>
-          <p className="text-sm text-muted-foreground mt-1">Oglasna tabla stambene zajednice</p>
+          <h1 className="text-2xl font-semibold">Обавештења</h1>
+          <p className="text-sm text-muted-foreground mt-1">Огласна табла стамбене заједнице</p>
         </div>
         {isManager && (
           <Button render={<Link href="/dashboard/obavestenja/novo" />}>
             <Plus className="w-4 h-4 mr-2" />
-            Novo obavestenje
+            Ново обавештење
           </Button>
         )}
       </div>
@@ -38,14 +38,14 @@ export default async function ObavestenjaPage() {
       {announcements.length === 0 ? (
         <Card>
           <CardContent className="text-center py-12">
-            <p className="text-muted-foreground">Nema obavestenja</p>
+            <p className="text-muted-foreground">Нема обавештења</p>
             {isManager && (
               <Button
                 className="mt-4"
                 variant="outline"
                 render={<Link href="/dashboard/obavestenja/novo" />}
               >
-                Dodaj prvo obavestenje
+                Додај прво обавештење
               </Button>
             )}
           </CardContent>
@@ -66,7 +66,7 @@ export default async function ObavestenjaPage() {
                     )}
                     <CardTitle className="text-base">{a.title}</CardTitle>
                     {a.priority === "URGENT" && (
-                      <Badge variant="destructive" className="text-xs">Hitno</Badge>
+                      <Badge variant="destructive" className="text-xs">Хитно</Badge>
                     )}
                   </div>
                   {isManager && (
@@ -74,7 +74,7 @@ export default async function ObavestenjaPage() {
                       href={`/dashboard/obavestenja/${a.id}/uredi`}
                       className="text-xs text-muted-foreground hover:text-foreground shrink-0"
                     >
-                      Uredi
+                      Уреди
                     </Link>
                   )}
                 </div>

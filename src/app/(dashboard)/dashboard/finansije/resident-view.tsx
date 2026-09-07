@@ -16,11 +16,11 @@ const MONTHS = [
 ]
 
 function rsd(value: number): string {
-  return `${Math.round(value).toLocaleString("sr-RS")} RSD`
+  return `${Math.round(value).toLocaleString("sr-RS")} РСД`
 }
 
 function rsd2(value: number): string {
-  return `${value.toLocaleString("sr-RS", { minimumFractionDigits: 2 })} RSD`
+  return `${value.toLocaleString("sr-RS", { minimumFractionDigits: 2 })} РСД`
 }
 
 export async function ResidentFinanceView() {
@@ -82,7 +82,7 @@ export async function ResidentFinanceView() {
   const byCategory = new Map<string, number>()
   for (const t of recentTx) {
     if (t.type !== "EXPENSE") continue
-    const name = t.categoryId ? (catName.get(t.categoryId) ?? "Ostalo") : "Bez kategorije"
+    const name = t.categoryId ? (catName.get(t.categoryId) ?? "Остало") : "Без категорије"
     byCategory.set(name, (byCategory.get(name) ?? 0) + Number(t.amount))
   }
   const catRows = [...byCategory.entries()].sort((a, b) => b[1] - a[1])
@@ -104,9 +104,9 @@ export async function ResidentFinanceView() {
           />
         </span>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Finansije zajednice</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Финансије заједнице</h1>
           <p className="text-sm text-muted-foreground">
-            Isti podaci koje vodi upravnik — samo za uvid
+            Исти подаци које води управник — само за увид
           </p>
         </div>
       </div>
@@ -115,12 +115,12 @@ export async function ResidentFinanceView() {
         <Card className="card-lift">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Stanje racuna
+              Стање рачуна
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold tracking-tight nums">{rsd2(balance)}</p>
-            <p className="text-xs text-muted-foreground mt-1">Od pocetka evidencije</p>
+            <p className="text-xs text-muted-foreground mt-1">Од почетка евиденције</p>
           </CardContent>
         </Card>
 
@@ -128,7 +128,7 @@ export async function ResidentFinanceView() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <span className={`w-2.5 h-2.5 rounded-sm ${INCOME}`} />
-              Uplate ovog meseca
+              Уплате овог месеца
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -140,7 +140,7 @@ export async function ResidentFinanceView() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <span className={`w-2.5 h-2.5 rounded-sm ${EXPENSE}`} />
-              Rashodi ovog meseca
+              Расходи овог месеца
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -152,22 +152,22 @@ export async function ResidentFinanceView() {
       {!hasData ? (
         <Card>
           <CardContent className="py-10 text-center text-sm text-muted-foreground">
-            Jos uvek nema evidentiranih stavki u poslednjih 12 meseci.
+            Још увек нема евидентираних ставки у последњих 12 месеци.
           </CardContent>
         </Card>
       ) : (
         <>
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Poslednjih 12 meseci</CardTitle>
+              <CardTitle className="text-base">Последњих 12 месеци</CardTitle>
               <div className="flex items-center gap-4 text-xs text-muted-foreground pt-1">
                 <span className="flex items-center gap-1.5">
                   <span className={`inline-block w-3 h-2 rounded-[2px] ${INCOME}`} />
-                  Uplate
+                  Уплате
                 </span>
                 <span className="flex items-center gap-1.5">
                   <span className={`inline-block w-3 h-2 rounded-[2px] ${EXPENSE}`} />
-                  Rashodi
+                  Расходи
                 </span>
               </div>
             </CardHeader>
@@ -206,14 +206,14 @@ export async function ResidentFinanceView() {
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Na sta je novac potrosen</CardTitle>
+              <CardTitle className="text-base">На шта је новац потрошен</CardTitle>
               <p className="text-xs text-muted-foreground pt-1">
-                Rashodi po kategorijama, poslednjih 12 meseci
+                Расходи по категоријама, последњих 12 месеци
               </p>
             </CardHeader>
             <CardContent>
               {catRows.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Nema evidentiranih rashoda.</p>
+                <p className="text-sm text-muted-foreground">Нема евидентираних расхода.</p>
               ) : (
                 <ul className="space-y-3">
                   {catRows.map(([name, value]) => (
@@ -242,11 +242,11 @@ export async function ResidentFinanceView() {
 
       <Card className="card-lift">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base">Poslednje stavke</CardTitle>
+          <CardTitle className="text-base">Последње ставке</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           {lastTx.length === 0 ? (
-            <p className="text-sm text-muted-foreground px-6 pb-6">Nema stavki.</p>
+            <p className="text-sm text-muted-foreground px-6 pb-6">Нема ставки.</p>
           ) : (
             <ul className="divide-y">
               {lastTx.map((t) => (
@@ -276,11 +276,11 @@ export async function ResidentFinanceView() {
       <Card>
         <CardContent className="flex flex-wrap items-center justify-between gap-3 py-4">
           <p className="text-sm text-muted-foreground">
-            Racuni i ugovori se nalaze u digitalnoj arhivi.
+            Рачуни и уговори се налазе у дигиталној архиви.
           </p>
           <Button variant="outline" render={<Link href="/dashboard/arhiva" />}>
             <FolderArchive className="w-4 h-4 mr-2" />
-            Otvori arhivu
+            Отвори архиву
           </Button>
         </CardContent>
       </Card>

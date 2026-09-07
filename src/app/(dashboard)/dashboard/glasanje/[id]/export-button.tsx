@@ -13,12 +13,12 @@ export function ExportPollResultsButton({ pollId }: { pollId: string }) {
     startTransition(async () => {
       try {
         const res = await exportPollResults(pollId)
-        toast.success(`Rezultati su sacuvani u Drive: ${res.fileName}`, {
+        toast.success(`Резултати су сачувани у Drive: ${res.fileName}`, {
           duration: 6000,
         })
       } catch (err) {
         toast.error(
-          err instanceof Error ? err.message : "Greska pri eksportu",
+          err instanceof Error ? err.message : "Грешка при извозу",
         )
       }
     })
@@ -32,7 +32,7 @@ export function ExportPollResultsButton({ pollId }: { pollId: string }) {
       disabled={pending}
     >
       <Download className="w-4 h-4 mr-2" />
-      {pending ? "Eksportujem..." : "Eksportuj u Drive"}
+      {pending ? "Извозим..." : "Извези у Drive"}
     </Button>
   )
 }

@@ -62,9 +62,9 @@ export default async function ZahteviZaPristupPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Zahtevi za pristup</h1>
+        <h1 className="text-2xl font-semibold">Захтеви за приступ</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Pregled novih zahteva za pristup portalu
+          Преглед нових захтева за приступ порталу
         </p>
       </div>
 
@@ -79,7 +79,7 @@ export default async function ZahteviZaPristupPage() {
             <div className="text-center py-8">
               <Inbox className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
               <p className="text-sm text-muted-foreground">
-                Nema zahteva na cekanju
+                Нема захтева на чекању
               </p>
             </div>
           ) : (
@@ -125,10 +125,10 @@ export default async function ZahteviZaPristupPage() {
                       <div className="mt-3 flex items-start gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200 text-sm text-amber-900">
                         <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                         <div>
-                          Stan <strong>{r.unit}</strong> vec ima aktivnog
+                          Стан <strong>{r.unit}</strong> vec ima aktivnog
                           korisnika: <strong>{occupant.name}</strong> (
                           {occupant.email}). Proveri vlasnistvo pre odobrenja.
-                          Ako se vlasnik promenio, ukloni pristup starom
+                          Ако се власник променио, уклони приступ старом
                           korisniku pre odobrenja novog.
                         </div>
                       </div>
@@ -149,7 +149,7 @@ export default async function ZahteviZaPristupPage() {
       {processed.length > 0 && (
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base">Istorija</CardTitle>
+            <CardTitle className="text-base">Историја</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -167,7 +167,7 @@ export default async function ZahteviZaPristupPage() {
                         }
                         className="text-xs"
                       >
-                        {r.status === "APPROVED" ? "Odobren" : "Odbijen"}
+                        {r.status === "APPROVED" ? "Одобрен" : "Одбијен"}
                       </Badge>
                       {r.unit && (
                         <Badge variant="outline" className="text-xs">

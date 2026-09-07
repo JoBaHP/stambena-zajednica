@@ -9,7 +9,7 @@ import { redirect } from "next/navigation"
 export async function createInspection(formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const title = formData.get("title") as string
@@ -20,7 +20,7 @@ export async function createInspection(formData: FormData) {
   const notes = formData.get("notes") as string
 
   if (!title || !inspectionDate || !result) {
-    throw new Error("Popunite obavezna polja")
+    throw new Error("Попуните обавезна поља")
   }
 
   const created = await db.pPInspection.create({
@@ -44,7 +44,7 @@ export async function createInspection(formData: FormData) {
 export async function updateInspection(id: string, formData: FormData) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   const title = formData.get("title") as string
@@ -76,7 +76,7 @@ export async function updateInspection(id: string, formData: FormData) {
 export async function deleteInspection(id: string) {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Nemate dozvolu")
+    throw new Error("Немате дозволу")
   }
 
   await db.pPInspection.delete({ where: { id } })

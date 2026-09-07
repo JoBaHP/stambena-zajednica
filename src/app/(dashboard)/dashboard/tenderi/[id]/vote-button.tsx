@@ -24,7 +24,7 @@ export function VoteButton({
       try {
         await castVote(tenderId, offerId)
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : "Greška pri glasanju")
+        toast.error(err instanceof Error ? err.message : "Грешка при гласању")
       }
     })
   }
@@ -40,7 +40,7 @@ export function VoteButton({
       className="shrink-0"
     >
       {isMyVote && <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />}
-      {pending ? "..." : isMyVote ? "Vaš glas" : "Glasaj"}
+      {pending ? "..." : isMyVote ? "Ваш глас" : "Гласај"}
     </Button>
   )
 }

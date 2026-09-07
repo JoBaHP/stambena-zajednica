@@ -26,11 +26,11 @@ export function MobileMenuTrigger() {
       aria-label={
         isOpen
           ? isMobile
-            ? "Zatvori meni"
-            : "Sakrij meni"
+            ? "Затвори мени"
+            : "Сакриј мени"
           : isMobile
-            ? "Otvori meni"
-            : "Prikazi meni"
+            ? "Отвори мени"
+            : "Прикажи мени"
       }
       className="h-11 w-11 p-0"
     >

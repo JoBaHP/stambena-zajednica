@@ -7,30 +7,30 @@ import { revalidatePath } from "next/cache"
 
 export async function changePassword(formData: FormData) {
   const session = await auth()
-  if (!session) throw new Error("Niste prijavljeni")
+  if (!session) throw new Error("Нисте пријављени")
 
   const currentPassword = formData.get("currentPassword") as string
   const newPassword = formData.get("newPassword") as string
   const confirmPassword = formData.get("confirmPassword") as string
 
   if (!currentPassword || !newPassword || !confirmPassword) {
-    return { error: "Popunite sva polja" }
+    return { error: "Попуните сва поља" }
   }
 
   if (newPassword.length < 6) {
-    return { error: "Nova lozinka mora imati bar 6 karaktera" }
+    return { error: "Нова лозинка мора имати бар 6 карактера" }
   }
 
   if (newPassword !== confirmPassword) {
-    return { error: "Lozinke se ne poklapaju" }
+    return { error: "Лозинке се не поклапају" }
   }
 
   const user = await db.user.findUnique({ where: { id: session.user.id } })
-  if (!user) return { error: "Korisnik nije pronadjen" }
+  if (!user) return { error: "Корисник није пронађен" }
 
   const validPassword = await bcrypt.compare(currentPassword, user.password)
   if (!validPassword) {
-    return { error: "Trenutna lozinka nije tacna" }
+    return { error: "Тренутна лозинка није тачна" }
   }
 
   const hashedPassword = await bcrypt.hash(newPassword, 12)
@@ -45,14 +45,14 @@ export async function changePassword(formData: FormData) {
 
 export async function updateNotificationPreferences(formData: FormData) {
   const session = await auth()
-  if (!session) return { error: "Niste prijavljeni" }
+  if (!session) return { error: "Нисте пријављени" }
 
   const notifyEmail = formData.get("notifyEmail") === "on"
   const notifySms = formData.get("notifySms") === "on"
   const phone = (formData.get("phone") as string)?.trim() || null
 
   if (notifySms && !phone) {
-    return { error: "Unesite broj telefona da biste primali SMS" }
+    return { error: "Унесите број телефона да бисте примали СМС" }
   }
 
   await db.user.update({

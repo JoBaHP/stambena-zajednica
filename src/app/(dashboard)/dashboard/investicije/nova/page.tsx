@@ -16,35 +16,35 @@ export default async function NovaInvesticijaPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Nova investicija</h1>
-        <p className="text-sm text-muted-foreground mt-1">Evidentiraj investicioni projekat</p>
+        <h1 className="text-2xl font-semibold">Нова инвестиција</h1>
+        <p className="text-sm text-muted-foreground mt-1">Евидентирај инвестициони пројекат</p>
       </div>
 
       <Card>
         <CardContent className="pt-6">
           <form action={createInvestment} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="title">Naziv</Label>
+              <Label htmlFor="title">Назив</Label>
               <Input
                 id="title"
                 name="title"
-                placeholder="npr. Renoviranje fasade"
+                placeholder="нпр. Реновирање фасаде"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Opis</Label>
+              <Label htmlFor="description">Опис</Label>
               <Textarea
                 id="description"
                 name="description"
-                placeholder="Detalji o investiciji..."
+                placeholder="Детаљи о инвестицији..."
                 rows={3}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="budget">Budzet (RSD)</Label>
+              <Label htmlFor="budget">Буџет (РСД)</Label>
               <Input
                 id="budget"
                 name="budget"
@@ -57,32 +57,32 @@ export default async function NovaInvesticijaPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
+              <Label htmlFor="status">Статус</Label>
               <select
                 id="status"
                 name="status"
                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
-                <option value="PLANNED">Planirano</option>
-                <option value="IN_PROGRESS">U toku</option>
+                <option value="PLANNED">Планирано</option>
+                <option value="IN_PROGRESS">У току</option>
               </select>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="startDate">Pocetak</Label>
+                <Label htmlFor="startDate">Почетак</Label>
                 <Input id="startDate" name="startDate" type="date" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="endDate">Zavrsetak</Label>
+                <Label htmlFor="endDate">Завршетак</Label>
                 <Input id="endDate" name="endDate" type="date" />
               </div>
             </div>
 
             <div className="flex gap-3 pt-2">
-              <SubmitButton className="flex-1">Sacuvaj</SubmitButton>
+              <SubmitButton className="flex-1">Сачувај</SubmitButton>
               <Button type="button" variant="outline" render={<Link href="/dashboard/investicije" />}>
-                Otkazi
+                Откажи
               </Button>
             </div>
           </form>

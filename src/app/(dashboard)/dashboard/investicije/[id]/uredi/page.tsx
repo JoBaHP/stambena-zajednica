@@ -28,15 +28,15 @@ export default async function UrediInvesticijuPage({
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Izmeni investiciju</h1>
-        <p className="text-sm text-muted-foreground mt-1">Azuriraj podatke investicionog projekta</p>
+        <h1 className="text-2xl font-semibold">Измени инвестицију</h1>
+        <p className="text-sm text-muted-foreground mt-1">Ажурирај податке инвестиционог пројекта</p>
       </div>
 
       <Card>
         <CardContent className="pt-6">
           <form action={updateWithId} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="title">Naziv</Label>
+              <Label htmlFor="title">Назив</Label>
               <Input
                 id="title"
                 name="title"
@@ -46,7 +46,7 @@ export default async function UrediInvesticijuPage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Opis</Label>
+              <Label htmlFor="description">Опис</Label>
               <Textarea
                 id="description"
                 name="description"
@@ -56,7 +56,7 @@ export default async function UrediInvesticijuPage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="budget">Budzet (RSD)</Label>
+              <Label htmlFor="budget">Буџет (РСД)</Label>
               <Input
                 id="budget"
                 name="budget"
@@ -69,7 +69,7 @@ export default async function UrediInvesticijuPage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="spent">Potroseno (RSD)</Label>
+              <Label htmlFor="spent">Потрошено (РСД)</Label>
               <Input
                 id="spent"
                 name="spent"
@@ -81,23 +81,23 @@ export default async function UrediInvesticijuPage({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
+              <Label htmlFor="status">Статус</Label>
               <select
                 id="status"
                 name="status"
                 defaultValue={investment.status}
                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
-                <option value="PLANNED">Planirano</option>
-                <option value="IN_PROGRESS">U toku</option>
-                <option value="COMPLETED">Zavrseno</option>
-                <option value="CANCELLED">Otkazano</option>
+                <option value="PLANNED">Планирано</option>
+                <option value="IN_PROGRESS">У току</option>
+                <option value="COMPLETED">Завршено</option>
+                <option value="CANCELLED">Отказано</option>
               </select>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="startDate">Pocetak</Label>
+                <Label htmlFor="startDate">Почетак</Label>
                 <Input
                   id="startDate"
                   name="startDate"
@@ -110,7 +110,7 @@ export default async function UrediInvesticijuPage({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="endDate">Zavrsetak</Label>
+                <Label htmlFor="endDate">Завршетак</Label>
                 <Input
                   id="endDate"
                   name="endDate"
@@ -125,9 +125,9 @@ export default async function UrediInvesticijuPage({
             </div>
 
             <div className="flex gap-3 pt-2">
-              <SubmitButton className="flex-1">Sacuvaj izmene</SubmitButton>
+              <SubmitButton className="flex-1">Сачувај измене</SubmitButton>
               <Button type="button" variant="outline" render={<Link href="/dashboard/investicije" />}>
-                Otkazi
+                Откажи
               </Button>
             </div>
           </form>

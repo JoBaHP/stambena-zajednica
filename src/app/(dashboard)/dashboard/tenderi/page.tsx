@@ -22,9 +22,9 @@ export default async function TenderiPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Tenderi</h1>
+        <h1 className="text-2xl font-semibold">Тендери</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Ponude kompanija za investicione radove — glasajte za najpovoljniju ponudu.
+          Понуде компанија за инвестиционе радове — гласајте за најповољнију понуду.
         </p>
       </div>
 
@@ -32,7 +32,7 @@ export default async function TenderiPage() {
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
             <Gavel className="w-10 h-10 mx-auto mb-3 opacity-30" />
-            <p className="text-sm">Nema aktivnih tendera.</p>
+            <p className="text-sm">Нема активних тендера.</p>
           </CardContent>
         </Card>
       )}
@@ -49,7 +49,7 @@ export default async function TenderiPage() {
                   <div className="flex items-center gap-2">
                     <span className="font-medium truncate">{t.title}</span>
                     <Badge variant={t.status === "OPEN" ? "default" : "secondary"} className="shrink-0">
-                      {t.status === "OPEN" ? "Aktivno" : "Zatvoreno"}
+                      {t.status === "OPEN" ? "Активно" : "Затворено"}
                     </Badge>
                   </div>
                   <p className="text-xs text-muted-foreground mt-0.5 truncate">
@@ -75,9 +75,9 @@ export default async function TenderiPage() {
 
       {session.user.role === "MANAGER" && (
         <p className="text-xs text-muted-foreground">
-          Tenderima se upravlja iz sekcije{" "}
+          Тендерима се управља из секције{" "}
           <Button variant="link" className="p-0 h-auto text-xs" render={<Link href="/dashboard/investicije" />}>
-            Investicije
+            Инвестиције
           </Button>
           .
         </p>

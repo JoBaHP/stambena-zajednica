@@ -13,36 +13,36 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: {
-    default: "Pasterova 16 — Stambena Zajednica",
+    default: "Пастерова 16 — Стамбена заједница",
     template: "%s · Pasterova 16",
   },
   description:
-    "Portal stambene zajednice Pasterova 16: finansije, obavestenja, glasanja, zahtevi za odrzavanje, kalendar i digitalna arhiva.",
-  applicationName: "Pasterova 16",
+    "Портал стамбене заједнице Пастерова 16: финансије, обавештења, гласања, захтеви за одржавање, календар и дигитална архива.",
+  applicationName: "Пастерова 16",
   authors: [
     { name: "Jovan Raosavljevic", url: "https://github.com/JoBaHP" },
   ],
   creator: "Jovan Raosavljevic",
   publisher: "Jovan Raosavljevic",
   openGraph: {
-    title: "Pasterova 16 — Stambena Zajednica",
+    title: "Пастерова 16 — Стамбена заједница",
     description:
-      "Portal stambene zajednice Pasterova 16: finansije, obavestenja, glasanja i digitalna arhiva.",
+      "Портал стамбене заједнице Пастерова 16: финансије, обавештења, гласања и дигитална архива.",
     type: "website",
     locale: "sr_RS",
-    siteName: "Pasterova 16",
+    siteName: "Пастерова 16",
     url: process.env.NEXT_PUBLIC_APP_URL ?? "https://pasterova-16.vercel.app",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pasterova 16 — Stambena Zajednica",
+    title: "Пастерова 16 — Стамбена заједница",
     description:
-      "Portal stambene zajednice Pasterova 16: finansije, obavestenja, glasanja i digitalna arhiva.",
+      "Портал стамбене заједнице Пастерова 16: финансије, обавештења, гласања и дигитална архива.",
   },
   robots: { index: false, follow: false },
   appleWebApp: {
     capable: true,
-    title: "Pasterova 16",
+    title: "Пастерова 16",
     statusBarStyle: "default",
   },
   formatDetection: {
