@@ -3,7 +3,7 @@
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { readFinanceSheet } from "@/lib/finance-sheet"
-import { scheduleMirror } from "@/lib/drive-mirror/schedule"
+import { scheduleDataMirror } from "@/lib/drive-mirror/schedule"
 import { revalidatePath } from "next/cache"
 
 // Uvoz iz tabele "Troskovi stambene zajednice" sa Drive-a.
@@ -16,41 +16,77 @@ const OPENING_CATEGORY = "Пренето стање"
 export type ImportSummary = {
   created: number
   updated: number
+  unchanged: number
   removed: number
   problems: { sheet: string; row: number; reason: string }[]
   sheets: number
   income: number
   expense: number
-  balance: number
 }
 
-export async function importFinanceSheet(): Promise<ImportSummary> {
+/**
+ * Rezultat se VRACA, ne baca.
+ *
+ * Next u produkciji zamenjuje tekst svake neuhvacene greske generickom
+ * porukom sa digest-om, pa bi upravnik dobio "An error occurred in the Server
+ * Components render" umesto pravog uzroka. Vraceni string prolazi netaknut.
+ */
+export type ImportResult =
+  | { ok: true; summary: ImportSummary }
+  | { ok: false; error: string }
+
+export async function importFinanceSheet(): Promise<ImportResult> {
   const session = await auth()
   if (!session || session.user.role !== "MANAGER") {
-    throw new Error("Немате дозволу")
+    return { ok: false, error: "Немате дозволу" }
   }
-
-  const { rows, problems, sheets, openingBalance } = await readFinanceSheet()
-
-  // Kategorije iz tabele su slobodan tekst; prave se po potrebi. Tip kategorije
-  // se vodi po prvoj stavci u kojoj se pojavila.
-  const categoryNames = new Map<string, "INCOME" | "EXPENSE">()
-  for (const r of rows) {
-    if (r.category && !categoryNames.has(r.category)) {
-      categoryNames.set(r.category, r.type)
+  if (!process.env.GDRIVE_FINANCE_SHEET_ID) {
+    return {
+      ok: false,
+      error:
+        "GDRIVE_FINANCE_SHEET_ID није постављен. Додај id табеле у env варијабле на Vercelu.",
     }
   }
-  if (openingBalance !== null) categoryNames.set(OPENING_CATEGORY, "INCOME")
 
-  const categoryIds = new Map<string, string>()
-  for (const [name, type] of categoryNames) {
-    const cat = await db.transactionCategory.upsert({
-      where: { name },
-      update: {},
-      create: { name, type },
-      select: { id: true },
+  try {
+    return { ok: true, summary: await runImport(session.user.id) }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.error("[uvozFinansija] nije uspelo", {
+      message,
+      stack: err instanceof Error ? err.stack : undefined,
     })
-    categoryIds.set(name, cat.id)
+    return { ok: false, error: `Читање табеле није успело: ${message}` }
+  }
+}
+
+async function runImport(userId: string): Promise<ImportSummary> {
+  const { rows, problems, sheets, openingBalance } = await readFinanceSheet()
+
+  // Kategorije iz tabele su slobodan tekst; prave se po potrebi.
+  const wanted = new Map<string, "INCOME" | "EXPENSE">()
+  for (const r of rows) {
+    if (r.category && !wanted.has(r.category)) wanted.set(r.category, r.type)
+  }
+  if (openingBalance !== null) wanted.set(OPENING_CATEGORY, "INCOME")
+
+  const existingCats = await db.transactionCategory.findMany({
+    where: { name: { in: [...wanted.keys()] } },
+    select: { id: true, name: true },
+  })
+  const categoryIds = new Map(existingCats.map((c) => [c.name, c.id]))
+
+  const missingCats = [...wanted.entries()].filter(([name]) => !categoryIds.has(name))
+  if (missingCats.length > 0) {
+    await db.transactionCategory.createMany({
+      data: missingCats.map(([name, type]) => ({ name, type })),
+      skipDuplicates: true,
+    })
+    const refreshed = await db.transactionCategory.findMany({
+      where: { name: { in: missingCats.map(([name]) => name) } },
+      select: { id: true, name: true },
+    })
+    for (const c of refreshed) categoryIds.set(c.name, c.id)
   }
 
   type Pending = {
@@ -77,10 +113,7 @@ export async function importFinanceSheet(): Promise<ImportSummary> {
 
   if (openingBalance !== null && rows.length > 0) {
     // Dan pre najranije stavke, da preneto stanje stoji ispred svega.
-    const earliest = rows.reduce(
-      (min, r) => (r.date < min ? r.date : min),
-      rows[0].date,
-    )
+    const earliest = rows.reduce((min, r) => (r.date < min ? r.date : min), rows[0].date)
     const day = new Date(earliest)
     day.setUTCDate(day.getUTCDate() - 1)
 
@@ -96,54 +129,88 @@ export async function importFinanceSheet(): Promise<ImportSummary> {
     })
   }
 
-  let created = 0
-  let updated = 0
+  // Jedan upit za sve postojece redove umesto findUnique po stavci — inace je
+  // ovo 45 uzastopnih odlazaka do baze i funkcija pregori timeout.
+  const refs = pending.map((p) => p.sourceRef)
+  const existing = await db.transaction.findMany({
+    where: { sourceRef: { in: refs } },
+    select: {
+      id: true,
+      sourceRef: true,
+      type: true,
+      amount: true,
+      description: true,
+      date: true,
+      categoryId: true,
+      referenceNum: true,
+      notes: true,
+    },
+  })
+  const byRef = new Map(existing.map((e) => [e.sourceRef, e]))
+
+  const toCreate: Pending[] = []
+  const toUpdate: { id: string; data: Omit<Pending, "sourceRef"> }[] = []
+  let unchanged = 0
 
   for (const p of pending) {
-    const existing = await db.transaction.findUnique({
-      where: { sourceRef: p.sourceRef },
-      select: { id: true },
+    const found = byRef.get(p.sourceRef)
+    if (!found) {
+      toCreate.push(p)
+      continue
+    }
+    // Upisuje se samo ono sto se stvarno promenilo.
+    const same =
+      found.type === p.type &&
+      Number(found.amount) === p.amount &&
+      found.description === p.description &&
+      found.date.getTime() === p.date.getTime() &&
+      found.categoryId === p.categoryId &&
+      (found.referenceNum ?? null) === p.referenceNum &&
+      (found.notes ?? null) === p.notes
+    if (same) {
+      unchanged++
+      continue
+    }
+    // Polja se navode izricito — `sourceRef` nikad ne sme u `update`, a ovako
+    // to ne zavisi od destructuring trika.
+    toUpdate.push({
+      id: found.id,
+      data: {
+        type: p.type,
+        amount: p.amount,
+        description: p.description,
+        date: p.date,
+        categoryId: p.categoryId,
+        referenceNum: p.referenceNum,
+        notes: p.notes,
+      },
     })
-
-    const data = {
-      type: p.type,
-      amount: p.amount,
-      description: p.description,
-      date: p.date,
-      categoryId: p.categoryId,
-      referenceNum: p.referenceNum,
-      notes: p.notes,
-    }
-
-    if (existing) {
-      await db.transaction.update({ where: { id: existing.id }, data })
-      updated++
-      scheduleMirror("TRANSACTION", existing.id)
-    } else {
-      const row = await db.transaction.create({
-        data: { ...data, sourceRef: p.sourceRef, createdById: session.user.id },
-        select: { id: true },
-      })
-      created++
-      scheduleMirror("TRANSACTION", row.id)
-    }
   }
 
-  // Red obrisan iz tabele mora da nestane i iz aplikacije — inace bi portal
-  // prikazivao stavku koje u evidenciji vise nema. Rucno unete stavke (bez
-  // sourceRef) se ne diraju.
-  const keep = pending.map((p) => p.sourceRef)
-  const stale = await db.transaction.findMany({
-    where: { sourceRef: { not: null, notIn: keep } },
-    select: { id: true },
+  if (toCreate.length > 0) {
+    await db.transaction.createMany({
+      data: toCreate.map((p) => ({ ...p, createdById: userId })),
+      skipDuplicates: true,
+    })
+  }
+  for (const u of toUpdate) {
+    await db.transaction.update({ where: { id: u.id }, data: u.data })
+  }
+
+  // Red obrisan iz tabele mora da nestane i iz aplikacije. Rucno unete stavke
+  // (bez sourceRef) se ne diraju.
+  const removed = await db.transaction.deleteMany({
+    where: { sourceRef: { not: null, notIn: refs } },
   })
-  for (const s of stale) {
-    await db.transaction.delete({ where: { id: s.id } })
-    scheduleMirror("TRANSACTION", s.id)
-  }
+
+  // Citljivi .txt dokumenti se NE upisuju odavde — to je 45 upisa na Drive i
+  // funkcija ne bi stigla. Ovde ide samo JSON snimak modula (jedan fajl);
+  // dokumente po stavci pokupi "Синхронизуј сада" u podesavanjima, koje radi
+  // u turama, ili scripts/mirror-all-to-drive.ts.
+  scheduleDataMirror("TRANSACTION")
 
   const income = pending
-    .filter((p) => p.type === "INCOME")
+    .filter((p) => p.type === "INCOME" && p.sourceRef !== OPENING_REF)
     .reduce((sum, p) => sum + p.amount, 0)
   const expense = pending
     .filter((p) => p.type === "EXPENSE")
@@ -153,13 +220,13 @@ export async function importFinanceSheet(): Promise<ImportSummary> {
   revalidatePath("/dashboard/finansije")
 
   return {
-    created,
-    updated,
-    removed: stale.length,
+    created: toCreate.length,
+    updated: toUpdate.length,
+    unchanged,
+    removed: removed.count,
     problems,
     sheets: sheets.length,
     income,
     expense,
-    balance: income - expense,
   }
 }

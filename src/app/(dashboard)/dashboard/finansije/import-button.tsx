@@ -20,27 +20,33 @@ export function ImportSheetButton() {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
   const [summary, setSummary] = useState<ImportSummary | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   function handleClick() {
     startTransition(async () => {
-      try {
-        const result = await importFinanceSheet()
-        setSummary(result)
+      const result = await importFinanceSheet()
 
-        const parts = []
-        if (result.created) parts.push(`ново: ${result.created}`)
-        if (result.updated) parts.push(`ажурирано: ${result.updated}`)
-        if (result.removed) parts.push(`уклоњено: ${result.removed}`)
-        toast.success(
-          parts.length ? `Освежено — ${parts.join(", ")}` : "Нема промена",
-          { duration: 6000 },
-        )
-        router.refresh()
-      } catch (err) {
-        toast.error(
-          err instanceof Error ? err.message : "Читање табеле није успело",
-        )
+      if (!result.ok) {
+        setSummary(null)
+        setError(result.error)
+        toast.error(result.error, { duration: 10000 })
+        return
       }
+
+      setError(null)
+      setSummary(result.summary)
+
+      const parts = []
+      if (result.summary.created) parts.push(`ново: ${result.summary.created}`)
+      if (result.summary.updated) parts.push(`ажурирано: ${result.summary.updated}`)
+      if (result.summary.removed) parts.push(`уклоњено: ${result.summary.removed}`)
+      toast.success(
+        parts.length
+          ? `Освежено — ${parts.join(", ")}`
+          : `Нема промена (${result.summary.unchanged} ставки већ усклађено)`,
+        { duration: 6000 },
+      )
+      router.refresh()
     })
   }
 
@@ -57,6 +63,16 @@ export function ImportSheetButton() {
         />
         {pending ? "Читам табелу..." : "Освежи из табеле"}
       </Button>
+
+      {error && (
+        <div className="rounded-xl border border-red-200 bg-red-50/60 p-4 flex gap-3">
+          <TriangleAlert className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-bold">Освежавање није успело</p>
+            <p className="text-sm text-muted-foreground mt-0.5">{error}</p>
+          </div>
+        </div>
+      )}
 
       {summary && summary.problems.length > 0 && (
         <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4 space-y-2">
