@@ -22,9 +22,29 @@ export type SheetRow = {
   status: string | null
 }
 
+/**
+ * Red koji nosi iznos ali nema datum, pa ne ulazi u brojke.
+ *
+ * Tabela drzi dve razlicite stvari, i kolona Status ih razdvaja:
+ * - `paid` (Status „Placeno") — novac je vec izasao sa racuna, samo red nije
+ *   dokumentovan. Stanje u portalu je zbog toga vise od stvarnog.
+ * - inace — standardna mesecna stavka koju upravnik unapred upise. Nista nije
+ *   pogresno; samo je jos nema u brojkama.
+ */
+export type SkippedRow = {
+  sheet: string
+  row: number
+  description: string
+  amount: number
+  type: "INCOME" | "EXPENSE"
+  paid: boolean
+}
+
 export type ParseResult = {
   rows: SheetRow[]
-  /** Redovi koje nije bilo moguce procitati — prikazuju se upravniku. */
+  /** Redovi sa iznosom ali bez datuma — ne ulaze u brojke. */
+  skipped: SkippedRow[]
+  /** Redovi koje nije bilo moguce procitati — prava greska u tabeli. */
   problems: { sheet: string; row: number; reason: string }[]
   sheets: string[]
   /** Stanje preneto iz meseca pre prve kartice, ako ga tabela navodi. */
@@ -117,6 +137,7 @@ export async function readFinanceSheet(): Promise<ParseResult> {
 
   const wb = XLSX.read(Buffer.from(res.data as ArrayBuffer), { type: "buffer" })
   const rows: SheetRow[] = []
+  const skipped: SkippedRow[] = []
   const problems: ParseResult["problems"] = []
   let openingBalance: number | null = null
 
@@ -186,15 +207,17 @@ export async function readFinanceSheet(): Promise<ParseResult> {
         // Prazan ili zbirni red se preskace, ali red koji NOSI iznos a nema
         // datum je prava stavka koju bi tiho izgubili — zato se prijavljuje.
         if (expense !== null || income !== null) {
-          const what =
-            (cDesc >= 0 ? String(r[cDesc] ?? "").trim() : "") ||
-            (cCat >= 0 ? String(r[cCat] ?? "").trim() : "") ||
-            "stavka"
-          const amount = (income ?? expense ?? 0).toLocaleString("sr-RS")
-          problems.push({
-            sheet: sheetName,
+          const status = cStatus >= 0 ? String(r[cStatus] ?? "").trim() : ""
+          skipped.push({
+            sheet: sheetName.trim(),
             row: rowNo,
-            reason: `nema datum — „${what.slice(0, 40)}" (${amount})`,
+            description:
+              (cDesc >= 0 ? String(r[cDesc] ?? "").trim() : "") ||
+              (cCat >= 0 ? String(r[cCat] ?? "").trim() : "") ||
+              "ставка",
+            amount: income ?? expense ?? 0,
+            type: income !== null ? "INCOME" : "EXPENSE",
+            paid: /plac|плаћ|плац/i.test(status),
           })
         }
         continue
@@ -232,5 +255,5 @@ export async function readFinanceSheet(): Promise<ParseResult> {
     }
   }
 
-  return { rows, problems, sheets: wb.SheetNames, openingBalance }
+  return { rows, skipped, problems, sheets: wb.SheetNames, openingBalance }
 }

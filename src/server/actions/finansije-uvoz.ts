@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
-import { readFinanceSheet } from "@/lib/finance-sheet"
+import { readFinanceSheet, type SkippedRow } from "@/lib/finance-sheet"
 import { scheduleDataMirror } from "@/lib/drive-mirror/schedule"
 import { revalidatePath } from "next/cache"
 
@@ -18,6 +18,12 @@ export type ImportSummary = {
   updated: number
   unchanged: number
   removed: number
+  /** Placeno, ali red u tabeli nema datum — stanje u portalu je zbog toga vise. */
+  paidUndated: SkippedRow[]
+  /** Standardne mesecne stavke unapred upisane bez datuma — nista nije pogresno. */
+  plannedUndated: SkippedRow[]
+  /** Koliko portal odstupa od racuna zbog placenih redova bez datuma. */
+  balanceGap: number
   problems: { sheet: string; row: number; reason: string }[]
   sheets: number
   income: number
@@ -61,7 +67,8 @@ export async function importFinanceSheet(): Promise<ImportResult> {
 }
 
 async function runImport(userId: string): Promise<ImportSummary> {
-  const { rows, problems, sheets, openingBalance } = await readFinanceSheet()
+  const { rows, skipped, problems, sheets, openingBalance } =
+    await readFinanceSheet()
 
   // Kategorije iz tabele su slobodan tekst; prave se po potrebi.
   const wanted = new Map<string, "INCOME" | "EXPENSE">()
@@ -219,11 +226,24 @@ async function runImport(userId: string): Promise<ImportSummary> {
   revalidatePath("/dashboard")
   revalidatePath("/dashboard/finansije")
 
+  const paidUndated = skipped.filter((s) => s.paid)
+  const plannedUndated = skipped.filter((s) => !s.paid)
+
+  // Placen rashod bez datuma znaci da je novac izasao a portal ga ne vidi, pa
+  // je prikazano stanje vise od stvarnog. Placen prihod bi ga cinio manjim.
+  const balanceGap = paidUndated.reduce(
+    (sum, s) => sum + (s.type === "EXPENSE" ? s.amount : -s.amount),
+    0,
+  )
+
   return {
     created: toCreate.length,
     updated: toUpdate.length,
     unchanged,
     removed: removed.count,
+    paidUndated,
+    plannedUndated,
+    balanceGap,
     problems,
     sheets: sheets.length,
     income,
