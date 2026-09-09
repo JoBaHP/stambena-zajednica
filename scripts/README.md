@@ -186,3 +186,50 @@ Sve transakcije, kategorije, obavestenja, glasanja, glasove, zahteve, komentare,
 - Prijavi se sa `szpasterova16@gmail.com` i lozinkom koju si zadao.
 - Promeni lozinku odmah preko `/dashboard/podesavanja`.
 - Po potrebi rucno obrisi i Drive foldere.
+
+## Безбедност базе: RLS и права
+
+Supabase уз базу диже и REST API (PostgREST) који је доступан свакоме са
+`anon` кључем пројекта. Портал га **не користи** — везује се Prisma-ом преко
+TCP-а као рола `postgres`. Али ако табеле нису затворене, тај API је отворена
+врата у базу мимо апликације.
+
+Миграција `20260909140000_lock_down_public_schema` их је затворила у три слоја:
+
+| слој | шта решава |
+| --- | --- |
+| `ENABLE ROW LEVEL SECURITY` на свим табелама, без политика | PostgREST не враћа ни један ред; ово гаси линтеров `rls_disabled_in_public` |
+| `REVOKE ALL ... FROM anon, authenticated` | RLS **не филтрира TRUNCATE** — без одузимања права табела се и уз RLS може испразнити |
+| `ALTER DEFAULT PRIVILEGES ... REVOKE ALL` | иначе би свака нова табела опет добила сва права за `anon` (`pg_default_acl` је стајао на `anon=arwdDxtm`) |
+
+Роли `postgres` је `rolbypassrls = true` и власник је свих табела, па је RLS
+за апликацију невидљив — проверено читањем и уписом после миграције.
+
+`service_role` намерно задржава права: то је серверски кључ Supabase-а, тајан
+је и није у употреби у порталу. **Не стављај `SUPABASE_SERVICE_ROLE_KEY`
+нигде у клијентски код** — он прескаче и RLS и одузета права.
+
+### Кад додајеш нову табелу
+
+У истој миграцији додај и:
+
+```sql
+ALTER TABLE "NovaTabela" ENABLE ROW LEVEL SECURITY;
+```
+
+Права се више не морају одузимати ручно — подразумевана права су исправљена,
+па нова табела коју направи Prisma (као `postgres`) **не добија** ништа за
+`anon`/`authenticated`. RLS је други слој и оно што линтер тражи.
+
+Провера да ништа није промакло:
+
+```sql
+select tablename from pg_tables
+where schemaname = 'public' and not rowsecurity;
+```
+
+Празан резултат значи да је све покривено.
+
+> Подразумевана права која поставља `supabase_admin` још дају права `anon`-у,
+> али их не можемо изменити (нисмо члан те роле) и не тичу нас се — важе само
+> за табеле које направи сам Supabase, а не Prisma миграције.
